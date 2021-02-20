@@ -10,4 +10,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AspireAdmin.Application\AspireAdmin.Application.csproj" />
+    <ProjectReference Include="..\..\source\Aspire.AutoMapper.Provider\Aspire.AutoMapper.Provider.csproj" />
+    <ProjectReference Include="..\..\source\Aspire.CSRedis.Provider\Aspire.CSRedis.Provider.csproj" />
+    <ProjectReference Include="..\..\source\Aspire.FreeSql.Provider\Aspire.FreeSql.Provider.csproj" />
+  </ItemGroup>
+
 </Project>

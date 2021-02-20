@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\AspireAdmin.Utility\AspireAdmin.Utility.csproj" />
-    <ProjectReference Include="..\..\source\Aspire\Aspire.csproj" />
+    <ProjectReference Include="..\Aspire\Aspire.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
