@@ -1,7 +1,6 @@
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using FreeSql;
 
 // ReSharper disable ArrangeModifiersOrder
 
@@ -56,6 +55,7 @@ namespace Aspire.FreeSql.Provider
         {
             return await _freeSql
                 .Select<TAuditEntity>()
+                .Where(x => !x.Deleted)
                 .Where(filter)
                 .ToListAsync()
                 .ToArrayAsync();
@@ -63,11 +63,21 @@ namespace Aspire.FreeSql.Provider
 
         public async override Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter, long limit)
         {
-            return (await _freeSql
+            return await _freeSql
                 .Select<TAuditEntity>()
+                .Where(x => !x.Deleted)
                 .Where(filter)
                 .Take(int.Parse(limit.ToString())) // TODO 装拆箱
-                .ToListAsync()).ToArray();
+                .ToListAsync()
+                .ToArrayAsync();
+        }
+    }
+
+    public static class xxxx<TAuditEntity>
+    {
+        public static void xx<TAuditEntity>(this IAuditRepository<TAuditEntity> xxx)
+        {
+
         }
     }
 }
