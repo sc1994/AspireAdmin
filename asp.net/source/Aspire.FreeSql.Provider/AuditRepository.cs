@@ -2,25 +2,25 @@ using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-// ReSharper disable ArrangeModifiersOrder
+using FreeSql;
 
 namespace Aspire.FreeSql.Provider
 {
-    public class FreeSqlAuditRepository<TAuditEntity> : FreeSqlAuditRepository<TAuditEntity, Guid>
-        where TAuditEntity : FreeAuditEntity
+    public class AuditRepository<TAuditEntity> : AuditRepository<TAuditEntity, Guid>
+        where TAuditEntity : AuditEntity
     {
-        public FreeSqlAuditRepository(IFreeSql freeSql, ILoginUser loginUser) : base(freeSql, loginUser)
+        public AuditRepository(IFreeSql freeSql, ILoginUser loginUser) : base(freeSql, loginUser)
         {
         }
     }
 
-    public class FreeSqlAuditRepository<TAuditEntity, TPrimaryKey> : AuditRepository<TAuditEntity, TPrimaryKey>
-        where TAuditEntity : FreeAuditEntity<TPrimaryKey>
+    public class AuditRepository<TAuditEntity, TPrimaryKey> : BlankAuditRepository<TAuditEntity, TPrimaryKey>
+        where TAuditEntity : AuditEntity<TPrimaryKey>
     {
         private readonly IFreeSql _freeSql;
         private readonly ILoginUser _loginUser;
 
-        public FreeSqlAuditRepository(IFreeSql freeSql, ILoginUser loginUser) : base(loginUser)
+        public AuditRepository(IFreeSql freeSql, ILoginUser loginUser) : base(loginUser)
         {
             _freeSql = freeSql;
             _loginUser = loginUser;
@@ -73,11 +73,18 @@ namespace Aspire.FreeSql.Provider
         }
     }
 
-    public static class xxxx<TAuditEntity>
+    public static class FreeSqlExtension
     {
-        public static void xx<TAuditEntity>(this IAuditRepository<TAuditEntity> xxx)
+        public static ISelect<TAuditEntity> Select<TAuditEntity>(this IFreeSql freeSql)
+            where TAuditEntity : AuditEntity
         {
+            return freeSql.Select<TAuditEntity>().Where(x => !x.Deleted);
+        }
 
+        public static ISelect<TAuditEntity> Select<TAuditEntity, TPrimaryKey>(this IFreeSql freeSql)
+            where TAuditEntity : AuditEntity<TPrimaryKey>
+        {
+            return freeSql.Select<TAuditEntity>().Where(x => !x.Deleted);
         }
     }
 }

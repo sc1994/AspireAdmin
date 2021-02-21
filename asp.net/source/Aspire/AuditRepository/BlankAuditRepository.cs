@@ -5,24 +5,22 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-// ReSharper disable ArrangeModifiersOrder
-
 namespace Aspire
 {
-    public abstract class AuditRepository<TAuditEntity> : AuditRepository<TAuditEntity, Guid>
+    public abstract class BlankAuditRepository<TAuditEntity> : BlankAuditRepository<TAuditEntity, Guid>
         where TAuditEntity : IAuditEntity
     {
-        protected AuditRepository(ILoginUser loginUser) : base(loginUser)
+        protected BlankAuditRepository(ILoginUser loginUser) : base(loginUser)
         {
         }
     }
 
-    public abstract class AuditRepository<TAuditEntity, TPrimaryKey> : IAuditRepository<TAuditEntity, TPrimaryKey>
+    public abstract class BlankAuditRepository<TAuditEntity, TPrimaryKey> : IAuditRepository<TAuditEntity, TPrimaryKey>
         where TAuditEntity : IAuditEntity<TPrimaryKey>
     {
         private readonly ILoginUser _loginUser;
 
-        protected AuditRepository(ILoginUser loginUser)
+        protected BlankAuditRepository(ILoginUser loginUser)
         {
             _loginUser = loginUser;
         }

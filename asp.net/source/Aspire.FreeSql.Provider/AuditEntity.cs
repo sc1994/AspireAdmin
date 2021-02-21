@@ -2,11 +2,9 @@ using System;
 
 using FreeSql.DataAnnotations;
 
-// ReSharper disable ArrangeModifiersOrder
-
 namespace Aspire.FreeSql.Provider
 {
-    public class FreeAuditEntity : FreeAuditEntity<Guid>, IAuditEntity
+    public class AuditEntity : AuditEntity<Guid>, IAuditEntity
     {
         public void InitId()
         {
@@ -17,7 +15,7 @@ namespace Aspire.FreeSql.Provider
         public override Guid Id { get; set; }
     }
 
-    public class FreeAuditEntity<TPrimaryKey> : IAuditEntity<TPrimaryKey>
+    public class AuditEntity<TPrimaryKey> : IAuditEntity<TPrimaryKey>
     {
         [Column(IsIdentity = true, CanUpdate = false, IsPrimary = true)]
         public virtual TPrimaryKey Id { get; set; }
