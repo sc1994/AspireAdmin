@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AspireAdmin.Application</name>
+    </assembly>
+    <members>
+        <member name="T:AspireAdmin.Application.UserManage.UserInfoAppService">
+            <summary>
+            登录 应用服务
+            </summary>
+        </member>
+        <member name="M:AspireAdmin.Application.UserManage.UserInfoAppService.FilterPage(Aspire.Dto.PageInputDto)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

@@ -1,5 +1,7 @@
 using System;
 
+using Aspire.Dto;
+
 namespace Aspire
 {
     public interface IAuditEntity : IAuditEntity<Guid>
@@ -7,13 +9,8 @@ namespace Aspire
         void InitId();
     }
 
-    public interface IAuditEntity<TPrimaryKey>
+    public interface IAuditEntity<TPrimaryKey> : IEntityDto<TPrimaryKey>
     {
-        /// <summary>
-        /// 主键
-        /// </summary>
-        TPrimaryKey Id { get; set; }
-
         /// <summary>
         /// 创建时间
         /// </summary>

@@ -2,28 +2,41 @@ using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
+using Aspire.Dto;
+
 using FreeSql;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Aspire.FreeSql.Provider
 {
     public class AuditRepository<TAuditEntity> : AuditRepository<TAuditEntity, Guid>
         where TAuditEntity : AuditEntity
     {
-        public AuditRepository(IFreeSql freeSql, ILoginUser loginUser) : base(freeSql, loginUser)
+        public AuditRepository(IFreeSql freeSql, ICurrentLoginUser currentLoginUser) : base(freeSql, currentLoginUser)
         {
         }
     }
 
-    public class AuditRepository<TAuditEntity, TPrimaryKey> : BlankAuditRepository<TAuditEntity, TPrimaryKey>
+    public class AuditRepository<TAuditEntity, TPrimaryKey> : RealizeAuditRepository<TAuditEntity, TPrimaryKey>
         where TAuditEntity : AuditEntity<TPrimaryKey>
     {
         private readonly IFreeSql _freeSql;
-        private readonly ILoginUser _loginUser;
+        private readonly ICurrentLoginUser _currentLoginUser;
+        private readonly IServiceProvider _serviceProvider;
 
-        public AuditRepository(IFreeSql freeSql, ILoginUser loginUser) : base(loginUser)
+
+        public AuditRepository(IFreeSql freeSql, ICurrentLoginUser currentLoginUser) : base(currentLoginUser)
         {
             _freeSql = freeSql;
-            _loginUser = loginUser;
+            _currentLoginUser = currentLoginUser;
+            _serviceProvider = FreeSqlStartup.ServiceProvider;
+        }
+
+        public async override Task<TAuditEntity> InsertThenEntityAsync(TAuditEntity entity)
+        {
+            SetCreatedEntity(ref entity);
+            return await _freeSql.Insert(entity).ExecuteInsertedAsync().FirstOrDefaultAsync();
         }
 
         public async override Task<long> InsertBatchAsync(TAuditEntity[] entities)
@@ -37,8 +50,8 @@ namespace Aspire.FreeSql.Provider
             return await _freeSql.Update<TAuditEntity>()
                 .Where(filter)
                 .Set(x => x.DeletedAt, DateTime.Now)
-                .Set(x => x.DeletedUser, _loginUser.UserName)
-                .Set(x => x.DeletedUserId, _loginUser.UserId)
+                .Set(x => x.DeletedUser, _currentLoginUser.UserName)
+                .Set(x => x.DeletedUserId, _currentLoginUser.UserId)
                 .Set(x => x.Deleted, true)
                 .ExecuteAffrowsAsync();
         }
@@ -70,6 +83,16 @@ namespace Aspire.FreeSql.Provider
                 .Take(int.Parse(limit.ToString())) // TODO 装拆箱
                 .ToListAsync()
                 .ToArrayAsync();
+        }
+
+        public async override Task<(TAuditEntity[] items, long totalCount)> PagingAsync(object queryable, PageInputDto dto)
+        {
+            if (queryable is ISelect<TAuditEntity> iSelect) {
+                var itemsAsync = iSelect.ToListAsync<TAuditEntity>().ToArrayAsync();
+                var totalCountAsync = iSelect.CountAsync();
+                return (await itemsAsync, await totalCountAsync);
+            }
+            throw new ArgumentException($"参数{nameof(queryable)}应该为ISelect<TAuditEntity>类型");
         }
     }
 

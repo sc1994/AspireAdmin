@@ -19,12 +19,24 @@ namespace Aspire
             return source.FirstOrDefault(predicate!);
         }
 
+
+        public static async Task<T> FirstOrDefaultAsync<T>(this Task<List<T>> sourceAsync, Func<T, bool> predicate = null)
+        {
+            var source = await sourceAsync;
+            return source.FirstOrDefault(predicate!);
+        }
+
+
+
         public static async Task<T[]> ToArrayAsync<T>(this Task<List<T>> sourceAsync)
         {
             var source = await sourceAsync;
             return source.ToArray();
         }
 
-
+        public static string Join(this IEnumerable<string> source, string separator)
+        {
+            return string.Join(separator, source);
+        }
     }
 }

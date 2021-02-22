@@ -1,16 +1,21 @@
-using FreeSql;
-using Microsoft.Extensions.DependencyInjection;
+using System;
 
-namespace Aspire.FreeSql.Provider
+using FreeSql;
+
+// ReSharper disable once CheckNamespace
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class FreeSqlStartup
     {
+        static internal IServiceProvider ServiceProvider;
+
         public static IServiceCollection AddFreeSql(
             this IServiceCollection services,
             string connectionString,
             DataType dataType)
         {
-            services.AddSingleton<IFreeSql>(serviceProvider => {
+            services.AddSingleton(serviceProvider => {
+                ServiceProvider = serviceProvider;
                 var freeSql = new FreeSqlBuilder()
                 .UseConnectionString(dataType, connectionString)
 #if DEBUG

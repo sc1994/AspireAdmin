@@ -1,0 +1,435 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Aspire</name>
+    </assembly>
+    <members>
+        <member name="T:Aspire.CrudAppService`1">
+            <summary>
+            CRUD 服务
+            </summary>
+            <typeparam name="TAuditEntity">数据库审计实体</typeparam>
+        </member>
+        <member name="T:Aspire.CrudAppService`2">
+            <summary>
+            CRUD 服务
+            </summary>
+            <typeparam name="TAuditEntity">数据库审计实体</typeparam>
+            <typeparam name="TPrimaryKey">实体主键</typeparam>
+        </member>
+        <member name="T:Aspire.CrudAppService`3">
+            <summary>
+            CRUD 服务
+            </summary>
+            <typeparam name="TAuditEntity">数据库审计实体</typeparam>
+            <typeparam name="TPrimaryKey">实体主键</typeparam>
+            <typeparam name="TPageInputDto">数据传输对象 分页输入</typeparam>
+        </member>
+        <member name="T:Aspire.CrudAppService`4">
+            <summary>
+            CRUD 服务
+            </summary>
+            <typeparam name="TAuditEntity">数据库审计实体</typeparam>
+            <typeparam name="TPrimaryKey">实体主键</typeparam>
+            <typeparam name="TPageInputDto">数据传输对象 分页输入</typeparam>
+            <typeparam name="TDto">数据传输对象</typeparam>
+        </member>
+        <member name="T:Aspire.CrudAppService`5">
+            <summary>
+            CRUD 服务
+            </summary>
+            <typeparam name="TAuditEntity">数据库审计实体</typeparam>
+            <typeparam name="TPrimaryKey">实体主键</typeparam>
+            <typeparam name="TPageInputDto">数据传输对象 分页输入</typeparam>
+            <typeparam name="TOutputDto">数据传输 输出对象</typeparam>
+            <typeparam name="TCreateOrUpdateDto">数据传输 创建或者更新 对象</typeparam>
+        </member>
+        <member name="T:Aspire.CrudAppService`6">
+            <summary>
+            CRUD 服务
+            </summary>
+            <typeparam name="TAuditEntity">数据库审计实体</typeparam>
+            <typeparam name="TPrimaryKey">实体主键</typeparam>
+            <typeparam name="TPageInputDto">数据传输对象 分页输入</typeparam>
+            <typeparam name="TOutputDto">数据传输 输出对象</typeparam>
+            <typeparam name="TCreateDto">数据传输 创建对象</typeparam>
+            <typeparam name="TUpdateDto">数据传输 更新对象</typeparam>
+        </member>
+        <member name="M:Aspire.CrudAppService`6.#ctor">
+            <summary>
+            默认 构造 ，实例CRUD必须的服务
+            </summary>
+        </member>
+        <member name="M:Aspire.CrudAppService`6.MapToDto(`0)">
+            <summary>
+            映射到 数据传输对象
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.CrudAppService`6.MapToDto``1(`0)">
+            <summary>
+            映射到 数据传输对象
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.CrudAppService`6.MapToEntity``1(``0)">
+            <summary>
+            映射到 实体
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.CrudAppService`6.CreateAsync(`4)">
+            <summary>
+            创建
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.CrudAppService`6.DeleteAsync(`1)">
+            <summary>
+            删除
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.CrudAppService`6.UpdateAsync(`5)">
+            <summary>
+            更新
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.CrudAppService`6.GetAsync(`1)">
+            <summary>
+            获取
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.CrudAppService`6.PagingAsync(`2)">
+            <summary>
+            分页
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.CrudAppService`6.FilterPage(`2)">
+            <summary>
+            过滤分页
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Aspire.Dto.PagedResultDto`1">
+            <summary>
+            分页后结果
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Aspire.Dto.PagedResultDto`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Int64)">
+            <summary>
+            实例 分页后结果 构造
+            </summary>
+            <param name="items"></param>
+            <param name="totalCount"></param>
+        </member>
+        <member name="P:Aspire.Dto.PagedResultDto`1.Items">
+            <summary>
+            项
+            </summary>
+        </member>
+        <member name="P:Aspire.Dto.PagedResultDto`1.TotalCount">
+            <summary>
+            总数量
+            </summary>
+        </member>
+        <member name="P:Aspire.IAuditEntity`1.CreatedAt">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Aspire.IAuditEntity`1.CreatedUser">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:Aspire.IAuditEntity`1.CreatedUserId">
+            <summary>
+            创建人id
+            </summary>
+        </member>
+        <member name="P:Aspire.IAuditEntity`1.UpdatedAt">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:Aspire.IAuditEntity`1.UpdatedUser">
+            <summary>
+            更新人
+            </summary>
+        </member>
+        <member name="P:Aspire.IAuditEntity`1.UpdatedUserId">
+            <summary>
+            更新人id
+            </summary>
+        </member>
+        <member name="P:Aspire.IAuditEntity`1.Deleted">
+            <summary>
+            是否删除
+            使用仓储进行筛选无需筛选这个字段
+            </summary>
+        </member>
+        <member name="P:Aspire.IAuditEntity`1.DeletedAt">
+            <summary>
+            删除时间
+            </summary>
+        </member>
+        <member name="P:Aspire.IAuditEntity`1.DeletedUser">
+            <summary>
+            删除人
+            </summary>
+        </member>
+        <member name="P:Aspire.IAuditEntity`1.DeletedUserId">
+            <summary>
+            删除人id
+            </summary>
+        </member>
+        <member name="T:Aspire.IAuditRepository`1">
+            <summary>
+            审计仓储 （主键为GUID）
+            </summary>
+            <typeparam name="TAuditEntity"></typeparam>
+        </member>
+        <member name="T:Aspire.IAuditRepository`2">
+            <summary>
+            审计仓储
+            </summary>
+            <typeparam name="TAuditEntity"></typeparam>
+            <typeparam name="TPrimaryKey"></typeparam>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.InsertAsync(`0)">
+            <summary>
+            增
+            </summary>
+            <param name="entity"></param>
+            <returns>成功与否</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.InsertThenEntityAsync(`0)">
+            <summary>
+            增 然后 取得实体
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.InsertBatchAsync(`0[])">
+            <summary>
+            增 批量 
+            </summary>
+            <param name="entities"></param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.InsertBatchAsync(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            增 批量 
+            </summary>
+            <param name="entities"></param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.DeleteAsync(`1)">
+            <summary>
+            删
+            </summary>
+            <param name="primaryKey">指定主键</param>
+            <returns>成功与否</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.DeleteBatchAsync(`1[])">
+            <summary>
+            删 批量 
+            </summary>
+            <param name="primaryKeys">指定主键集合</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.DeleteBatchAsync(System.Collections.Generic.IEnumerable{`1})">
+            <summary>
+            删 批量 
+            </summary>
+            <param name="primaryKeys">指定主键集合</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.DeleteBatchAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            删 批量 
+            </summary>
+            <param name="filter">过滤条件</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.UpdateAsync(`0)">
+            <summary>
+            改 
+            </summary>
+            <param name="newEntity">新实体</param>
+            <returns>成功与否</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.UpdateBatchAsync(`0[])">
+            <summary>
+            改 批量 
+            </summary>
+            <param name="newEntities">新实体集合</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.UpdateBatchAsync(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            改 批量 
+            </summary>
+            <param name="newEntities">新实体集合</param>
+            <returns>影响行数</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.GetAsync(`1)">
+            <summary>
+            查 
+            </summary>
+            <param name="primaryKey">主键</param>
+            <returns>数据库内容</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.GetBatchAsync(`1[])">
+            <summary>
+            查 
+            </summary>
+            <param name="primaryKeys">主键集合</param>
+            <returns>数据库内容</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.GetBatchAsync(System.Collections.Generic.IEnumerable{`1})">
+            <summary>
+            查 
+            </summary>
+            <param name="primaryKeys">主键集合</param>
+            <returns>数据库内容</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.GetBatchAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            查 
+            </summary>
+            <param name="filter">过滤</param>
+            <returns>数据库内容</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.GetBatchAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int64)">
+            <summary>
+            查 
+            </summary>
+            <param name="filter">过滤</param>
+            <param name="limit"></param>
+            <returns>数据库内容</returns>
+        </member>
+        <member name="M:Aspire.IAuditRepository`2.PagingAsync(System.Object,Aspire.Dto.PageInputDto)">
+            <summary>
+            查 
+            </summary>
+            <param name="queryable">可查询对象 比如 ef 中的 IQueryable，freeSql 中的 ISelect</param>
+            <param name="dto"></param>
+            <returns>数据库内容</returns>
+        </member>
+        <member name="T:Aspire.RealizeAuditRepository`1">
+            <summary>
+            审计仓储 实现 部分自举 方法 默认GUID主键
+            </summary>
+            <typeparam name="TAuditEntity">审计实体</typeparam>
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`1.#ctor(Aspire.ICurrentLoginUser)">
+            <summary>
+            审计仓储
+            </summary>
+            <param name="currentLoginUser">当前登录用户</param>
+        </member>
+        <member name="T:Aspire.RealizeAuditRepository`2">
+            <summary>
+            审计仓储 实现 部分自举 方法
+            </summary>
+            <typeparam name="TAuditEntity">审计实体</typeparam>
+            <typeparam name="TPrimaryKey">主键</typeparam>
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.#ctor(Aspire.ICurrentLoginUser)">
+            <summary>
+            审计仓储
+            </summary>
+            <param name="currentLoginUser">当前登录用户</param>
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.InsertAsync(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.InsertThenEntityAsync(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.InsertBatchAsync(`0[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.InsertBatchAsync(System.Collections.Generic.IEnumerable{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.DeleteAsync(`1)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.DeleteBatchAsync(`1[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.DeleteBatchAsync(System.Collections.Generic.IEnumerable{`1})">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.DeleteBatchAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.UpdateAsync(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.UpdateBatchAsync(`0[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.UpdateBatchAsync(System.Collections.Generic.IEnumerable{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.GetAsync(`1)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.GetBatchAsync(`1[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.GetBatchAsync(System.Collections.Generic.IEnumerable{`1})">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.GetBatchAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.GetBatchAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int64)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.SetCreatedEntity(`0@)">
+            <summary>
+            设置 创建的审计实体 
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.SetUpdatedEntity(`0@)">
+            <summary>
+            设置 更新的审计实体 
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="T:Aspire.ICurrentLoginUser">
+            <summary>
+            当前登入用户
+            </summary>
+        </member>
+        <member name="P:Aspire.ICurrentLoginUser.UserId">
+            <summary>
+            用户Id
+            </summary>
+        </member>
+        <member name="P:Aspire.ICurrentLoginUser.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+    </members>
+</doc>
