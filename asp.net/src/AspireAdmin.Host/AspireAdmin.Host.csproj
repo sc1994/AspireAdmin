@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FreeSql.Provider.Sqlite" Version="2.3.100" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.1" NoWarn="NU1605" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.1" NoWarn="NU1605" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
@@ -16,6 +17,10 @@
     <ProjectReference Include="..\..\source\Aspire.AutoMapper.Provider\Aspire.AutoMapper.Provider.csproj" />
     <ProjectReference Include="..\..\source\Aspire.CSRedis.Provider\Aspire.CSRedis.Provider.csproj" />
     <ProjectReference Include="..\..\source\Aspire.FreeSql.Provider\Aspire.FreeSql.Provider.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="AppData\" />
   </ItemGroup>
 
 </Project>

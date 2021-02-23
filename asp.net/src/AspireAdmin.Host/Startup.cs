@@ -1,6 +1,8 @@
 using System;
 using System.Reflection;
 
+using FreeSql;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -44,6 +46,8 @@ namespace AspireAdmin.Host
                     setup.IncludeXmlComments(xmlPath);
                 };
             });
+
+            services.AddFreeSql(_configuration.GetConnectionString("DbMain"), DataType.Sqlite);
         }
 
         public void Configure(
