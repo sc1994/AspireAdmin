@@ -146,6 +146,67 @@
             总数量
             </summary>
         </member>
+        <member name="T:Aspire.Dto.PageInputDto">
+            <summary>
+            页输入
+            </summary>
+        </member>
+        <member name="P:Aspire.Dto.PageInputDto.PageIndex">
+            <summary>
+            页 索引
+            </summary>
+        </member>
+        <member name="P:Aspire.Dto.PageInputDto.PageSize">
+            <summary>
+            页 大小
+            </summary>
+        </member>
+        <member name="T:Aspire.AspireConfigure">
+            <summary>
+            Aspire 配置项
+            </summary>
+        </member>
+        <member name="P:Aspire.AspireConfigure.CorsPolicyBuilderConfigure">
+            <summary>
+            跨域政策配置
+            </summary>
+        </member>
+        <member name="P:Aspire.AspireConfigure.SwaggerUiName">
+            <summary>
+            Swagger Ui 名称
+            </summary>
+        </member>
+        <member name="P:Aspire.AspireConfigure.EndpointRouteConfigure">
+            <summary>
+            终节点路由配置
+            </summary>
+        </member>
+        <member name="P:Aspire.AspireConfigure.ServiceProvider">
+            <summary>
+            di 服务 提供者
+            </summary>
+        </member>
+        <member name="T:Aspire.AspireSetupOptions">
+            <summary>
+            aspire 启动 选项
+            </summary>
+        </member>
+        <member name="P:Aspire.AspireSetupOptions.NewtonsoftJsonOptionsSetup">
+            <summary>
+            NewtonsoftJson 启动选项
+            </summary>
+        </member>
+        <member name="P:Aspire.AspireSetupOptions.DynamicWebApiOptionsSetup">
+            <summary>
+            动态 api 启动选项
+            <para>详情参考：https://github.com/pda-team/Panda.DynamicWebApi/blob/master/README_zh-CN.md</para>
+            </summary>
+        </member>
+        <member name="P:Aspire.AspireSetupOptions.SwaggerGenOptionsSetup">
+            <summary>
+            swagger 启动选项
+            </summary>
+        </member>
         <member name="P:Aspire.IAuditEntity`1.CreatedAt">
             <summary>
             创建时间
@@ -404,6 +465,9 @@
         <member name="M:Aspire.RealizeAuditRepository`2.GetBatchAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int64)">
             <inheritdoc />
         </member>
+        <member name="M:Aspire.RealizeAuditRepository`2.PagingAsync(System.Object,Aspire.Dto.PageInputDto)">
+            <inheritdoc />
+        </member>
         <member name="M:Aspire.RealizeAuditRepository`2.SetCreatedEntity(`0@)">
             <summary>
             设置 创建的审计实体 
@@ -430,6 +494,46 @@
             <summary>
             用户名
             </summary>
+        </member>
+        <member name="T:Aspire.StringUtility">
+            <summary>
+            StringUtility
+            </summary>
+        </member>
+        <member name="M:Aspire.StringUtility.IsNullOrWhiteSpace(System.String)">
+            <summary>
+            是 null 或 空字符串
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.AspireStartup">
+            <summary>
+            aspire 启动
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.AspireStartup.AddAspire(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Aspire.AspireSetupOptions})">
+            <summary>
+            添加 aspire
+            </summary>
+            <param name="services"></param>
+            <param name="setupAction">选项</param>
+            <exception cref="T:System.ArgumentNullException">请注意 [NotNull] 标识</exception>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.AspNetCore.Builder.AspireStartup">
+            <summary>
+            aspire 启动
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.AspireStartup.UseAspire(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Aspire.AspireConfigure})">
+            <summary>
+            使用 aspire
+            </summary>
+            <param name="app"></param>
+            <param name="actionConfigure"></param>
+            <exception cref="T:System.ArgumentNullException">请注意 [NotNull] 标识</exception>
+            <returns></returns>
         </member>
     </members>
 </doc>

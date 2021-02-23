@@ -106,7 +106,7 @@ namespace Aspire
         public abstract Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter);
         /// <inheritdoc />
         public abstract Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter, long limit);
-
+        /// <inheritdoc />
         public abstract Task<(TAuditEntity[] items, long totalCount)> PagingAsync(object queryable, PageInputDto dto);
 
         /// <summary>

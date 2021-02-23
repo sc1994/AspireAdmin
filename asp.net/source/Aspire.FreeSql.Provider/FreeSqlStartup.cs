@@ -1,5 +1,6 @@
 using System;
-
+using Aspire;
+using Aspire.FreeSql.Provider;
 using FreeSql;
 
 // ReSharper disable once CheckNamespace
@@ -24,6 +25,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 .Build();
                 return freeSql;
             });
+
+            services.AddScoped(typeof(IAuditRepository<>), typeof(AuditRepository<>));
+            services.AddScoped(typeof(IAuditRepository<>), typeof(AuditRepository<>));
+
 
             return services;
         }

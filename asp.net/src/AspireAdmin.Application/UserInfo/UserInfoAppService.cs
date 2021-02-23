@@ -8,7 +8,7 @@ using FreeSql;
 namespace AspireAdmin.Application.UserManage
 {
     /// <summary>
-    /// 登录 应用服务
+    /// 用户信息
     /// </summary>
     public class UserInfoAppService : CrudAppService<UserInfo>
     {

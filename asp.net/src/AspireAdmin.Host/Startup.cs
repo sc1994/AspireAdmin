@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace AspireAdmin.Host
 {
@@ -20,7 +21,29 @@ namespace AspireAdmin.Host
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAspire(Assembly.Load("AspireAdmin.Application"));
+            services.AddAspire(options => {
+                var applicationAssembly = Assembly.Load("AspireAdmin.Application");
+
+                options.NewtonsoftJsonOptionsSetup = setup => {
+                    setup.AllowInputFormatterExceptionMessages = false;
+                };
+
+                options.DynamicWebApiOptionsSetup = setup => {
+                    // 指定全局默认的 api 前缀
+                    setup.DefaultApiPrefix = "api";
+                    // 指定程序集 
+                    setup.AddAssemblyOptions(applicationAssembly);
+                };
+
+                options.SwaggerGenOptionsSetup = setup => {
+                    setup.SwaggerDoc("AspireAdmin.Host v1", new OpenApiInfo {
+                        Title = "AspireAdmin.Host",
+                        Version = "v1"
+                    });
+                    var xmlPath = applicationAssembly.Location.TrimEnd('d', 'l') + "xml";
+                    setup.IncludeXmlComments(xmlPath);
+                };
+            });
         }
 
         public void Configure(
@@ -28,12 +51,26 @@ namespace AspireAdmin.Host
             IWebHostEnvironment env,
             IServiceProvider serviceProvider)
         {
-            app.UseAspire(serviceProvider);
+            app.UseAspire(configure => {
+                configure.ServiceProvider = serviceProvider;
+
+                configure.CorsPolicyBuilderConfigure = corsPolicy => {
+                    corsPolicy.AllowAnyHeader();
+                    corsPolicy.AllowAnyMethod();
+                    corsPolicy.AllowCredentials();
+                    corsPolicy.WithOrigins(_configuration.GetSection("WithOrigins").Value.Split(","));
+                };
+
+                configure.EndpointRouteConfigure = endpoint => {
+                    endpoint.MapControllers();
+                };
+
+                configure.SwaggerUiName = "AspireAdmin.Host";
+            });
 
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseAuthorization();
         }
     }

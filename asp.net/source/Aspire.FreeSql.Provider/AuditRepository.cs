@@ -6,8 +6,6 @@ using Aspire.Dto;
 
 using FreeSql;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Aspire.FreeSql.Provider
 {
     public class AuditRepository<TAuditEntity> : AuditRepository<TAuditEntity, Guid>
@@ -23,14 +21,12 @@ namespace Aspire.FreeSql.Provider
     {
         private readonly IFreeSql _freeSql;
         private readonly ICurrentLoginUser _currentLoginUser;
-        private readonly IServiceProvider _serviceProvider;
 
 
         public AuditRepository(IFreeSql freeSql, ICurrentLoginUser currentLoginUser) : base(currentLoginUser)
         {
             _freeSql = freeSql;
             _currentLoginUser = currentLoginUser;
-            _serviceProvider = FreeSqlStartup.ServiceProvider;
         }
 
         public async override Task<TAuditEntity> InsertThenEntityAsync(TAuditEntity entity)
