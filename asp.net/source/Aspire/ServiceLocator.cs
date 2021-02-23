@@ -6,27 +6,54 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Aspire
 {
+    /// <summary>
+    /// di 服务提供 代理
+    /// </summary>
     public interface IServiceProviderProxy
     {
+        /// <summary>
+        /// 获取服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         T GetService<T>();
+        /// <summary>
+        /// 获取服务
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         IEnumerable<T> GetServices<T>();
+        /// <summary>
+        /// 获取服务
+        /// </summary>
+        /// <returns></returns>
         object GetService(Type type);
+        /// <summary>
+        /// 获取服务
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<object> GetServices(Type type);
     }
 
+    /// <summary>
+    /// 服务定位
+    /// </summary>
     public static class ServiceLocator
     {
         private static IServiceProviderProxy _diProxy;
 
+        /// <summary>
+        /// di 服务提供 代理 实例
+        /// </summary>
         public static IServiceProviderProxy ServiceProvider => _diProxy ?? throw new Exception("请先调用Initialize初始化服务");
 
-        public static void Initialize(IServiceProviderProxy proxy)
+        static internal void Initialize(IServiceProviderProxy proxy)
         {
             _diProxy = proxy;
         }
     }
 
-    public class HttpContextServiceProviderProxy : IServiceProviderProxy
+    internal class HttpContextServiceProviderProxy : IServiceProviderProxy
     {
         private readonly IHttpContextAccessor _contextAccessor;
 

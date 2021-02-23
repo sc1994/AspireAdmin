@@ -1,6 +1,9 @@
 using System;
 using System.Reflection;
 
+using Aspire.AutoMapper.Provider;
+using Aspire.FreeSql.Provider;
+
 using FreeSql;
 
 using Microsoft.AspNetCore.Builder;
@@ -45,9 +48,11 @@ namespace AspireAdmin.Host
                     var xmlPath = applicationAssembly.Location.TrimEnd('d', 'l') + "xml";
                     setup.IncludeXmlComments(xmlPath);
                 };
-            });
 
-            services.AddFreeSql(_configuration.GetConnectionString("DbMain"), DataType.Sqlite);
+                options.MapperOptionsSetup = new AutoMapperOptionsSetup(applicationAssembly);
+
+                options.AuditRepositoryOptionsSetup = new FreeSqlAuditRepositoryOptionsSetup(_configuration.GetConnectionString("DbMain"), DataType.Sqlite);
+            });
         }
 
         public void Configure(

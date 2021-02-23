@@ -59,6 +59,16 @@ namespace Microsoft.Extensions.DependencyInjection
                 x.DocInclusionPredicate((docName, description) => true);
             });
 
+            // mapper
+            if (setupOptions.MapperOptionsSetup == null)
+                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.MapperOptionsSetup));
+            setupOptions.MapperOptionsSetup.AddAspireMapper(services);
+
+            // audit repository
+            if (setupOptions.AuditRepositoryOptionsSetup == null)
+                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.AuditRepositoryOptionsSetup));
+            setupOptions.AuditRepositoryOptionsSetup.AddAuditRepository(services);
+
             return services;
         }
     }

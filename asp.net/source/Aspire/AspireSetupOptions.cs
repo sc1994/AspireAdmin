@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
+using Aspire.Mapper;
+
 using Microsoft.AspNetCore.Mvc;
 
 using Panda.DynamicWebApi;
@@ -32,5 +34,20 @@ namespace Aspire
         /// </summary>
         [NotNull]
         public Action<SwaggerGenOptions> SwaggerGenOptionsSetup { get; set; }
+
+        /// <summary>
+        /// Mapper 启动项
+        /// <para>比如 new AutoMapperOptionsSetup()</para>
+        /// </summary>
+        [NotNull]
+        public IAspireMapperOptionsSetup MapperOptionsSetup { get; set; }
+
+
+        /// <summary>
+        /// 审计仓储 启动项
+        /// <para>比如 new FreeSqlAuditRepositoryOptionsSetup()</para>
+        /// </summary>
+        [NotNull]
+        public IAuditRepositoryOptionsSetup AuditRepositoryOptionsSetup { get; set; }
     }
 }

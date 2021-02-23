@@ -207,6 +207,18 @@
             swagger 启动选项
             </summary>
         </member>
+        <member name="P:Aspire.AspireSetupOptions.MapperOptionsSetup">
+            <summary>
+            Mapper 启动项
+            <para>比如 new AutoMapperOptionsSetup()</para>
+            </summary>
+        </member>
+        <member name="P:Aspire.AspireSetupOptions.AuditRepositoryOptionsSetup">
+            <summary>
+            审计仓储 启动项
+            <para>比如 new FreeSqlAuditRepositoryOptionsSetup()</para>
+            </summary>
+        </member>
         <member name="P:Aspire.IAuditEntity`1.CreatedAt">
             <summary>
             创建时间
@@ -493,6 +505,81 @@
         <member name="P:Aspire.ICurrentLoginUser.UserName">
             <summary>
             用户名
+            </summary>
+        </member>
+        <member name="T:Aspire.Mapper.IAspireMapper">
+            <summary>
+            Mapper
+            </summary>
+        </member>
+        <member name="M:Aspire.Mapper.IAspireMapper.MapTo``1(System.Object)">
+            <summary>
+            映射到
+            </summary>
+            <typeparam name="TTarget">目标对象</typeparam>
+            <param name="source">源</param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.Mapper.IAspireMapper.MapTo``2(``0)">
+            <summary>
+            映射到
+            </summary>
+            <typeparam name="TSource">源对象</typeparam>
+            <typeparam name="TTarget">目标对象</typeparam>
+            <param name="source">源</param>
+            <returns></returns>
+        </member>
+        <member name="T:Aspire.Mapper.IAspireMapperOptionsSetup">
+            <summary>
+            Aspire Mapper 启动
+            </summary>
+        </member>
+        <member name="M:Aspire.Mapper.IAspireMapperOptionsSetup.AddAspireMapper(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            添加 Aspire Mapper
+            <para>必须声明如何实现IAspireMapperStartup</para>
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="T:Aspire.IServiceProviderProxy">
+            <summary>
+            di 服务提供 代理
+            </summary>
+        </member>
+        <member name="M:Aspire.IServiceProviderProxy.GetService``1">
+            <summary>
+            获取服务
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.IServiceProviderProxy.GetServices``1">
+            <summary>
+            获取服务
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.IServiceProviderProxy.GetService(System.Type)">
+            <summary>
+            获取服务
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.IServiceProviderProxy.GetServices(System.Type)">
+            <summary>
+            获取服务
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Aspire.ServiceLocator">
+            <summary>
+            服务定位
+            </summary>
+        </member>
+        <member name="P:Aspire.ServiceLocator.ServiceProvider">
+            <summary>
+            di 服务提供 代理 实例
             </summary>
         </member>
         <member name="T:Aspire.StringUtility">
