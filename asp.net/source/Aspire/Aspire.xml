@@ -4,6 +4,11 @@
         <name>Aspire</name>
     </assembly>
     <members>
+        <member name="T:Aspire.AppService">
+            <summary>
+            应用程序 服务
+            </summary>
+        </member>
         <member name="T:Aspire.CrudAppService`1">
             <summary>
             CRUD 服务
@@ -123,6 +128,17 @@
             <param name="dto"></param>
             <returns></returns>
         </member>
+        <member name="T:Aspire.Dto.IDto`1">
+            <summary>
+            数据传输对象
+            </summary>
+            <typeparam name="TPrimaryKey"></typeparam>
+        </member>
+        <member name="P:Aspire.Dto.IDto`1.Id">
+            <summary>
+            主键
+            </summary>
+        </member>
         <member name="T:Aspire.Dto.PagedResultDto`1">
             <summary>
             分页后结果
@@ -159,6 +175,16 @@
         <member name="P:Aspire.Dto.PageInputDto.PageSize">
             <summary>
             页 大小
+            </summary>
+        </member>
+        <member name="T:Aspire.AppServices.User.Login.LoginAppService">
+            <summary>
+            登录
+            </summary>
+        </member>
+        <member name="T:Aspire.AppServices.User.UserInfo.UserInfoAppService">
+            <summary>
+            用户信息
             </summary>
         </member>
         <member name="T:Aspire.AspireConfigure">
@@ -218,6 +244,22 @@
             审计仓储 启动项
             <para>比如 new FreeSqlAuditRepositoryOptionsSetup()</para>
             </summary>
+        </member>
+        <member name="T:Aspire.IAuditEntity">
+            <summary>
+            审计实体
+            </summary>
+        </member>
+        <member name="M:Aspire.IAuditEntity.InitId">
+            <summary>
+            初始化GUID
+            </summary>
+        </member>
+        <member name="T:Aspire.IAuditEntity`1">
+            <summary>
+            审计实体
+            </summary>
+            <typeparam name="TPrimaryKey"></typeparam>
         </member>
         <member name="P:Aspire.IAuditEntity`1.CreatedAt">
             <summary>
@@ -404,6 +446,17 @@
             <param name="dto"></param>
             <returns>数据库内容</returns>
         </member>
+        <member name="T:Aspire.IAuditRepositoryOptionsSetup">
+            <summary>
+            审计仓储启动选项
+            </summary>
+        </member>
+        <member name="M:Aspire.IAuditRepositoryOptionsSetup.AddAuditRepository(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            添加审计仓储
+            </summary>
+            <param name="services"></param>
+        </member>
         <member name="T:Aspire.RealizeAuditRepository`1">
             <summary>
             审计仓储 实现 部分自举 方法 默认GUID主键
@@ -491,6 +544,31 @@
             设置 更新的审计实体 
             </summary>
             <param name="entity"></param>
+        </member>
+        <member name="T:Aspire.Core.UserInfos.IUserInfo">
+            <summary>
+            用户信息
+            </summary>
+        </member>
+        <member name="T:Aspire.Core.UserInfos.UserInfoManage">
+            <summary>
+            用户信息管理
+            </summary>
+        </member>
+        <member name="T:Aspire.GlobalExceptionFilter">
+            <summary>
+            全局异常过滤器
+            </summary>
+        </member>
+        <member name="T:Aspire.RequestFilterAttribute">
+            <summary>
+            请求过滤器
+            </summary>
+        </member>
+        <member name="T:Aspire.ResponseFilterAttribute">
+            <summary>
+            响应过滤器
+            </summary>
         </member>
         <member name="T:Aspire.ICurrentLoginUser">
             <summary>
@@ -581,6 +659,70 @@
             <summary>
             di 服务提供 代理 实例
             </summary>
+        </member>
+        <member name="T:Aspire.GuidUtility">
+            <summary>
+            GUID 工具
+            </summary>
+        </member>
+        <member name="M:Aspire.GuidUtility.NewOrderlyGuid">
+            <summary>
+            创建新的有序GUID
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Aspire.LinqUtility">
+            <summary>
+            Linq 工具
+            </summary>
+        </member>
+        <member name="M:Aspire.LinqUtility.ForEach``1(``0[],System.Action{``0})">
+            <summary>
+            迭代 Array 
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="array"></param>
+            <param name="action"></param>
+        </member>
+        <member name="M:Aspire.LinqUtility.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            迭代 IEnumerable 
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="array"></param>
+            <param name="action"></param>
+        </member>
+        <member name="M:Aspire.LinqUtility.FirstOrDefaultAsync``1(System.Threading.Tasks.Task{``0[]})">
+            <summary>
+            第一个或者默认
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sourceAsync"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.LinqUtility.FirstOrDefaultAsync``1(System.Threading.Tasks.Task{System.Collections.Generic.List{``0}})">
+            <summary>
+            第一个或者默认
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sourceAsync"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.LinqUtility.ToArrayAsync``1(System.Threading.Tasks.Task{System.Collections.Generic.List{``0}})">
+            <summary>
+            To Array
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sourceAsync"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Aspire.LinqUtility.Join(System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            Join 
+            </summary>
+            <param name="source"></param>
+            <param name="separator"></param>
+            <returns></returns>
         </member>
         <member name="T:Aspire.StringUtility">
             <summary>

@@ -1,6 +1,11 @@
-namespace Aspire.Filters
+using Microsoft.AspNetCore.Mvc.Filters;
+
+namespace Aspire
 {
-    internal class RequestFilterAttribute
+    /// <summary>
+    /// 请求过滤器
+    /// </summary>
+    public class RequestFilterAttribute : ActionFilterAttribute
     {
     }
 }

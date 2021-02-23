@@ -4,12 +4,22 @@ using Aspire.Dto;
 
 namespace Aspire
 {
+    /// <summary>
+    /// 审计实体
+    /// </summary>
     public interface IAuditEntity : IAuditEntity<Guid>
     {
+        /// <summary>
+        /// 初始化GUID
+        /// </summary>
         void InitId();
     }
 
-    public interface IAuditEntity<TPrimaryKey> : IEntityDto<TPrimaryKey>
+    /// <summary>
+    /// 审计实体
+    /// </summary>
+    /// <typeparam name="TPrimaryKey"></typeparam>
+    public interface IAuditEntity<TPrimaryKey> : IDto<TPrimaryKey>
     {
         /// <summary>
         /// 创建时间

@@ -2,6 +2,7 @@ using System;
 using System.Data;
 
 using Aspire;
+using Aspire.Core.UserInfos;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,6 +69,9 @@ namespace Microsoft.Extensions.DependencyInjection
             if (setupOptions.AuditRepositoryOptionsSetup == null)
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.AuditRepositoryOptionsSetup));
             setupOptions.AuditRepositoryOptionsSetup.AddAuditRepository(services);
+
+            // user login info 
+            services.AddScoped<ICurrentLoginUser>(x => new TestUser());
 
             return services;
         }

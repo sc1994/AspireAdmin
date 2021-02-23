@@ -1,6 +1,9 @@
-namespace Aspire.Filters
+namespace Aspire
 {
-    internal class GlobalExceptionFilter
+    /// <summary>
+    /// 全局异常过滤器
+    /// </summary>
+    public class GlobalExceptionFilter
     {
     }
 }

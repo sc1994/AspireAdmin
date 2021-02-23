@@ -80,7 +80,7 @@ namespace Aspire
         TDto>
         where TAuditEntity : IAuditEntity<TPrimaryKey>
         where TPageInputDto : PageInputDto
-        where TDto : IEntityDto<TPrimaryKey>
+        where TDto : IDto<TPrimaryKey>
     {
 
     }
@@ -107,7 +107,7 @@ namespace Aspire
         TCreateOrUpdateDto>
         where TAuditEntity : IAuditEntity<TPrimaryKey>
         where TPageInputDto : PageInputDto
-        where TCreateOrUpdateDto : IEntityDto<TPrimaryKey>
+        where TCreateOrUpdateDto : IDto<TPrimaryKey>
     {
 
     }
@@ -131,7 +131,7 @@ namespace Aspire
         TUpdateDto> : IDynamicWebApi
         where TAuditEntity : IAuditEntity<TPrimaryKey>
         where TPageInputDto : PageInputDto
-        where TUpdateDto : IEntityDto<TPrimaryKey>
+        where TUpdateDto : IDto<TPrimaryKey>
     {
         private readonly IAuditRepository<TAuditEntity, TPrimaryKey> _repository;
         private readonly IAspireMapper _mapper;
