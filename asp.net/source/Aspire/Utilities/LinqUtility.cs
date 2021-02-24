@@ -39,11 +39,12 @@ namespace Aspire
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sourceAsync"></param>
+        /// <param name="predicate"></param>
         /// <returns></returns>
-        public static async Task<T> FirstOrDefaultAsync<T>(this Task<T[]> sourceAsync)
+        public static async Task<T> FirstOrDefaultAsync<T>(this Task<T[]> sourceAsync, Func<T, bool> predicate = null)
         {
             var source = await sourceAsync;
-            return source.FirstOrDefault();
+            return source.FirstOrDefault(predicate ?? (x => true));
         }
 
         /// <summary>
@@ -51,11 +52,12 @@ namespace Aspire
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sourceAsync"></param>
+        /// <param name="predicate"></param>
         /// <returns></returns>
-        public static async Task<T> FirstOrDefaultAsync<T>(this Task<List<T>> sourceAsync)
+        public static async Task<T> FirstOrDefaultAsync<T>(this Task<List<T>> sourceAsync, Func<T, bool> predicate = null)
         {
             var source = await sourceAsync;
-            return source.FirstOrDefault();
+            return source.FirstOrDefault(predicate ?? (x => true));
         }
 
         /// <summary>
