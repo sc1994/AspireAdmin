@@ -114,17 +114,17 @@ namespace Aspire
         protected virtual void SetCreatedEntity(ref TAuditEntity entity)
         {
             entity.CreatedAt = DateTime.Now;
-            entity.CreatedUser = _currentUser.UserName;
-            entity.CreatedUserId = _currentUser.UserId;
+            entity.CreatedUserName = _currentUser.Name;
+            entity.CreatedUserAccount = _currentUser.Account;
 
             entity.Deleted = false;
             entity.DeletedAt = SqlDateTime.MaxValue.Value;
-            entity.DeletedUser = string.Empty;
-            entity.DeletedUserId = string.Empty;
+            entity.DeletedUserName = string.Empty;
+            entity.DeletedUserAccount = string.Empty;
 
             entity.UpdatedAt = SqlDateTime.MaxValue.Value;
-            entity.UpdatedUser = string.Empty;
-            entity.UpdatedUserId = string.Empty;
+            entity.UpdatedUserName = string.Empty;
+            entity.UpdatedUserAccount = string.Empty;
         }
 
         /// <summary>
@@ -134,8 +134,8 @@ namespace Aspire
         protected virtual void SetUpdatedEntity(ref TAuditEntity entity)
         {
             entity.UpdatedAt = DateTime.Now;
-            entity.UpdatedUser = _currentUser.UserName;
-            entity.UpdatedUserId = _currentUser.UserId;
+            entity.UpdatedUserName = _currentUser.Name;
+            entity.UpdatedUserAccount = _currentUser.Account;
         }
     }
 }

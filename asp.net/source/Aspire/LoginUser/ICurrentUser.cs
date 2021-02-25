@@ -8,10 +8,10 @@ namespace Aspire
         /// <summary>
         /// 用户Id
         /// </summary>
-        string UserId { get; set; }
+        string Account { get; set; }
 
         /// <summary>
-        /// 用户名
+        /// 姓名
         /// </summary>
         string Name { get; set; }
     }

@@ -1,8 +1,11 @@
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 using Aspire.AutoMapper.Provider;
 using Aspire.FreeSql.Provider;
+
+using AspireAdmin.Core.Users;
 
 using FreeSql;
 
@@ -26,7 +29,7 @@ namespace AspireAdmin.Host
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAspire(options => {
+            services.AddAspire<User>(options => {
                 var applicationAssembly = Assembly.Load("AspireAdmin.Application");
 
                 options.NewtonsoftJsonOptionsSetup = setup => {
@@ -41,17 +44,26 @@ namespace AspireAdmin.Host
                 };
 
                 options.SwaggerGenOptionsSetup = setup => {
-                    setup.SwaggerDoc("AspireAdmin.Host v1", new OpenApiInfo {
+                    setup.SwaggerDoc("v1", new OpenApiInfo {
                         Title = "AspireAdmin.Host",
                         Version = "v1"
                     });
+
+                    var headerKey = _configuration.GetSection("Aspire").GetSection("Jwt").GetSection("HeaderKey").Value;
+                    setup.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+                        Description = $"set header: {headerKey}",
+                        Name = headerKey, // 自定义 header key
+                        In = ParameterLocation.Header,
+                        Type = SecuritySchemeType.ApiKey,
+                    });
+
                     var xmlPath = applicationAssembly.Location.TrimEnd('d', 'l') + "xml";
                     setup.IncludeXmlComments(xmlPath);
                 };
 
-                options.MapperOptionsSetup = new AutoMapperOptionsSetup(applicationAssembly);
+                options.MapperOptions = new AutoMapperOptionsSetup(applicationAssembly);
 
-                options.AuditRepositoryOptionsSetup = new FreeSqlAuditRepositoryOptionsSetup(_configuration.GetConnectionString("DbMain"), DataType.Sqlite);
+                options.AuditRepositoryOptions = new FreeSqlAuditRepositoryOptionsSetup(_configuration.GetConnectionString("DbMain"), DataType.Sqlite);
             });
         }
 
@@ -60,6 +72,10 @@ namespace AspireAdmin.Host
             IWebHostEnvironment env,
             IServiceProvider serviceProvider)
         {
+            if (env.IsDevelopment()) {
+                app.UseDeveloperExceptionPage();
+            }
+
             app.UseAspire(configure => {
                 configure.ServiceProvider = serviceProvider;
 
@@ -72,15 +88,16 @@ namespace AspireAdmin.Host
 
                 configure.EndpointRouteConfigure = endpoint => {
                     endpoint.MapControllers();
+
+                    endpoint.Map("/", async cxt => {
+                        await Task.Run(() => cxt.Response.Redirect("/swagger"));
+                    });
                 };
 
-                configure.SwaggerUiName = "AspireAdmin.Host";
+                configure.SwaggerUiName = "AspireAdmin.Host v1";
             });
 
-            if (env.IsDevelopment()) {
-                app.UseDeveloperExceptionPage();
-            }
-            app.UseAuthorization();
+
         }
     }
 }

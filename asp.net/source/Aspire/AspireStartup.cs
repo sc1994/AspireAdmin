@@ -2,11 +2,15 @@ using System;
 using System.Data;
 
 using Aspire;
+using Aspire.Core;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 using Panda.DynamicWebApi;
 
@@ -25,14 +29,30 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="setupAction">选项</param>
         /// <exception cref="ArgumentNullException">请注意 [NotNull] 标识</exception>
         /// <returns></returns>
-        public static IServiceCollection AddAspire(
+        public static IServiceCollection AddAspire<TUserEntity>(
             this IServiceCollection services,
             Action<AspireSetupOptions> setupAction)
+            where TUserEntity : IUserEntity, new()
+        {
+            return AddAspire<TUserEntity, Guid>(services, setupAction);
+        }
+
+        /// <summary>
+        /// 添加 aspire
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="setupAction">选项</param>
+        /// <exception cref="ArgumentNullException">请注意 [NotNull] 标识</exception>
+        /// <returns></returns>
+        public static IServiceCollection AddAspire<TUserEntity, TPrimaryKey>(
+            this IServiceCollection services,
+            Action<AspireSetupOptions> setupAction)
+            where TUserEntity : IUserEntity<TPrimaryKey>, new()
         {
             var setupOptions = new AspireSetupOptions();
             setupAction(setupOptions);
 
-            // di服务代理 旨在 以一个静态类获取 di中内容
+            // di服务代理 旨在以一个静态类获取 di中内容
             services
                 .AddHttpContextAccessor()
                 .AddSingleton<IServiceProviderProxy, HttpContextServiceProviderProxy>();
@@ -62,26 +82,46 @@ namespace Microsoft.Extensions.DependencyInjection
             });
 
             // mapper
-            if (setupOptions.MapperOptionsSetup == null)
-                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.MapperOptionsSetup));
-            setupOptions.MapperOptionsSetup.AddAspireMapper(services);
+            if (setupOptions.MapperOptions == null)
+                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.MapperOptions));
+            setupOptions.MapperOptions.AddAspireMapper(services);
 
             // audit repository
-            if (setupOptions.AuditRepositoryOptionsSetup == null)
-                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.AuditRepositoryOptionsSetup));
-            setupOptions.AuditRepositoryOptionsSetup.AddAuditRepository(services);
+            if (setupOptions.AuditRepositoryOptions == null)
+                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.AuditRepositoryOptions));
+            setupOptions.AuditRepositoryOptions.AddAuditRepository(services);
 
             // aspire configure options
-            services.AddScoped(serviceProvider => serviceProvider
-                .GetService<IConfiguration>()
-                .GetValue<AspireConfigureOptions>("Aspire"));
-
-            // user login info 
-            if (setupOptions.CurrentUserOptionsSetup == null)
-                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.CurrentUserOptionsSetup));
-            services.AddScoped<ICurrentUser>(x => {
-                // TODO JWT
+            services.AddScoped(serviceProvider => {
+                var aspireConfigureOptions = new AspireConfigureOptions();
+                serviceProvider
+                     .GetService<IConfiguration>()
+                     .GetSection("Aspire")
+                     .Bind(aspireConfigureOptions);
+                return aspireConfigureOptions;
             });
+
+            // current user 
+            services.AddScoped(x => {
+                var httpContext = x.GetService<IHttpContextAccessor>().HttpContext;
+                var configureOptions = x.GetService<AspireConfigureOptions>();
+                if (httpContext != null && httpContext.Request.Headers.TryGetValue(configureOptions.Jwt.HeaderKey, out var token)) {
+                    return new JwtManage(x.GetService<AspireConfigureOptions>().Jwt)
+                        .DeconstructionJwtToken<TUserEntity, TPrimaryKey>(token.ToString());
+                }
+
+                return new TUserEntity {
+                    Account = "undefined",
+                    Name = "undefined"
+                };
+            });
+
+            services.AddAuthentication(options => {
+                options.AddScheme("", x => {
+                    
+                });
+            });
+            JwtBearerDefaults
 
             return services;
         }
@@ -129,10 +169,16 @@ namespace Microsoft.AspNetCore.Builder
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", configure.SwaggerUiName));
             }
 
+            // 启用跨域
+            app.UseCors(configure.CorsPolicyBuilderConfigure);
+
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(configure.EndpointRouteConfigure);
 
-            app.UseCors(configure.CorsPolicyBuilderConfigure);
 
             return app;
         }

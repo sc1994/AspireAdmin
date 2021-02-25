@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+
 using FreeSql;
 
 namespace Aspire.FreeSql.Provider
@@ -43,8 +44,8 @@ namespace Aspire.FreeSql.Provider
             return await _freeSql.Update<TAuditEntity>()
                 .Where(filter)
                 .Set(x => x.DeletedAt, DateTime.Now)
-                .Set(x => x.DeletedUser, _currentUser.UserName)
-                .Set(x => x.DeletedUserId, _currentUser.UserId)
+                .Set(x => x.DeletedUserName, _currentUser.Name)
+                .Set(x => x.DeletedUserAccount, _currentUser.Account)
                 .Set(x => x.Deleted, true)
                 .ExecuteAffrowsAsync();
         }

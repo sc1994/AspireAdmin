@@ -11,6 +11,6 @@ namespace Aspire
         /// 添加审计仓储
         /// </summary>
         /// <param name="services"></param>
-         void AddAuditRepository(IServiceCollection services);
+        void AddAuditRepository(IServiceCollection services);
     }
 }

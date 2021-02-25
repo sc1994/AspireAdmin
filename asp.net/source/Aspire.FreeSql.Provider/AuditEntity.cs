@@ -27,19 +27,19 @@ namespace Aspire.FreeSql.Provider
         public virtual DateTime CreatedAt { get; set; }
         /// <inheritdoc />
         [Column(StringLength = 50, IsNullable = false, CanUpdate = false)]
-        public virtual string CreatedUser { get; set; }
+        public virtual string CreatedUserName { get; set; }
         /// <inheritdoc />
         [Column(IsNullable = false, CanUpdate = false)]
-        public virtual string CreatedUserId { get; set; }
+        public virtual string CreatedUserAccount { get; set; }
         /// <inheritdoc />
         [Column(IsNullable = false)]
         public virtual DateTime UpdatedAt { get; set; }
         /// <inheritdoc />
         [Column(StringLength = 50, IsNullable = false)]
-        public virtual string UpdatedUser { get; set; }
+        public virtual string UpdatedUserName { get; set; }
         /// <inheritdoc />
         [Column(IsNullable = false)]
-        public virtual string UpdatedUserId { get; set; }
+        public virtual string UpdatedUserAccount { get; set; }
         /// <inheritdoc />
         [Column(IsNullable = false)]
         public virtual bool Deleted { get; set; }
@@ -48,9 +48,9 @@ namespace Aspire.FreeSql.Provider
         public virtual DateTime DeletedAt { get; set; }
         /// <inheritdoc />
         [Column(StringLength = 50, IsNullable = false)]
-        public virtual string DeletedUser { get; set; }
+        public virtual string DeletedUserName { get; set; }
         /// <inheritdoc />
         [Column(IsNullable = false)]
-        public virtual string DeletedUserId { get; set; }
+        public virtual string DeletedUserAccount { get; set; }
     }
 }

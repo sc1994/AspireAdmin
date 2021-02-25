@@ -8,7 +8,7 @@ namespace Aspire.AppServices.Authenticate
         /// <summary>
         /// 用户 身份唯一标识
         /// </summary>
-        public string UserId { get; set; }
+        public string Account { get; set; }
 
         /// <summary>
         /// 密码

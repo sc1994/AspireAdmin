@@ -27,12 +27,12 @@ namespace Aspire
         /// <summary>
         /// 创建人
         /// </summary>
-        string CreatedUser { get; set; }
+        string CreatedUserName { get; set; }
 
         /// <summary>
         /// 创建人id
         /// </summary>
-        string CreatedUserId { get; set; }
+        string CreatedUserAccount { get; set; }
 
         /// <summary>
         /// 更新时间
@@ -42,12 +42,12 @@ namespace Aspire
         /// <summary>
         /// 更新人
         /// </summary>
-        string UpdatedUser { get; set; }
+        string UpdatedUserName { get; set; }
 
         /// <summary>
         /// 更新人id
         /// </summary>
-        string UpdatedUserId { get; set; }
+        string UpdatedUserAccount { get; set; }
 
         /// <summary>
         /// 是否删除
@@ -63,11 +63,11 @@ namespace Aspire
         /// <summary>
         /// 删除人
         /// </summary>
-        string DeletedUser { get; set; }
+        string DeletedUserName { get; set; }
 
         /// <summary>
         /// 删除人id
         /// </summary>
-        string DeletedUserId { get; set; }
+        string DeletedUserAccount { get; set; }
     }
 }

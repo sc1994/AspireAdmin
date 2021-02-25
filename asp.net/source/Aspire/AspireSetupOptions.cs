@@ -36,24 +36,18 @@ namespace Aspire
         public Action<SwaggerGenOptions> SwaggerGenOptionsSetup { get; set; }
 
         /// <summary>
-        /// Mapper 启动项
+        /// Mapper 设置项
         /// <para>比如 new AutoMapperOptionsSetup()</para>
         /// </summary>
         [NotNull]
-        public IAspireMapperOptionsSetup MapperOptionsSetup { get; set; }
+        public IAspireMapperOptionsSetup MapperOptions { get; set; }
 
 
         /// <summary>
-        /// 审计仓储 启动项
+        /// 审计仓储 设置项
         /// <para>比如 new FreeSqlAuditRepositoryOptionsSetup()</para>
         /// </summary>
         [NotNull]
-        public IAuditRepositoryOptionsSetup AuditRepositoryOptionsSetup { get; set; }
-
-        /// <summary>
-        /// 当前登录用户 启动项目
-        /// </summary>
-        [NotNull]
-        public Action<string, string> CurrentUserOptionsSetup { get; set; }
+        public IAuditRepositoryOptionsSetup AuditRepositoryOptions { get; set; }
     }
 }

@@ -6,14 +6,35 @@ namespace Aspire
     public class AspireConfigureOptions
     {
         /// <summary>
-        /// JWT Secret
+        /// JWT 
         /// </summary>
-        public string JwtSecret { get; set; }
+        public JwtOptions Jwt { get; set; }
 
         /// <summary>
         /// 管理员
         /// </summary>
         public AdministratorOptions Administrator { get; set; }
+    }
+
+    /// <summary>
+    /// Jwt 配置项
+    /// </summary>
+    public class JwtOptions
+    {
+        /// <summary>
+        /// JWT Secret
+        /// </summary>
+        public string Secret { get; set; }
+
+        /// <summary>
+        /// 到期秒
+        /// </summary>
+        public int ExpireSeconds { get; set; }
+
+        /// <summary>
+        /// Header Key
+        /// </summary>
+        public string HeaderKey { get; set; }
     }
 
     /// <summary>
@@ -29,7 +50,7 @@ namespace Aspire
         /// <summary>
         /// 用户名
         /// </summary>
-        public string UserId { get; set; }
+        public string Account { get; set; }
 
         /// <summary>
         /// 密码

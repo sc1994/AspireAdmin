@@ -1,16 +1,20 @@
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 using Aspire.Core;
-
-using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace Aspire.AppServices.Authenticate
 {
+    /// <summary>
+    /// 鉴权
+    /// </summary>
+    public abstract class AuthenticateAppService<TUserEntity> : AuthenticateAppService<TUserEntity, Guid>
+        where TUserEntity : IUserEntity, new()
+    {
+
+    }
+
     /// <summary>
     /// 鉴权
     /// </summary>
@@ -32,15 +36,15 @@ namespace Aspire.AppServices.Authenticate
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         public async Task<string> LoginAsync(LoginInputDto input)
         {
             TUserEntity user;
 
             if (input.Password == _aspireConfigureOptions.Administrator.Password
-                && input.UserId == _aspireConfigureOptions.Administrator.UserId) {
+                && input.Account == _aspireConfigureOptions.Administrator.Account) {
                 user = new TUserEntity {
-                    Id = (TPrimaryKey)Convert.ChangeType(_aspireConfigureOptions.Administrator.PrimaryKey, typeof(TPrimaryKey)),
-                    UserId = _aspireConfigureOptions.Administrator.UserId,
+                    Account = _aspireConfigureOptions.Administrator.Account,
                     Name = _aspireConfigureOptions.Administrator.Name
                 };
             }
@@ -49,42 +53,17 @@ namespace Aspire.AppServices.Authenticate
             }
 
             if (user is not null) {
-                return GenerateJwtToken(user);
+                return new JwtManage(_aspireConfigureOptions.Jwt).GenerateJwtToken(user);
             }
 
             throw new Exception("登录失败");
-        }
-
-        private async Task<TUserEntity> GetUserByIdAndPwdAsync(LoginInputDto input)
-        {
-            return await ServiceLocator.ServiceProvider.GetService<IAuditRepository<TUserEntity, TPrimaryKey>>()
-                 .GetBatchAsync(x => x.UserId == input.UserId && x.Password == input.Password)
-                 .FirstOrDefaultAsync();
-        }
-
-        private string GenerateJwtToken(ICurrentUser user)
-        {
-            // generate token that is valid for 7 days
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_aspireConfigureOptions.JwtSecret);
-            var tokenDescriptor = new SecurityTokenDescriptor {
-                Subject = new ClaimsIdentity(new[] {
-                new Claim("userId", user.UserId),
-                new Claim("username", user.Name)
-            }),
-                Expires = DateTime.Now.AddDays(7),
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
         }
 
         /// <summary>
         /// 获取当前用户
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         public CurrentUserDto GetCurrentUser()
         {
             throw new NotImplementedException();
@@ -97,6 +76,13 @@ namespace Aspire.AppServices.Authenticate
         public string Logout()
         {
             throw new NotImplementedException();
+        }
+
+        private async static Task<TUserEntity> GetUserByIdAndPwdAsync(LoginInputDto input)
+        {
+            return await ServiceLocator.ServiceProvider.GetService<IAuditRepository<TUserEntity, TPrimaryKey>>()
+                .GetBatchAsync(x => x.Account == input.Account && x.Password == input.Password)
+                .FirstOrDefaultAsync();
         }
     }
 }
