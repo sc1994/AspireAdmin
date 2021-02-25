@@ -3,7 +3,7 @@ namespace Aspire
     /// <summary>
     /// 当前登入用户
     /// </summary>
-    public interface ICurrentLoginUser
+    public interface ICurrentUser
     {
         /// <summary>
         /// 用户Id
@@ -13,6 +13,6 @@ namespace Aspire
         /// <summary>
         /// 用户名
         /// </summary>
-        string UserName { get; set; }
+        string Name { get; set; }
     }
 }

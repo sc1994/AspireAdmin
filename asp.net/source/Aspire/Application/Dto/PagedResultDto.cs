@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Aspire.Dto
+namespace Aspire
 {
     /// <summary>
     /// 分页后结果

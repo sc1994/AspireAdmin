@@ -2,9 +2,9 @@ using System;
 using System.Data;
 
 using Aspire;
-using Aspire.Core.UserInfos;
 
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -45,16 +45,17 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             // 引入 Panda.DynamicWebApi 自定义配置
+            if (setupOptions.DynamicWebApiOptionsSetup == null)
+                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.DynamicWebApiOptionsSetup));
             services.AddDynamicWebApi(optionsAction => {
-                if (setupOptions.DynamicWebApiOptionsSetup == null)
-                    throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.DynamicWebApiOptionsSetup));
                 setupOptions.DynamicWebApiOptionsSetup(optionsAction);
             });
 
             // swagger 
+            if (setupOptions.SwaggerGenOptionsSetup == null)
+                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.SwaggerGenOptionsSetup));
             services.AddSwaggerGen(x => {
-                if (setupOptions.SwaggerGenOptionsSetup == null)
-                    throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.SwaggerGenOptionsSetup));
+                setupOptions.SwaggerGenOptionsSetup(x);
 
                 // 一定要返回true！这是 Panda.DynamicWebApi 的限制
                 x.DocInclusionPredicate((docName, description) => true);
@@ -70,8 +71,17 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.AuditRepositoryOptionsSetup));
             setupOptions.AuditRepositoryOptionsSetup.AddAuditRepository(services);
 
+            // aspire configure options
+            services.AddScoped(serviceProvider => serviceProvider
+                .GetService<IConfiguration>()
+                .GetValue<AspireConfigureOptions>("Aspire"));
+
             // user login info 
-            services.AddScoped<ICurrentLoginUser>(x => new TestUser());
+            if (setupOptions.CurrentUserOptionsSetup == null)
+                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.CurrentUserOptionsSetup));
+            services.AddScoped<ICurrentUser>(x => {
+                // TODO JWT
+            });
 
             return services;
         }
@@ -96,18 +106,18 @@ namespace Microsoft.AspNetCore.Builder
         /// <returns></returns>
         public static IApplicationBuilder UseAspire(
             this IApplicationBuilder app,
-            Action<AspireConfigure> actionConfigure)
+            Action<AspireUseConfigure> actionConfigure)
         {
-            var configure = new AspireConfigure();
+            var configure = new AspireUseConfigure();
             actionConfigure(configure);
             if (configure.ServiceProvider == null)
-                throw new NoNullAllowedException(nameof(AspireConfigure) + "." + nameof(AspireConfigure.ServiceProvider));
+                throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.ServiceProvider));
             if (configure.CorsPolicyBuilderConfigure == null)
-                throw new NoNullAllowedException(nameof(AspireConfigure) + "." + nameof(AspireConfigure.CorsPolicyBuilderConfigure));
+                throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.CorsPolicyBuilderConfigure));
             if (configure.EndpointRouteConfigure == null)
-                throw new NoNullAllowedException(nameof(AspireConfigure) + "." + nameof(AspireConfigure.EndpointRouteConfigure));
+                throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.EndpointRouteConfigure));
             if (configure.SwaggerUiName.IsNullOrWhiteSpace())
-                throw new NoNullAllowedException(nameof(AspireConfigure) + "." + nameof(AspireConfigure.SwaggerUiName));
+                throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.SwaggerUiName));
 
             // 初始化 di服务代理 到 静态服务定位类中
             ServiceLocator.Initialize(configure.ServiceProvider.GetService<IServiceProviderProxy>());

@@ -4,7 +4,7 @@ using AutoMapper;
 
 namespace Aspire.AutoMapper.Provider
 {
-    public class AspireMapper : IAspireMapper
+    internal class AspireMapper : IAspireMapper
     {
         private readonly IMapper _mapper;
 

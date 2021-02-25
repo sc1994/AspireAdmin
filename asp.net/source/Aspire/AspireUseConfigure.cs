@@ -9,7 +9,7 @@ namespace Aspire
     /// <summary>
     /// Aspire 配置项
     /// </summary>
-    public class AspireConfigure
+    public class AspireUseConfigure
     {
         /// <summary>
         /// 跨域政策配置

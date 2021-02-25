@@ -49,5 +49,11 @@ namespace Aspire
         /// </summary>
         [NotNull]
         public IAuditRepositoryOptionsSetup AuditRepositoryOptionsSetup { get; set; }
+
+        /// <summary>
+        /// 当前登录用户 启动项目
+        /// </summary>
+        [NotNull]
+        public Action<string, string> CurrentUserOptionsSetup { get; set; }
     }
 }

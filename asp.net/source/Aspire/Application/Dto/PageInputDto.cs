@@ -1,4 +1,4 @@
-namespace Aspire.Dto
+namespace Aspire
 {
     /// <summary>
     /// 页输入

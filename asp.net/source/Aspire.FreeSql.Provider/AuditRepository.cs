@@ -1,32 +1,29 @@
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-
-using Aspire.Dto;
-
 using FreeSql;
 
 namespace Aspire.FreeSql.Provider
 {
-    public class AuditRepository<TAuditEntity> : AuditRepository<TAuditEntity, Guid>
+    internal class AuditRepository<TAuditEntity> : AuditRepository<TAuditEntity, Guid>
         where TAuditEntity : AuditEntity
     {
-        public AuditRepository(IFreeSql freeSql, ICurrentLoginUser currentLoginUser) : base(freeSql, currentLoginUser)
+        public AuditRepository(IFreeSql freeSql, ICurrentUser currentUser) : base(freeSql, currentUser)
         {
         }
     }
 
-    public class AuditRepository<TAuditEntity, TPrimaryKey> : RealizeAuditRepository<TAuditEntity, TPrimaryKey>
+    internal class AuditRepository<TAuditEntity, TPrimaryKey> : RealizeAuditRepository<TAuditEntity, TPrimaryKey>
         where TAuditEntity : AuditEntity<TPrimaryKey>
     {
         private readonly IFreeSql _freeSql;
-        private readonly ICurrentLoginUser _currentLoginUser;
+        private readonly ICurrentUser _currentUser;
 
 
-        public AuditRepository(IFreeSql freeSql, ICurrentLoginUser currentLoginUser) : base(currentLoginUser)
+        public AuditRepository(IFreeSql freeSql, ICurrentUser currentUser) : base(currentUser)
         {
             _freeSql = freeSql;
-            _currentLoginUser = currentLoginUser;
+            _currentUser = currentUser;
         }
 
         public async override Task<TAuditEntity> InsertThenEntityAsync(TAuditEntity entity)
@@ -46,8 +43,8 @@ namespace Aspire.FreeSql.Provider
             return await _freeSql.Update<TAuditEntity>()
                 .Where(filter)
                 .Set(x => x.DeletedAt, DateTime.Now)
-                .Set(x => x.DeletedUser, _currentLoginUser.UserName)
-                .Set(x => x.DeletedUserId, _currentLoginUser.UserId)
+                .Set(x => x.DeletedUser, _currentUser.UserName)
+                .Set(x => x.DeletedUserId, _currentUser.UserId)
                 .Set(x => x.Deleted, true)
                 .ExecuteAffrowsAsync();
         }

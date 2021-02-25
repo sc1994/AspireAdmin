@@ -5,8 +5,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-using Aspire.Dto;
-
 namespace Aspire
 {
     /// <summary>
@@ -19,8 +17,8 @@ namespace Aspire
         /// <summary>
         /// 审计仓储
         /// </summary>
-        /// <param name="currentLoginUser">当前登录用户</param>
-        protected RealizeAuditRepository(ICurrentLoginUser currentLoginUser) : base(currentLoginUser)
+        /// <param name="currentUser">当前登录用户</param>
+        protected RealizeAuditRepository(ICurrentUser currentUser) : base(currentUser)
         {
         }
     }
@@ -33,15 +31,15 @@ namespace Aspire
     public abstract class RealizeAuditRepository<TAuditEntity, TPrimaryKey> : IAuditRepository<TAuditEntity, TPrimaryKey>
         where TAuditEntity : IAuditEntity<TPrimaryKey>
     {
-        private readonly ICurrentLoginUser _currentLoginUser;
+        private readonly ICurrentUser _currentUser;
 
         /// <summary>
         /// 审计仓储
         /// </summary>
-        /// <param name="currentLoginUser">当前登录用户</param>
-        protected RealizeAuditRepository(ICurrentLoginUser currentLoginUser)
+        /// <param name="currentUser">当前登录用户</param>
+        protected RealizeAuditRepository(ICurrentUser currentUser)
         {
-            _currentLoginUser = currentLoginUser;
+            _currentUser = currentUser;
         }
 
         /// <inheritdoc />
@@ -116,8 +114,8 @@ namespace Aspire
         protected virtual void SetCreatedEntity(ref TAuditEntity entity)
         {
             entity.CreatedAt = DateTime.Now;
-            entity.CreatedUser = _currentLoginUser.UserName;
-            entity.CreatedUserId = _currentLoginUser.UserId;
+            entity.CreatedUser = _currentUser.UserName;
+            entity.CreatedUserId = _currentUser.UserId;
 
             entity.Deleted = false;
             entity.DeletedAt = SqlDateTime.MaxValue.Value;
@@ -136,8 +134,8 @@ namespace Aspire
         protected virtual void SetUpdatedEntity(ref TAuditEntity entity)
         {
             entity.UpdatedAt = DateTime.Now;
-            entity.UpdatedUser = _currentLoginUser.UserName;
-            entity.UpdatedUserId = _currentLoginUser.UserId;
+            entity.UpdatedUser = _currentUser.UserName;
+            entity.UpdatedUserId = _currentUser.UserId;
         }
     }
 }

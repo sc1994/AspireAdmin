@@ -4,10 +4,6 @@
     <ProjectReference Include="..\AspireAdmin.Core\AspireAdmin.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UserInfo\Dto\" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>

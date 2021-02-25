@@ -350,3 +350,4 @@ MigrationBackup/
 .ionide/
 /asp.net/src/AspireAdmin.Application/AspireAdmin.Application.xml
 /asp.net/source/Aspire/Aspire.xml
+/asp.net/src/AspireAdmin.Host/App_Data/DbMain.db
