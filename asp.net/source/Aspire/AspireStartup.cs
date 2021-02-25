@@ -1,15 +1,20 @@
 using System;
 using System.Data;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 using Aspire;
 using Aspire.Core;
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 using Panda.DynamicWebApi;
@@ -117,13 +122,60 @@ namespace Microsoft.Extensions.DependencyInjection
             });
 
             services.AddAuthentication(options => {
-                options.AddScheme("", x => {
-                    
-                });
+                options.AddScheme<AuthenticationHandler>("AuthenticationName", "AuthenticationDisplayName");
+                options.DefaultForbidScheme =
+                    options.DefaultChallengeScheme =
+                        options.DefaultAuthenticateScheme =
+                            "AuthenticationName";
             });
-            JwtBearerDefaults
 
             return services;
+        }
+    }
+
+
+    internal class AuthenticationHandler : IAuthenticationHandler
+    {
+        private readonly HttpContext _httpContext;
+        private readonly AspireConfigureOptions _aspireConfigureOptions;
+
+        public AuthenticationHandler()
+        {
+            _httpContext = ServiceLocator.ServiceProvider.GetService<IHttpContextAccessor>().HttpContext;
+            if (_httpContext == null)
+                throw new ArgumentNullException(nameof(AuthenticationHandler) + "." + nameof(_httpContext));
+            _aspireConfigureOptions = ServiceLocator.ServiceProvider.GetService<AspireConfigureOptions>();
+        }
+
+        async public Task InitializeAsync(AuthenticationScheme scheme, HttpContext context)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public async Task<AuthenticateResult> AuthenticateAsync()
+        {
+            if (!_httpContext.Request.Headers.ContainsKey(_aspireConfigureOptions.Jwt.HeaderKey)) {
+                //Authorization header not in request
+                return AuthenticateResult.NoResult();
+            }
+
+            if (_httpContext.Request.Headers.TryGetValue(_aspireConfigureOptions.Jwt.HeaderKey, out var token)) {
+                if (token != "123") {
+                    return AuthenticateResult.Fail("token不正确");
+                }
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public Task ChallengeAsync(AuthenticationProperties? properties)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task ForbidAsync(AuthenticationProperties? properties)
+        {
+            return Task.CompletedTask;
         }
     }
 }
