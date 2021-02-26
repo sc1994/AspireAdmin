@@ -1,4 +1,4 @@
-namespace Aspire.Core
+namespace Aspire.Core.Authenticate
 {
     /// <summary>
     /// 角色路由

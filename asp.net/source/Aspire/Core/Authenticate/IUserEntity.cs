@@ -1,6 +1,6 @@
 using System;
 
-namespace Aspire.Core
+namespace Aspire.Core.Authenticate
 {
     /// <summary>
     /// 用户 实体

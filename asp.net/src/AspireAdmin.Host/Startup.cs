@@ -29,7 +29,7 @@ namespace AspireAdmin.Host
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAspire<User>(options => {
+            services.AddAspire<User, UserRole>(options => {
                 var applicationAssembly = Assembly.Load("AspireAdmin.Application");
 
                 options.NewtonsoftJsonOptionsSetup = setup => {
@@ -49,14 +49,6 @@ namespace AspireAdmin.Host
                         Version = "v1"
                     });
 
-                    var headerKey = _configuration.GetSection("Aspire").GetSection("Jwt").GetSection("HeaderKey").Value;
-                    setup.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
-                        Description = $"set header: {headerKey}",
-                        Name = headerKey, // 自定义 header key
-                        In = ParameterLocation.Header,
-                        Type = SecuritySchemeType.ApiKey,
-                    });
-
                     var xmlPath = applicationAssembly.Location.TrimEnd('d', 'l') + "xml";
                     setup.IncludeXmlComments(xmlPath);
                 };
@@ -64,6 +56,8 @@ namespace AspireAdmin.Host
                 options.MapperOptions = new AutoMapperOptionsSetup(applicationAssembly);
 
                 options.AuditRepositoryOptions = new FreeSqlAuditRepositoryOptionsSetup(_configuration.GetConnectionString("DbMain"), DataType.Sqlite);
+
+                options.Configuration = _configuration;
             });
         }
 

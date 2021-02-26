@@ -1,20 +1,17 @@
 using System;
 using System.Data;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+using System.Text;
 
 using Aspire;
-using Aspire.Core;
+using Aspire.Core.Authenticate;
 
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using Panda.DynamicWebApi;
@@ -34,12 +31,13 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="setupAction">选项</param>
         /// <exception cref="ArgumentNullException">请注意 [NotNull] 标识</exception>
         /// <returns></returns>
-        public static IServiceCollection AddAspire<TUserEntity>(
+        public static IServiceCollection AddAspire<TUserEntity, TUserRoleEntity>(
             this IServiceCollection services,
             Action<AspireSetupOptions> setupAction)
-            where TUserEntity : IUserEntity, new()
+            where TUserEntity : class, IUserEntity, new()
+            where TUserRoleEntity : class, IUserRoleEntity, new()
         {
-            return AddAspire<TUserEntity, Guid>(services, setupAction);
+            return AddAspire<TUserEntity, TUserRoleEntity, Guid>(services, setupAction);
         }
 
         /// <summary>
@@ -49,13 +47,18 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="setupAction">选项</param>
         /// <exception cref="ArgumentNullException">请注意 [NotNull] 标识</exception>
         /// <returns></returns>
-        public static IServiceCollection AddAspire<TUserEntity, TPrimaryKey>(
+        public static IServiceCollection AddAspire<TUserEntity, TUserRoleEntity, TPrimaryKey>(
             this IServiceCollection services,
             Action<AspireSetupOptions> setupAction)
-            where TUserEntity : IUserEntity<TPrimaryKey>, new()
+            where TUserEntity : class, IUserEntity<TPrimaryKey>, new()
+            where TUserRoleEntity : class, IUserRoleEntity<TPrimaryKey>, new()
         {
-            var setupOptions = new AspireSetupOptions();
-            setupAction(setupOptions);
+            var options = new AspireSetupOptions();
+            setupAction(options);
+            if (options.Configuration == null)
+                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.Configuration));
+
+            var aspireConfigure = GetAspireConfigureOptions(options.Configuration);
 
             // di服务代理 旨在以一个静态类获取 di中内容
             services
@@ -65,117 +68,95 @@ namespace Microsoft.Extensions.DependencyInjection
             var mvcBuilder = services.AddControllers();
 
             // NewtonsoftJson
-            if (setupOptions.NewtonsoftJsonOptionsSetup != null) {
-                mvcBuilder.AddNewtonsoftJson(setupOptions.NewtonsoftJsonOptionsSetup);
+            if (options.NewtonsoftJsonOptionsSetup != null) {
+                mvcBuilder.AddNewtonsoftJson(options.NewtonsoftJsonOptionsSetup);
             }
 
             // 引入 Panda.DynamicWebApi 自定义配置
-            if (setupOptions.DynamicWebApiOptionsSetup == null)
+            if (options.DynamicWebApiOptionsSetup == null)
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.DynamicWebApiOptionsSetup));
             services.AddDynamicWebApi(optionsAction => {
-                setupOptions.DynamicWebApiOptionsSetup(optionsAction);
+                options.DynamicWebApiOptionsSetup(optionsAction);
             });
 
             // swagger 
-            if (setupOptions.SwaggerGenOptionsSetup == null)
+            if (options.SwaggerGenOptionsSetup == null)
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.SwaggerGenOptionsSetup));
             services.AddSwaggerGen(x => {
-                setupOptions.SwaggerGenOptionsSetup(x);
+                options.SwaggerGenOptionsSetup(x);
+
+                x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+                    Description = $"set header: {aspireConfigure.Jwt.HeaderKey}",
+                    Name = aspireConfigure.Jwt.HeaderKey, // 自定义 header key
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                });
 
                 // 一定要返回true！这是 Panda.DynamicWebApi 的限制
                 x.DocInclusionPredicate((docName, description) => true);
             });
 
             // mapper
-            if (setupOptions.MapperOptions == null)
+            if (options.MapperOptions == null)
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.MapperOptions));
-            setupOptions.MapperOptions.AddAspireMapper(services);
+            options.MapperOptions.AddAspireMapper(services);
 
             // audit repository
-            if (setupOptions.AuditRepositoryOptions == null)
+            if (options.AuditRepositoryOptions == null)
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.AuditRepositoryOptions));
-            setupOptions.AuditRepositoryOptions.AddAuditRepository(services);
+            options.AuditRepositoryOptions.AddAuditRepository(services);
 
             // aspire configure options
-            services.AddScoped(serviceProvider => {
-                var aspireConfigureOptions = new AspireConfigureOptions();
-                serviceProvider
-                     .GetService<IConfiguration>()
-                     .GetSection("Aspire")
-                     .Bind(aspireConfigureOptions);
-                return aspireConfigureOptions;
-            });
+            services.AddScoped(serviceProvider => GetAspireConfigureOptions(serviceProvider.GetService<IConfiguration>()));
 
-            // current user 
-            services.AddScoped(x => {
-                var httpContext = x.GetService<IHttpContextAccessor>().HttpContext;
-                var configureOptions = x.GetService<AspireConfigureOptions>();
-                if (httpContext != null && httpContext.Request.Headers.TryGetValue(configureOptions.Jwt.HeaderKey, out var token)) {
-                    return new JwtManage(x.GetService<AspireConfigureOptions>().Jwt)
-                        .DeconstructionJwtToken<TUserEntity, TPrimaryKey>(token.ToString());
-                }
+            // TODO current user 
+            //services.AddScoped(x => {
+            //    var httpContext = x.GetService<IHttpContextAccessor>().HttpContext;
+            //    var configureOptions = x.GetService<AspireConfigureOptions>();
+            //    if (httpContext != null && httpContext.Request.Headers.TryGetValue(configureOptions.Jwt.HeaderKey, out var token)) {
+            //        return new JwtManage(x.GetService<AspireConfigureOptions>().Jwt)
+            //            .DeconstructionJwtToken<TUserEntity, TPrimaryKey>(token.ToString());
+            //    }
 
-                return new TUserEntity {
-                    Account = "undefined",
-                    Name = "undefined"
-                };
-            });
+            //    return new TUserEntity {
+            //        Account = "undefined",
+            //        Name = "undefined"
+            //    };
+            //});
 
-            services.AddAuthentication(options => {
-                options.AddScheme<AuthenticationHandler>("AuthenticationName", "AuthenticationDisplayName");
-                options.DefaultForbidScheme =
-                    options.DefaultChallengeScheme =
-                        options.DefaultAuthenticateScheme =
-                            "AuthenticationName";
-            });
+            services.AddIdentity<TUserEntity, TUserRoleEntity>()
+                .AddUserStore<UserStore<TUserEntity, TPrimaryKey>>()
+                .AddRoleStore<RoleStore<TUserRoleEntity, TPrimaryKey>>();
+
+            services
+                .AddAuthentication(x => {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(x => {
+                    x.SaveToken = true;
+#if DEBUG
+                    x.RequireHttpsMetadata = false;
+#endif
+                    x.TokenValidationParameters = new TokenValidationParameters {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidAudience = aspireConfigure.Jwt.ValidAudience,
+                        ValidIssuer = aspireConfigure.Jwt.ValidIssuer,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(aspireConfigure.Jwt.Secret))
+                    };
+                });
 
             return services;
         }
-    }
 
-
-    internal class AuthenticationHandler : IAuthenticationHandler
-    {
-        private readonly HttpContext _httpContext;
-        private readonly AspireConfigureOptions _aspireConfigureOptions;
-
-        public AuthenticationHandler()
+        private static AspireConfigureOptions GetAspireConfigureOptions(IConfiguration configuration)
         {
-            _httpContext = ServiceLocator.ServiceProvider.GetService<IHttpContextAccessor>().HttpContext;
-            if (_httpContext == null)
-                throw new ArgumentNullException(nameof(AuthenticationHandler) + "." + nameof(_httpContext));
-            _aspireConfigureOptions = ServiceLocator.ServiceProvider.GetService<AspireConfigureOptions>();
-        }
-
-        async public Task InitializeAsync(AuthenticationScheme scheme, HttpContext context)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public async Task<AuthenticateResult> AuthenticateAsync()
-        {
-            if (!_httpContext.Request.Headers.ContainsKey(_aspireConfigureOptions.Jwt.HeaderKey)) {
-                //Authorization header not in request
-                return AuthenticateResult.NoResult();
-            }
-
-            if (_httpContext.Request.Headers.TryGetValue(_aspireConfigureOptions.Jwt.HeaderKey, out var token)) {
-                if (token != "123") {
-                    return AuthenticateResult.Fail("token不正确");
-                }
-            }
-
-            throw new NotImplementedException();
-        }
-
-        public Task ChallengeAsync(AuthenticationProperties? properties)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task ForbidAsync(AuthenticationProperties? properties)
-        {
-            return Task.CompletedTask;
+            var aspireConfigureOptions = new AspireConfigureOptions();
+            configuration.GetSection("Aspire")
+                .Bind(aspireConfigureOptions);
+            return aspireConfigureOptions;
         }
     }
 }

@@ -22,9 +22,19 @@ namespace Aspire
     public class JwtOptions
     {
         /// <summary>
-        /// JWT Secret
+        /// Secret
         /// </summary>
         public string Secret { get; set; }
+
+        /// <summary>
+        /// Audience
+        /// </summary>
+        public string ValidAudience { get; set; }
+
+        /// <summary>
+        /// Issuer
+        /// </summary>
+        public string ValidIssuer { get; set; }
 
         /// <summary>
         /// 到期秒

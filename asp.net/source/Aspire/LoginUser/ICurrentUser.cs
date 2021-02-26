@@ -14,5 +14,10 @@ namespace Aspire
         /// 姓名
         /// </summary>
         string Name { get; set; }
+
+        /// <summary>
+        /// 角色
+        /// </summary>
+        public string RoleName { get; set; }
     }
 }

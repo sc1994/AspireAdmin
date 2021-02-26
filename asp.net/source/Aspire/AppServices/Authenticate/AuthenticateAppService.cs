@@ -1,7 +1,8 @@
 using System;
 using System.Threading.Tasks;
 
-using Aspire.Core;
+using Aspire.Core.Authenticate;
+
 using Microsoft.AspNetCore.Authorization;
 
 namespace Aspire.AppServices.Authenticate
@@ -78,7 +79,7 @@ namespace Aspire.AppServices.Authenticate
             throw new NotImplementedException();
         }
 
-        private async static Task<TUserEntity> GetUserByIdAndPwdAsync(LoginInputDto input)
+        private static async Task<TUserEntity> GetUserByIdAndPwdAsync(LoginInputDto input)
         {
             return await ServiceLocator.ServiceProvider.GetService<IAuditRepository<TUserEntity, TPrimaryKey>>()
                 .GetBatchAsync(x => x.Account == input.Account && x.Password == input.Password)

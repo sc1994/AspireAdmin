@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using Aspire.Mapper;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 using Panda.DynamicWebApi;
 
@@ -49,5 +50,11 @@ namespace Aspire
         /// </summary>
         [NotNull]
         public IAuditRepositoryOptionsSetup AuditRepositoryOptions { get; set; }
+
+        /// <summary>
+        /// 配置
+        /// </summary>
+        [NotNull]
+        public IConfiguration Configuration { get; set; }
     }
 }
