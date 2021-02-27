@@ -10,8 +10,8 @@ namespace Aspire.Authenticate
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthenticateAppService<TUserEntity> :
-        AuthenticateAppService<
+    public abstract class AuthorizationAppService<TUserEntity> :
+        AuthorizationAppService<
             TUserEntity,
             Guid,
             LoginDto,
@@ -19,18 +19,18 @@ namespace Aspire.Authenticate
             RegisterDto>
         where TUserEntity : class, IUserEntity, new()
     {
-        
+
     }
 
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthenticateAppService<
+    public abstract class AuthorizationAppService<
         TUserEntity,
         TLoginDto,
         TCurrentUserDto,
         TRegisterDto> :
-        AuthenticateAppService<
+        AuthorizationAppService<
         TUserEntity,
         Guid,
         TLoginDto,
@@ -47,7 +47,7 @@ namespace Aspire.Authenticate
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthenticateAppService<
+    public abstract class AuthorizationAppService<
         TUserEntity,
         TPrimaryKey,
         TLoginDto,
@@ -64,7 +64,7 @@ namespace Aspire.Authenticate
         /// <summary>
         /// 鉴权
         /// </summary>
-        protected AuthenticateAppService()
+        protected AuthorizationAppService()
         {
             _aspireAppSettings = ServiceLocator.ServiceProvider.GetService<IOptions<AspireAppSettings>>().Value;
             _userRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TUserEntity, TPrimaryKey>>();
@@ -83,7 +83,7 @@ namespace Aspire.Authenticate
             }
 
             if (user is null) {
-                throw new Exception("用户名或者密码错误");
+                return Failure<string>(ResponseCode.UnauthorizedAccountOrPassword, "用户名或者密码错误");
             }
 
             return new JwtManage(_aspireAppSettings.Jwt).GenerateJwtToken(user);

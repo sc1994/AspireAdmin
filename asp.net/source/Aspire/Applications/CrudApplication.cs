@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Aspire.Exceptions;
 using Aspire.Mapper;
 
 using Microsoft.AspNetCore.Mvc;
@@ -120,14 +121,13 @@ namespace Aspire
     /// <typeparam name="TOutputDto">数据传输 输出对象</typeparam>
     /// <typeparam name="TCreateDto">数据传输 创建对象</typeparam>
     /// <typeparam name="TUpdateDto">数据传输 更新对象</typeparam>
-    [DynamicWebApi]
     public abstract class CrudAppService<
         TAuditEntity,
         TPrimaryKey,
         TPageInputDto,
         TOutputDto,
         TCreateDto,
-        TUpdateDto> : IDynamicWebApi
+        TUpdateDto> : Application
         where TAuditEntity : IAuditEntity<TPrimaryKey>
         where TPageInputDto : PageInputDto
         where TUpdateDto : IDto<TPrimaryKey>
@@ -213,7 +213,7 @@ namespace Aspire
             if (success) {
                 return await GetAsync(dto.Id);
             }
-            throw new Exception(""); // TODO 有好的异常信息
+            return Failure<TOutputDto>(ResponseCode.InternalServerDatabaseError, $"执行 {nameof(TAuditEntity)} 实体更新失败");
         }
 
         /// <summary>
