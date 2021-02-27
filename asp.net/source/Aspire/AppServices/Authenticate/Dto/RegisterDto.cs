@@ -1,9 +1,9 @@
 namespace Aspire.AppServices.Authenticate
 {
     /// <summary>
-    /// 登录 输入
+    /// 注册
     /// </summary>
-    public class LoginInputDto
+    public class RegisterDto
     {
         /// <summary>
         /// 用户 身份唯一标识
@@ -14,5 +14,10 @@ namespace Aspire.AppServices.Authenticate
         /// 密码
         /// </summary>
         public string Password { get; set; }
+
+        /// <summary>
+        /// 角色
+        /// </summary>
+        public string UserRole { get; set; }
     }
 }

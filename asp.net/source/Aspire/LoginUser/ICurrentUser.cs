@@ -18,6 +18,8 @@ namespace Aspire
         /// <summary>
         /// 角色
         /// </summary>
-        public string RoleName { get; set; }
+        string RoleName { get; set; }
+
+
     }
 }

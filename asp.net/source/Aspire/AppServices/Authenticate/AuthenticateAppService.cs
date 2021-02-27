@@ -4,14 +4,17 @@ using System.Threading.Tasks;
 using Aspire.Core.Authenticate;
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace Aspire.AppServices.Authenticate
 {
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthenticateAppService<TUserEntity> : AuthenticateAppService<TUserEntity, Guid>
-        where TUserEntity : IUserEntity, new()
+    public abstract class AuthenticateAppService<TUserEntity, TUserRoleEntity> : AuthenticateAppService<TUserEntity, TUserRoleEntity, Guid>
+        where TUserEntity : class, IUserEntity<Guid>, new()
+        where TUserRoleEntity : class, IUserRoleEntity<Guid>, new()
     {
 
     }
@@ -19,17 +22,22 @@ namespace Aspire.AppServices.Authenticate
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthenticateAppService<TUserEntity, TPrimaryKey> : AppService
-        where TUserEntity : IUserEntity<TPrimaryKey>, new()
+    public abstract class AuthenticateAppService<TUserEntity, TUserRoleEntity, TPrimaryKey> : AppService
+        where TUserEntity : class, IUserEntity<TPrimaryKey>, new()
+        where TUserRoleEntity : class, IUserRoleEntity<TPrimaryKey>, new()
     {
-        private readonly AspireConfigureOptions _aspireConfigureOptions;
+        private readonly AspireAppSettings _aspireAppSettings;
+        private readonly UserManager<TUserEntity> _userManager;
+        private readonly RoleManager<TUserRoleEntity> _roleManager;
 
         /// <summary>
         /// 鉴权
         /// </summary>
         protected AuthenticateAppService()
         {
-            _aspireConfigureOptions = ServiceLocator.ServiceProvider.GetService<AspireConfigureOptions>();
+            _aspireAppSettings = ServiceLocator.ServiceProvider.GetService<IOptions<AspireAppSettings>>().Value;
+            _userManager = ServiceLocator.ServiceProvider.GetService<UserManager<TUserEntity>>();
+            _roleManager = ServiceLocator.ServiceProvider.GetService<RoleManager<TUserRoleEntity>>();
         }
 
         /// <summary>
@@ -38,26 +46,22 @@ namespace Aspire.AppServices.Authenticate
         /// <param name="input"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        public async Task<string> LoginAsync(LoginInputDto input)
+        public async Task<string> LoginAsync(LoginDto input)
         {
             TUserEntity user;
 
-            if (input.Password == _aspireConfigureOptions.Administrator.Password
-                && input.Account == _aspireConfigureOptions.Administrator.Account) {
+            if (input.Password == _aspireAppSettings.Administrator.Password
+                && input.Account == _aspireAppSettings.Administrator.Account) {
                 user = new TUserEntity {
-                    Account = _aspireConfigureOptions.Administrator.Account,
-                    Name = _aspireConfigureOptions.Administrator.Name
+                    Account = _aspireAppSettings.Administrator.Account,
+                    Name = _aspireAppSettings.Administrator.Name
                 };
             }
             else {
                 user = await GetUserByIdAndPwdAsync(input);
             }
 
-            if (user is not null) {
-                return new JwtManage(_aspireConfigureOptions.Jwt).GenerateJwtToken(user);
-            }
-
-            throw new Exception("登录失败");
+            return new JwtManage(_aspireAppSettings.Jwt).GenerateJwtToken(user);
         }
 
         /// <summary>
@@ -79,11 +83,30 @@ namespace Aspire.AppServices.Authenticate
             throw new NotImplementedException();
         }
 
-        private static async Task<TUserEntity> GetUserByIdAndPwdAsync(LoginInputDto input)
+        /// <summary>
+        /// 注册
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        public async Task<bool> RegisterAsync(RegisterDto input)
         {
-            return await ServiceLocator.ServiceProvider.GetService<IAuditRepository<TUserEntity, TPrimaryKey>>()
-                .GetBatchAsync(x => x.Account == input.Account && x.Password == input.Password)
-                .FirstOrDefaultAsync();
+            var result = await _userManager.CreateAsync(new TUserEntity {
+                Account = input.Account,
+                Password = input.Password,
+                RoleName = input.UserRole
+            });
+            return result.Succeeded;
+        }
+
+
+        private async Task<TUserEntity> GetUserByIdAndPwdAsync(LoginDto input)
+        {
+            var user = await _userManager.FindByNameAsync(input.Account);
+            if (user != null && user.Password == input.Password.EncodingToBase64()) { // TODO 密码加密
+                return user;
+            }
+            throw new Exception("用户名或者密码错误");
         }
     }
 }

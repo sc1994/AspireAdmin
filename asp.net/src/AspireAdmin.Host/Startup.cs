@@ -29,7 +29,7 @@ namespace AspireAdmin.Host
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAspire<User, UserRole>(options => {
+            services.AddAspire<User>(options => {
                 var applicationAssembly = Assembly.Load("AspireAdmin.Application");
 
                 options.NewtonsoftJsonOptionsSetup = setup => {
@@ -70,7 +70,7 @@ namespace AspireAdmin.Host
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseAspire(configure => {
+            app.UseAspire<User>(configure => {
                 configure.ServiceProvider = serviceProvider;
 
                 configure.CorsPolicyBuilderConfigure = corsPolicy => {
