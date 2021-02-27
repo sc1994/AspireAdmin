@@ -10,8 +10,36 @@ namespace Aspire.Authenticate
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthenticateAppService<TUserEntity> : AuthenticateAppService<TUserEntity, Guid>
-        where TUserEntity : class, IUserEntity<Guid>, new()
+    public abstract class AuthenticateAppService<TUserEntity> :
+        AuthenticateAppService<
+            TUserEntity,
+            Guid,
+            LoginDto,
+            CurrentUserDto,
+            RegisterDto>
+        where TUserEntity : class, IUserEntity, new()
+    {
+        
+    }
+
+    /// <summary>
+    /// 鉴权
+    /// </summary>
+    public abstract class AuthenticateAppService<
+        TUserEntity,
+        TLoginDto,
+        TCurrentUserDto,
+        TRegisterDto> :
+        AuthenticateAppService<
+        TUserEntity,
+        Guid,
+        TLoginDto,
+        TCurrentUserDto,
+        TRegisterDto>
+        where TUserEntity : class, IUserEntity, new()
+        where TLoginDto : LoginDto
+        where TCurrentUserDto : CurrentUserDto
+        where TRegisterDto : RegisterDto
     {
 
     }
@@ -19,8 +47,16 @@ namespace Aspire.Authenticate
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthenticateAppService<TUserEntity, TPrimaryKey> : Application
+    public abstract class AuthenticateAppService<
+        TUserEntity,
+        TPrimaryKey,
+        TLoginDto,
+        TCurrentUserDto,
+        TRegisterDto> : Application
         where TUserEntity : class, IUserEntity<TPrimaryKey>, new()
+        where TLoginDto : LoginDto
+        where TCurrentUserDto : CurrentUserDto
+        where TRegisterDto : RegisterDto
     {
         private readonly AspireAppSettings _aspireAppSettings;
         private readonly IAuditRepository<TUserEntity, TPrimaryKey> _userRepository;
@@ -40,20 +76,10 @@ namespace Aspire.Authenticate
         /// <param name="input"></param>
         /// <returns></returns>
         [AllowAnonymous, HttpPost]
-        public async Task<string> LoginAsync(LoginDto input)
+        public async Task<string> LoginAsync(TLoginDto input)
         {
-            TUserEntity user;
-
-            if (input.Password == _aspireAppSettings.Administrator.Password
-                && input.Account == _aspireAppSettings.Administrator.Account) {
-                user = new TUserEntity {
-                    Account = _aspireAppSettings.Administrator.Account,
-                    Name = _aspireAppSettings.Administrator.Name,
-                    Roles = Roles.Admin
-                };
-            }
-            else {
-                user = await GetUserByIdAndPwdAsync(input);
+            if (!TryAdminLogin(input, out var user)) {
+                user = await TryUserLogin(input);
             }
 
             if (user is null) {
@@ -67,7 +93,7 @@ namespace Aspire.Authenticate
         /// 获取当前用户
         /// </summary>
         /// <returns></returns>
-        public CurrentUserDto GetCurrentUser()
+        public virtual TCurrentUserDto GetCurrentUser()
         {
             throw new NotImplementedException();
         }
@@ -76,7 +102,7 @@ namespace Aspire.Authenticate
         /// 登出
         /// </summary>
         /// <returns></returns>
-        public string Logout()
+        public virtual string Logout()
         {
             throw new NotImplementedException();
         }
@@ -87,7 +113,7 @@ namespace Aspire.Authenticate
         /// <param name="input"></param>
         /// <returns></returns>
         [Authorize(Roles.Admin)]
-        public async Task<bool> RegisterAsync(RegisterDto input)
+        public virtual async Task<bool> RegisterAsync(TRegisterDto input)
         {
             return await _userRepository.InsertAsync(new TUserEntity {
                 Account = input.Account,
@@ -97,13 +123,38 @@ namespace Aspire.Authenticate
             });
         }
 
-
-        private async Task<TUserEntity> GetUserByIdAndPwdAsync(LoginDto input)
+        /// <summary>
+        /// 尝试用户登录
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        protected virtual async Task<TUserEntity> TryUserLogin(TLoginDto input)
         {
-            return await _userRepository.GetBatchAsync(
-                x => x.Account == input.Account
-                && x.Password == input.Password, 1)
+            return await _userRepository
+                .GetBatchAsync(x => x.Account == input.Account && x.Password == input.Password, 1)
                 .FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// 尝试管理员登陆
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="userEntity"></param>
+        /// <returns></returns>
+        protected virtual bool TryAdminLogin(TLoginDto input, out TUserEntity userEntity)
+        {
+            if (input.Password == _aspireAppSettings.Administrator.Password
+                && input.Account == _aspireAppSettings.Administrator.Account) {
+                userEntity = new TUserEntity {
+                    Account = _aspireAppSettings.Administrator.Account,
+                    Name = _aspireAppSettings.Administrator.Name,
+                    Roles = Roles.Admin
+                };
+                return true;
+            }
+
+            userEntity = default;
+            return false;
         }
     }
 }

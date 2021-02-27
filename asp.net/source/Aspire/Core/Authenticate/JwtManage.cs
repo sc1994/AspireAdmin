@@ -22,10 +22,9 @@ namespace Aspire.Authenticate
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtAppSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor {
-                Subject = new ClaimsIdentity(new[] {
-                    new Claim(nameof(ICurrentUser.Account), user.Account),
-                    new Claim(nameof(ICurrentUser.Name), user.Name)
-                }),
+                Subject = new ClaimsIdentity(typeof(ICurrentUser).GetProperties()
+                    .Select(x => new Claim(x.Name, x.GetValue(user)?.ToString() ?? string.Empty))
+                    .ToArray()),
                 Expires = DateTime.Now.AddSeconds(_jwtAppSettings.ExpireSeconds),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
@@ -51,11 +50,10 @@ namespace Aspire.Authenticate
             }, out var validatedToken);
 
             var token = (JwtSecurityToken)validatedToken;
-            var userId = token.Claims.First(x => x.Type == nameof(ICurrentUser.Account)).Value;
-            var name = token.Claims.First(x => x.Type == nameof(ICurrentUser.Name)).Value;
             return new TCurrentUser {
-                Account = userId,
-                Name = name
+                Account = token.Claims.First(x => x.Type == nameof(ICurrentUser.Account)).Value,
+                Name = token.Claims.First(x => x.Type == nameof(ICurrentUser.Name)).Value,
+                Roles = token.Claims.First(x => x.Type == nameof(ICurrentUser.Roles)).Value,
             };
         }
     }

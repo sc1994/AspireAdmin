@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ben.Demystifier" Version="0.3.0" />
     <PackageReference Include="Panda.DynamicWebApi" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />

@@ -21,14 +21,14 @@ namespace Aspire
         /// <summary>
         /// 角色
         /// </summary>
-        public string[] CurrentRoles { get; set; } = new string[0];
+        public string[] CurrentRoles { get; set; }
 
         /// <summary>
         /// 鉴权
         /// </summary>
         public AuthorizeAttribute()
         {
-
+            CurrentRoles = Array.Empty<string>();
         }
 
         /// <summary>
