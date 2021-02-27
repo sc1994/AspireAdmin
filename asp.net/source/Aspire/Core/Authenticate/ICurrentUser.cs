@@ -1,4 +1,4 @@
-namespace Aspire
+namespace Aspire.Authenticate
 {
     /// <summary>
     /// 当前登入用户
@@ -18,8 +18,6 @@ namespace Aspire
         /// <summary>
         /// 角色
         /// </summary>
-        string RoleName { get; set; }
-
-
+        string Roles { get; set; }
     }
 }

@@ -2,9 +2,11 @@ using System;
 using System.Data;
 
 using Aspire;
-using Aspire.Core.Authenticate;
+using Aspire.Authenticate;
 
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -16,6 +18,59 @@ namespace Microsoft.AspNetCore.Builder
     /// </summary>
     public static class AspireStartupConfigure
     {
+        /// <summary>
+        /// 使用 aspire
+        /// </summary>
+        /// <typeparam name="TUserEntity">用户实体</typeparam>
+        /// <param name="app"></param>
+        /// <param name="serviceProvider">提供服务</param>
+        /// <param name="endpointRouteConfigure">终结点【配置</param>
+        /// <param name="swaggerUiName">swagger ui name</param>
+        /// <param name="corsPolicyBuilderConfigure">跨域代理配置</param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseAspire<TUserEntity>(
+            this IApplicationBuilder app,
+            IServiceProvider serviceProvider,
+            Action<IEndpointRouteBuilder> endpointRouteConfigure,
+            string swaggerUiName,
+            Action<CorsPolicyBuilder> corsPolicyBuilderConfigure)
+            where TUserEntity : class, IUserEntity, new()
+        {
+            return UseAspire<TUserEntity, Guid>(
+                app,
+                serviceProvider,
+                endpointRouteConfigure,
+                swaggerUiName,
+                corsPolicyBuilderConfigure);
+        }
+
+        /// <summary>
+        /// 使用 aspire
+        /// </summary>
+        /// <typeparam name="TUserEntity">用户实体</typeparam>
+        /// <typeparam name="TPrimaryKey">实体主键</typeparam>
+        /// <param name="app"></param>
+        /// <param name="serviceProvider">提供服务</param>
+        /// <param name="endpointRouteConfigure">终结点【配置</param>
+        /// <param name="swaggerUiName">swagger ui name</param>
+        /// <param name="corsPolicyBuilderConfigure">跨域代理配置</param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseAspire<TUserEntity, TPrimaryKey>(
+            this IApplicationBuilder app,
+            IServiceProvider serviceProvider,
+            Action<IEndpointRouteBuilder> endpointRouteConfigure,
+            string swaggerUiName,
+            Action<CorsPolicyBuilder> corsPolicyBuilderConfigure)
+            where TUserEntity : class, IUserEntity<TPrimaryKey>, new()
+        {
+            return UseAspire<TUserEntity, TPrimaryKey>(app, actionConfigure => {
+                actionConfigure.ServiceProvider = serviceProvider;
+                actionConfigure.EndpointRouteConfigure = endpointRouteConfigure;
+                actionConfigure.SwaggerUiName = swaggerUiName;
+                actionConfigure.CorsPolicyBuilderConfigure = corsPolicyBuilderConfigure;
+            });
+        }
+
         /// <summary>
         /// 使用 aspire
         /// </summary>

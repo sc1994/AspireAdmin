@@ -1,13 +1,18 @@
-namespace Aspire.Core.Authenticate
+namespace Aspire
 {
     /// <summary>
-    /// 角色路由
+    /// 角色
     /// </summary>
-    public class RoleConst
+    public class Roles
     {
         /// <summary>
-        /// 管理员
+        /// admin
         /// </summary>
         public const string Admin = "Admin";
+
+        /// <summary>
+        /// user
+        /// </summary>
+        public const string User = "User";
     }
 }

@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-using Aspire.Core.Authenticate;
+using Aspire.Authenticate;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;

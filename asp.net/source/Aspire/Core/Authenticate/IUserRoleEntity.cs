@@ -1,6 +1,6 @@
 using System;
 
-namespace Aspire.Core.Authenticate
+namespace Aspire.Authenticate
 {
     /// <summary>
     /// 用户角色
@@ -19,6 +19,6 @@ namespace Aspire.Core.Authenticate
         /// <summary>
         /// 路由名
         /// </summary>
-        public string RoleName { get; set; }
+        string RoleName { get; set; }
     }
 }

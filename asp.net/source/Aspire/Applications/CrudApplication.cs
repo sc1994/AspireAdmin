@@ -15,7 +15,7 @@ namespace Aspire
     /// CRUD 服务
     /// </summary>
     /// <typeparam name="TAuditEntity">数据库审计实体</typeparam>
-    public abstract class CrudAppService<
+    public abstract class CrudApplication<
         TAuditEntity> : CrudAppService<
         TAuditEntity,
         Guid>

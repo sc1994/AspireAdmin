@@ -1,6 +1,6 @@
 using System;
 
-namespace Aspire.Core.Authenticate
+namespace Aspire.Authenticate
 {
     /// <summary>
     /// 用户 实体
@@ -18,6 +18,6 @@ namespace Aspire.Core.Authenticate
         /// <summary>
         /// 密码
         /// </summary>
-        public string Password { get; set; }
+        string Password { get; set; }
     }
 }

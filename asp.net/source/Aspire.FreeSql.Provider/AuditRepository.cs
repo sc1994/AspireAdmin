@@ -2,6 +2,8 @@ using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
+using Aspire.Authenticate;
+
 using FreeSql;
 
 namespace Aspire.FreeSql.Provider

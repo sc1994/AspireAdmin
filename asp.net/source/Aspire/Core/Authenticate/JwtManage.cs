@@ -6,7 +6,7 @@ using System.Text;
 
 using Microsoft.IdentityModel.Tokens;
 
-namespace Aspire.Core.Authenticate
+namespace Aspire.Authenticate
 {
     internal class JwtManage
     {

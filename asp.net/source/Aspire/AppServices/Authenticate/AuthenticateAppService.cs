@@ -1,9 +1,8 @@
 using System;
 using System.Threading.Tasks;
 
-using Aspire.Core.Authenticate;
-
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace Aspire.Authenticate
@@ -20,7 +19,7 @@ namespace Aspire.Authenticate
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthenticateAppService<TUserEntity, TPrimaryKey> : AppService
+    public abstract class AuthenticateAppService<TUserEntity, TPrimaryKey> : Application
         where TUserEntity : class, IUserEntity<TPrimaryKey>, new()
     {
         private readonly AspireAppSettings _aspireAppSettings;
@@ -40,7 +39,7 @@ namespace Aspire.Authenticate
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AllowAnonymous]
+        [AllowAnonymous, HttpPost]
         public async Task<string> LoginAsync(LoginDto input)
         {
             TUserEntity user;
@@ -49,7 +48,8 @@ namespace Aspire.Authenticate
                 && input.Account == _aspireAppSettings.Administrator.Account) {
                 user = new TUserEntity {
                     Account = _aspireAppSettings.Administrator.Account,
-                    Name = _aspireAppSettings.Administrator.Name
+                    Name = _aspireAppSettings.Administrator.Name,
+                    Roles = Roles.Admin
                 };
             }
             else {
@@ -86,13 +86,13 @@ namespace Aspire.Authenticate
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AllowAnonymous]
+        [Authorize(Roles.Admin)]
         public async Task<bool> RegisterAsync(RegisterDto input)
         {
             return await _userRepository.InsertAsync(new TUserEntity {
                 Account = input.Account,
                 Password = input.Password,
-                RoleName = input.UserRole,
+                Roles = input.Roles,
                 Name = input.Name
             });
         }

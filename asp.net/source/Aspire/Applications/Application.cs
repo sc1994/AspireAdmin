@@ -4,11 +4,11 @@ using Panda.DynamicWebApi.Attributes;
 namespace Aspire
 {
     /// <summary>
-    /// 应用程序 服务
+    /// 应用程序
     /// </summary>
     [DynamicWebApi]
     [Authorize]
-    public abstract class AppService : IDynamicWebApi
+    public abstract class Application : IDynamicWebApi
     {
 
     }
