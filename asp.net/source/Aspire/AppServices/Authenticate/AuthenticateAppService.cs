@@ -1,13 +1,12 @@
 using System;
 using System.Threading.Tasks;
-
 using Aspire.Core.Authenticate;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace Aspire.AppServices.Authenticate
+namespace Aspire.Authenticate
 {
     /// <summary>
     /// 鉴权

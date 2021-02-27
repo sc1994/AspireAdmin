@@ -1,4 +1,4 @@
-using Aspire.AppServices.Authenticate;
+using Aspire.Authenticate;
 
 using AspireAdmin.Core.Users;
 

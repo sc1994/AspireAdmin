@@ -1,4 +1,4 @@
-namespace Aspire.AppServices.Authenticate
+namespace Aspire.Authenticate
 {
     /// <summary>
     /// 当前用户
