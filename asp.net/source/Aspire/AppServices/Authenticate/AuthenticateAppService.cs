@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
+
 using Aspire.Core.Authenticate;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace Aspire.Authenticate
@@ -11,9 +11,8 @@ namespace Aspire.Authenticate
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthenticateAppService<TUserEntity, TUserRoleEntity> : AuthenticateAppService<TUserEntity, TUserRoleEntity, Guid>
+    public abstract class AuthenticateAppService<TUserEntity> : AuthenticateAppService<TUserEntity, Guid>
         where TUserEntity : class, IUserEntity<Guid>, new()
-        where TUserRoleEntity : class, IUserRoleEntity<Guid>, new()
     {
 
     }
@@ -21,13 +20,11 @@ namespace Aspire.Authenticate
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthenticateAppService<TUserEntity, TUserRoleEntity, TPrimaryKey> : AppService
+    public abstract class AuthenticateAppService<TUserEntity, TPrimaryKey> : AppService
         where TUserEntity : class, IUserEntity<TPrimaryKey>, new()
-        where TUserRoleEntity : class, IUserRoleEntity<TPrimaryKey>, new()
     {
         private readonly AspireAppSettings _aspireAppSettings;
-        private readonly UserManager<TUserEntity> _userManager;
-        private readonly RoleManager<TUserRoleEntity> _roleManager;
+        private readonly IAuditRepository<TUserEntity, TPrimaryKey> _userRepository;
 
         /// <summary>
         /// 鉴权
@@ -35,8 +32,7 @@ namespace Aspire.Authenticate
         protected AuthenticateAppService()
         {
             _aspireAppSettings = ServiceLocator.ServiceProvider.GetService<IOptions<AspireAppSettings>>().Value;
-            _userManager = ServiceLocator.ServiceProvider.GetService<UserManager<TUserEntity>>();
-            _roleManager = ServiceLocator.ServiceProvider.GetService<RoleManager<TUserRoleEntity>>();
+            _userRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TUserEntity, TPrimaryKey>>();
         }
 
         /// <summary>
@@ -60,6 +56,10 @@ namespace Aspire.Authenticate
                 user = await GetUserByIdAndPwdAsync(input);
             }
 
+            if (user is null) {
+                throw new Exception("用户名或者密码错误");
+            }
+
             return new JwtManage(_aspireAppSettings.Jwt).GenerateJwtToken(user);
         }
 
@@ -67,7 +67,6 @@ namespace Aspire.Authenticate
         /// 获取当前用户
         /// </summary>
         /// <returns></returns>
-        [Authorize]
         public CurrentUserDto GetCurrentUser()
         {
             throw new NotImplementedException();
@@ -90,22 +89,21 @@ namespace Aspire.Authenticate
         [AllowAnonymous]
         public async Task<bool> RegisterAsync(RegisterDto input)
         {
-            var result = await _userManager.CreateAsync(new TUserEntity {
+            return await _userRepository.InsertAsync(new TUserEntity {
                 Account = input.Account,
                 Password = input.Password,
-                RoleName = input.UserRole
+                RoleName = input.UserRole,
+                Name = input.Name
             });
-            return result.Succeeded;
         }
 
 
         private async Task<TUserEntity> GetUserByIdAndPwdAsync(LoginDto input)
         {
-            var user = await _userManager.FindByNameAsync(input.Account);
-            if (user != null && user.Password == input.Password.EncodingToBase64()) { // TODO 密码加密
-                return user;
-            }
-            throw new Exception("用户名或者密码错误");
+            return await _userRepository.GetBatchAsync(
+                x => x.Account == input.Account
+                && x.Password == input.Password, 1)
+                .FirstOrDefaultAsync();
         }
     }
 }

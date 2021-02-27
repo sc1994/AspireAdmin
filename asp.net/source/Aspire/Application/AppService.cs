@@ -7,7 +7,7 @@ namespace Aspire
     /// 应用程序 服务
     /// </summary>
     [DynamicWebApi]
-    [Authorization]
+    [Authorize]
     public abstract class AppService : IDynamicWebApi
     {
 

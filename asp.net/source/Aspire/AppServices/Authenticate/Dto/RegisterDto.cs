@@ -19,5 +19,10 @@ namespace Aspire.Authenticate
         /// 角色
         /// </summary>
         public string UserRole { get; set; }
+
+        /// <summary>
+        /// 姓名
+        /// </summary>
+        public string Name { get; set; }
     }
 }
