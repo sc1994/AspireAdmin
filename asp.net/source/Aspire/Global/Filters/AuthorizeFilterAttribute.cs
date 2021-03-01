@@ -16,7 +16,7 @@ namespace Aspire
     /// 鉴权
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class AuthorizeAttribute : Attribute, IAuthorizationFilter
+    public class AuthorizeFilterAttribute : Attribute, IAuthorizationFilter
     {
         /// <summary>
         /// 角色
@@ -26,17 +26,21 @@ namespace Aspire
         /// <summary>
         /// 鉴权
         /// </summary>
-        public AuthorizeAttribute()
+        public AuthorizeFilterAttribute()
         {
             CurrentRoles = Array.Empty<string>();
         }
 
         /// <summary>
-        /// 鉴权 指定 角色
+        /// 鉴权 指定 角色 
         /// </summary>
-        public AuthorizeAttribute(string roles)
+        /// <param name="roles">Admin,User</param>
+        public AuthorizeFilterAttribute(string roles)
         {
-            CurrentRoles = roles.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            CurrentRoles = roles
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .ToArray();
         }
 
         /// <summary>
@@ -50,44 +54,48 @@ namespace Aspire
                     .MethodInfo
                     .GetCustomAttributes<AllowAnonymousAttribute>()
                     .FirstOrDefault();
+                if (allowAnonymous != null) {
+                    return;
+                }
 
                 // 尝试查找鉴权特性
                 var authorize = contextActionDescriptor
                     .MethodInfo
-                    .GetCustomAttributes<AuthorizeAttribute>()
+                    .GetCustomAttributes<AuthorizeFilterAttribute>()
                     .FirstOrDefault() ?? contextActionDescriptor
                     .ControllerTypeInfo
-                    .GetCustomAttributes<AuthorizeAttribute>()
+                    .GetCustomAttributes<AuthorizeFilterAttribute>()
                     .FirstOrDefault() ?? contextActionDescriptor
                     .ControllerTypeInfo.BaseType?
-                    .GetCustomAttributes<AuthorizeAttribute>()
+                    .GetCustomAttributes<AuthorizeFilterAttribute>()
                     .FirstOrDefault() ?? contextActionDescriptor
                     .ControllerTypeInfo.BaseType?.BaseType?
-                    .GetCustomAttributes<AuthorizeAttribute>()
+                    .GetCustomAttributes<AuthorizeFilterAttribute>()
                     .FirstOrDefault() ?? contextActionDescriptor
                     .ControllerTypeInfo.BaseType?.BaseType?.BaseType?
-                    .GetCustomAttributes<AuthorizeAttribute>()
+                    .GetCustomAttributes<AuthorizeFilterAttribute>()
                     .FirstOrDefault();
 
                 if (authorize is not null) {
                     // 用户不是admin
                     if (context.HttpContext.Items["User"] is ICurrentUser user && user.Roles != Roles.Admin) {
+                        var preResponse = new GlobalResponse {
+                            Message = new[] { $"接口需要指定[{authorize.CurrentRoles.Join(",")}]的角色权限" },
+                            Code = ResponseCode.UnauthorizedRoles.GetHashCode()
+                        };
                         // 配置了指定角色
                         if (authorize.CurrentRoles.Any()) {
                             // 没有角色
                             if (user.Roles.IsNullOrWhiteSpace()) {
-                                context.Result = new JsonResult(string.Empty) { StatusCode = StatusCodes.Status403Forbidden };
+                                context.Result = new JsonResult(preResponse) { StatusCode = StatusCodes.Status403Forbidden };
                                 return;
                             }
                             var useRoles = user.Roles.Split(',', StringSplitOptions.RemoveEmptyEntries);
                             // 角色不包含在指定角色中
                             if (useRoles.All(x => !authorize.CurrentRoles.Contains(x))) {
-                                context.Result = new JsonResult(string.Empty) { StatusCode = StatusCodes.Status403Forbidden };
+                                context.Result = new JsonResult(preResponse) { StatusCode = StatusCodes.Status403Forbidden };
                             }
                         }
-                    }
-                    else if (allowAnonymous is null) {
-                        context.Result = new JsonResult(string.Empty) { StatusCode = StatusCodes.Status401Unauthorized };
                     }
                 }
             }

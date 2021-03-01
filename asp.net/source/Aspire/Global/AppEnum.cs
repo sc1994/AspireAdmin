@@ -11,9 +11,19 @@ namespace Aspire
         Ok = 200,
 
         /// <summary>
+        /// 未授权
+        /// </summary>
+        Unauthorized = 401,
+
+        /// <summary>
+        /// 未授权角色
+        /// </summary>
+        UnauthorizedRoles = 403,
+
+        /// <summary>
         /// 未授权的账号或者密码
         /// </summary>
-        UnauthorizedAccountOrPassword = 400001,
+        UnauthorizedAccountOrPassword = 401001,
 
         /// <summary>
         /// 内部服务异常

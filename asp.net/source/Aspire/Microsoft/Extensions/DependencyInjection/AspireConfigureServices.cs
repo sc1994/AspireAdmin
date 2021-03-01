@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 using Aspire;
@@ -14,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using Panda.DynamicWebApi;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
+
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -133,9 +135,9 @@ namespace Microsoft.Extensions.DependencyInjection
             var mvcBuilder = services.AddControllers();
 
             // NewtonsoftJson
-            if (options.NewtonsoftJsonOptionsSetup != null) {
-                mvcBuilder.AddNewtonsoftJson(options.NewtonsoftJsonOptionsSetup);
-            }
+            if (options.NewtonsoftJsonOptionsSetup == null)
+                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.NewtonsoftJsonOptionsSetup));
+            mvcBuilder.AddNewtonsoftJson(options.NewtonsoftJsonOptionsSetup);
 
             // swagger 
             if (options.SwaggerGenOptionsSetup == null)
@@ -148,6 +150,24 @@ namespace Microsoft.Extensions.DependencyInjection
                     Name = aspireConfigure.Jwt.HeaderKey, // 自定义 header key
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                x.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
                 });
 
                 // 一定要返回true！这是 Panda.DynamicWebApi 的限制
@@ -210,13 +230,16 @@ namespace Microsoft.Extensions.DependencyInjection
             // 引入 Panda.DynamicWebApi 自定义配置
             if (options.DynamicWebApiOptionsSetup == null)
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.DynamicWebApiOptionsSetup));
-
             services.AddDynamicWebApi(optionsAction => {
                 options.DynamicWebApiOptionsSetup(optionsAction);
             });
 
+            // LOG TODO
+
             return services;
         }
+
+
 
         private static AspireAppSettings GetAspireConfigureOptions(IConfiguration configuration)
         {

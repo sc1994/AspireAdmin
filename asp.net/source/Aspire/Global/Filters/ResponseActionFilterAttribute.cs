@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 using Aspire.Exceptions;
 
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +8,7 @@ namespace Aspire
     /// <summary>
     /// 响应过滤器
     /// </summary>
-    public class ResponseFilterAttribute : ActionFilterAttribute
+    public class ResponseActionFilterAttribute : ActionFilterAttribute
     {
         /// <summary>
         /// 在控制器完成后检验控制器结果
@@ -21,36 +19,33 @@ namespace Aspire
                 if (cxt.Exception is FriendlyException friendlyException) {
                     cxt.Result = new OkObjectResult(new GlobalResponse {
                         Code = friendlyException.Code,
-                        Result = friendlyException.Messages,
+                        Message = friendlyException.Messages,
 #if DEBUG
-                        StackTrace = friendlyException.StackTrace.ToString()
+                        StackTrace = friendlyException
 #endif
                     });
                 }
                 else if (cxt.Exception is { } exception) {
                     cxt.Result = new OkObjectResult(new GlobalResponse {
                         Code = ResponseCode.InternalServerError.GetHashCode(),
-                        Result = "内部服务异常",
+                        Message = new[] { exception.Message },
 #if DEBUG
-                        StackTrace = exception.Demystify().ToString()
+                        StackTrace = exception
 #endif
                     });
                 }
-                // TODO 日志
                 cxt.Exception = null;
-                base.OnActionExecuted(cxt);
-                return;
             }
             else {
-                // TODO 日志
-                // EnhancedStackTrace.Current();
+                var result = (ObjectResult)cxt.Result;
+                cxt.Result = new OkObjectResult(new GlobalResponse {
+                    Code = ResponseCode.Ok.GetHashCode(),
+                    Result = result.Value,
+                });
             }
 
-            var result = (ObjectResult)cxt.Result;
-            cxt.Result = new OkObjectResult(new {
-                Code = ResponseCode.Ok.GetHashCode(),
-                Data = result.Value
-            });
+            // TODO 日志
+            //JsonConvert.SerializeObject((OkObjectResult)cxt.Message);
             base.OnActionExecuted(cxt);
         }
     }

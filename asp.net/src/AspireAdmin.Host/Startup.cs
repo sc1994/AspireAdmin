@@ -34,6 +34,7 @@ namespace AspireAdmin.Host
 
                 options.NewtonsoftJsonOptionsSetup = setup => {
                     setup.AllowInputFormatterExceptionMessages = false;
+                    setup.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 };
 
                 options.DynamicWebApiOptionsSetup = setup => {

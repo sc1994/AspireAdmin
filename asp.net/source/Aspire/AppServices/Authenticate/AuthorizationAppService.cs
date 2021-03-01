@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace Aspire.Authenticate
@@ -75,15 +74,15 @@ namespace Aspire.Authenticate
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AllowAnonymous, HttpPost]
-        public async Task<string> LoginAsync(TLoginDto input)
+        [AllowAnonymous]
+        public async Task<TokenDto> LoginAsync(TLoginDto input)
         {
             if (!TryAdminLogin(input, out var user)) {
                 user = await TryUserLogin(input);
             }
 
             if (user is null) {
-                return Failure<string>(ResponseCode.UnauthorizedAccountOrPassword, "用户名或者密码错误");
+                return Failure<TokenDto>(ResponseCode.UnauthorizedAccountOrPassword, "用户名或者密码错误");
             }
 
             return new JwtManage(_aspireAppSettings.Jwt).GenerateJwtToken(user);
@@ -112,7 +111,7 @@ namespace Aspire.Authenticate
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [Authorize(Roles.Admin)]
+        [AuthorizeFilter(Roles.Admin)]
         public virtual async Task<bool> RegisterAsync(TRegisterDto input)
         {
             return await _userRepository.InsertAsync(new TUserEntity {

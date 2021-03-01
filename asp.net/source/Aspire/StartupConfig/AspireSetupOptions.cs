@@ -20,7 +20,7 @@ namespace Aspire
         /// <summary>
         /// NewtonsoftJson 启动选项
         /// </summary>
-        [AllowNull]
+        [NotNull]
         public Action<MvcNewtonsoftJsonOptions> NewtonsoftJsonOptionsSetup { get; set; }
 
         /// <summary>

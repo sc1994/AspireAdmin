@@ -17,21 +17,26 @@ namespace Aspire.Authenticate
             _jwtAppSettings = jwtAppSettings;
         }
 
-        public string GenerateJwtToken(ICurrentUser user)
+        public TokenDto GenerateJwtToken(ICurrentUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtAppSettings.Secret);
+            DateTime expiryTime;
             var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(typeof(ICurrentUser).GetProperties()
                     .Select(x => new Claim(x.Name, x.GetValue(user)?.ToString() ?? string.Empty))
                     .ToArray()),
-                Expires = DateTime.Now.AddSeconds(_jwtAppSettings.ExpireSeconds),
+                Expires = expiryTime = DateTime.Now.AddSeconds(_jwtAppSettings.ExpireSeconds),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return new TokenDto {
+                BearerToken = $"Bearer {tokenHandler.WriteToken(token)}",
+                ExpiryTime = expiryTime,
+                Ttl = _jwtAppSettings.ExpireSeconds
+            };
         }
 
         public ICurrentUser DeconstructionJwtToken<TCurrentUser>(string jwtToken)
@@ -39,7 +44,7 @@ namespace Aspire.Authenticate
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtAppSettings.Secret);
-            tokenHandler.ValidateToken(jwtToken, new TokenValidationParameters {
+            tokenHandler.ValidateToken(jwtToken.Split(' ').LastOrDefault(), new TokenValidationParameters {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateIssuer = false,
