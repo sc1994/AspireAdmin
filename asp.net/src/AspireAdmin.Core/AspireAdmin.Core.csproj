@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\source\Aspire.FreeSql.Provider\Aspire.FreeSql.Provider.csproj" />
+    <ProjectReference Include="..\AspireAdmin.Utility\AspireAdmin.Utility.csproj" />
+    <ProjectReference Include="..\..\source\Aspire\Aspire.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
