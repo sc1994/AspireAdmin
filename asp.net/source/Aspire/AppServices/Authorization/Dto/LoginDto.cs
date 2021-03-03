@@ -1,4 +1,4 @@
-namespace Aspire.Authenticate
+namespace Aspire.Authorization
 {
     /// <summary>
     /// 登录 输入

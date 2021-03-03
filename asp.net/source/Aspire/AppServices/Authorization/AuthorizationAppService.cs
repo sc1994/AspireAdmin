@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-
+using Aspire.Authenticate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
-namespace Aspire.Authenticate
+namespace Aspire.Authorization
 {
     /// <summary>
     /// 鉴权

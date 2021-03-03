@@ -1,6 +1,6 @@
 using System;
 
-namespace Aspire.Authenticate
+namespace Aspire.Authorization
 {
     /// <summary>
     /// token 
@@ -21,5 +21,10 @@ namespace Aspire.Authenticate
         /// Ttl
         /// </summary>
         public int Ttl { get; set; }
+
+        /// <summary>
+        /// header key
+        /// </summary>
+        public string HeaderKey { get; set; }
     }
 }

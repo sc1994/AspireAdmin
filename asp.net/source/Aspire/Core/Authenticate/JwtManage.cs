@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-
+using Aspire.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Aspire.Authenticate
@@ -35,7 +35,8 @@ namespace Aspire.Authenticate
             return new TokenDto {
                 BearerToken = $"Bearer {tokenHandler.WriteToken(token)}",
                 ExpiryTime = expiryTime,
-                Ttl = _jwtAppSettings.ExpireSeconds
+                Ttl = _jwtAppSettings.ExpireSeconds,
+                HeaderKey = _jwtAppSettings.HeaderKey
             };
         }
 

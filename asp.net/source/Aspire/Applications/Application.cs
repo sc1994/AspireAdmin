@@ -1,4 +1,5 @@
 using Aspire.Exceptions;
+using Aspire.Mapper;
 
 using Panda.DynamicWebApi;
 using Panda.DynamicWebApi.Attributes;
@@ -6,11 +7,48 @@ using Panda.DynamicWebApi.Attributes;
 namespace Aspire
 {
     /// <summary>
-    /// 应用程序
+    /// 应用
+    /// 作为控制器的最基层
     /// </summary>
     [DynamicWebApi, AuthorizeFilter, ResponseActionFilter]
     public abstract class Application : IDynamicWebApi
     {
+        /// <summary>
+        /// Mapper
+        /// </summary>
+        protected readonly IAspireMapper Mapper;
+
+        /// <summary>
+        /// 应用 
+        /// </summary>
+        protected Application()
+        {
+            Mapper = ServiceLocator.ServiceProvider.GetService<IAspireMapper>();
+        }
+
+        /// <summary>
+        /// 映射到
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        protected T MapTo<T>(object source)
+        {
+            return Mapper.MapTo<T>(source);
+        }
+
+        /// <summary>
+        /// 映射到
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TTarget"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        protected TTarget MapTo<TSource, TTarget>(TSource source)
+        {
+            return Mapper.MapTo<TSource, TTarget>(source);
+        }
+
         /// <summary>
         /// 失败
         /// </summary>

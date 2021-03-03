@@ -236,6 +236,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             // LOG TODO
 
+            // Redis
+
             return services;
         }
 

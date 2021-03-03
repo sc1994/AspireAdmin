@@ -2,8 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Aspire.Mapper;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aspire
@@ -128,16 +126,17 @@ namespace Aspire
         where TPageInputDto : PageInputDto
         where TUpdateDto : IDto<TPrimaryKey>
     {
-        private readonly IAuditRepository<TAuditEntity, TPrimaryKey> _repository;
-        private readonly IAspireMapper _mapper;
+        /// <summary>
+        /// 当前服务仓储
+        /// </summary>
+        protected readonly IAuditRepository<TAuditEntity, TPrimaryKey> CurrentRepository;
 
         /// <summary>
         /// 默认 构造 ，实例CRUD必须的服务
         /// </summary>
         public CrudAppService()
         {
-            _repository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TAuditEntity, TPrimaryKey>>();
-            _mapper = ServiceLocator.ServiceProvider.GetService<IAspireMapper>();
+            CurrentRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TAuditEntity, TPrimaryKey>>();
         }
 
         //protected virtual  PageFilter(TPageInputDto input)
@@ -152,7 +151,7 @@ namespace Aspire
         /// <returns></returns>
         protected virtual TOutputDto MapToDto(TAuditEntity entity)
         {
-            return _mapper.MapTo<TAuditEntity, TOutputDto>(entity);
+            return MapTo<TAuditEntity, TOutputDto>(entity);
         }
 
         /// <summary>
@@ -162,7 +161,7 @@ namespace Aspire
         /// <returns></returns>
         protected virtual TTargetDto MapToDto<TTargetDto>(TAuditEntity entity)
         {
-            return _mapper.MapTo<TAuditEntity, TTargetDto>(entity);
+            return MapTo<TAuditEntity, TTargetDto>(entity);
         }
 
         /// <summary>
@@ -172,7 +171,7 @@ namespace Aspire
         /// <returns></returns>
         protected virtual TAuditEntity MapToEntity<TSourceDto>(TSourceDto dto)
         {
-            return _mapper.MapTo<TSourceDto, TAuditEntity>(dto);
+            return MapTo<TSourceDto, TAuditEntity>(dto);
         }
 
         /// <summary>
@@ -183,7 +182,7 @@ namespace Aspire
         public virtual async Task<TOutputDto> CreateAsync(TCreateDto dto)
         {
             var entity = MapToEntity(dto);
-            return MapToDto(await _repository.InsertThenEntityAsync(entity));
+            return MapToDto(await CurrentRepository.InsertThenEntityAsync(entity));
         }
 
         /// <summary>
@@ -194,7 +193,7 @@ namespace Aspire
         [HttpDelete("{id}")]
         public virtual async Task<bool> DeleteAsync(TPrimaryKey id)
         {
-            return await _repository.DeleteAsync(id);
+            return await CurrentRepository.DeleteAsync(id);
         }
 
         /// <summary>
@@ -205,7 +204,7 @@ namespace Aspire
         public virtual async Task<TOutputDto> UpdateAsync(TUpdateDto dto)
         {
             var entity = MapToEntity(dto);
-            var success = await _repository.UpdateAsync(entity);
+            var success = await CurrentRepository.UpdateAsync(entity);
             if (success) {
                 return await GetAsync(dto.Id);
             }
@@ -220,7 +219,7 @@ namespace Aspire
         [HttpGet("{id}")]
         public virtual async Task<TOutputDto> GetAsync(TPrimaryKey id)
         {
-            return MapToDto<TOutputDto>(await _repository.GetAsync(id));
+            return MapToDto<TOutputDto>(await CurrentRepository.GetAsync(id));
         }
 
         /// <summary>
@@ -232,7 +231,7 @@ namespace Aspire
         public virtual async Task<PagedResultDto<TOutputDto>> PagingAsync(TPageInputDto dto)
         {
             var filer = FilterPage(dto);
-            var (items, totalCount) = await _repository.PagingAsync(filer, dto);
+            var (items, totalCount) = await CurrentRepository.PagingAsync(filer, dto);
             return new PagedResultDto<TOutputDto>(items.Select(MapToDto), totalCount);
 
         }
