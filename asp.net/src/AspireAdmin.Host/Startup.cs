@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Aspire.AutoMapper.Provider;
 using Aspire.FreeSql.Provider;
+using Aspire.Serilog.ElasticSearch.Provider;
 
 using AspireAdmin.Core.Users;
 
@@ -59,6 +60,8 @@ namespace AspireAdmin.Host
                 options.AuditRepositoryOptions = new FreeSqlAuditRepositoryOptionsSetup(_configuration.GetConnectionString("DbMain"), DataType.Sqlite);
 
                 options.Configuration = _configuration;
+
+                options.LoggerOptionsSetup = new SerilogElasticSearchOptionsSetup();
             });
         }
 

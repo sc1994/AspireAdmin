@@ -2,8 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 
-using Aspire.Exceptions;
-
 using Newtonsoft.Json;
 
 namespace Aspire

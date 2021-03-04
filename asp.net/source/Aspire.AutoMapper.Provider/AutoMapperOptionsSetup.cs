@@ -23,13 +23,24 @@ namespace Aspire.AutoMapper.Provider
 
         public void AddAspireMapper(IServiceCollection services)
         {
-            services.AddScoped<IAspireMapper, AspireMapper>();
-
-            services.AddScoped(typeof(IMapper), _ => {
+            services.AddSingleton(_ => {
                 return new MapperConfiguration(cfg => {
                     cfg.AddMaps(_applicationAssembly);
+                    _applicationAssembly
+                        .GetTypes()
+                        .ForEach(type => {
+                            var mapperCase = type.GetCustomAttribute<MapperProfileAttribute>();
+                            if (mapperCase is not null) {
+                                cfg.CreateProfile($"{type.FullName}_mutually_{mapperCase.Type.FullName}", profileConfig => {
+                                    profileConfig.CreateMap(type, mapperCase.Type).ReverseMap();
+                                });
+                            }
+                        });
+
                 }).CreateMapper();
             });
+
+            services.AddScoped<IAspireMapper, AspireMapper>();
         }
     }
 }

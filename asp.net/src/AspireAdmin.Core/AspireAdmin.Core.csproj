@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\..\source\Aspire.AutoMapper.Provider\Aspire.AutoMapper.Provider.csproj" />
     <ProjectReference Include="..\..\source\Aspire.FreeSql.Provider\Aspire.FreeSql.Provider.csproj" />
     <ProjectReference Include="..\AspireAdmin.Utility\AspireAdmin.Utility.csproj" />
     <ProjectReference Include="..\..\source\Aspire\Aspire.csproj" />

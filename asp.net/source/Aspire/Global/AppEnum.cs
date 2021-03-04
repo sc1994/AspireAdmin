@@ -35,4 +35,23 @@ namespace Aspire
         /// </summary>
         InternalServerDatabaseError = 500001
     }
+
+    /// <summary>
+    /// 日志等级
+    /// </summary>
+    public enum LogLevelEnum
+    {
+        /// <summary>
+        /// info
+        /// </summary>
+        Info,
+        /// <summary>
+        /// warn
+        /// </summary>
+        Warn,
+        /// <summary>
+        /// error
+        /// </summary>
+        Error
+    }
 }

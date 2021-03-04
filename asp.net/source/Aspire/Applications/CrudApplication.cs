@@ -129,7 +129,7 @@ namespace Aspire
         /// <summary>
         /// 当前服务仓储
         /// </summary>
-        protected readonly IAuditRepository<TAuditEntity, TPrimaryKey> CurrentRepository;
+        readonly protected IAuditRepository<TAuditEntity, TPrimaryKey> CurrentRepository;
 
         /// <summary>
         /// 默认 构造 ，实例CRUD必须的服务

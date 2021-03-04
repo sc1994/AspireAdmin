@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -28,7 +29,10 @@ namespace Aspire
         /// </summary>
         /// <param name="entity"></param>
         /// <returns>成功与否</returns>
-        Task<bool> InsertAsync(TAuditEntity entity);
+        public async Task<bool> InsertAsync(TAuditEntity entity)
+        {
+            return await InsertBatchAsync(new[] { entity }) == 1;
+        }
 
         /// <summary>
         /// 增 然后 取得实体
@@ -49,28 +53,40 @@ namespace Aspire
         /// </summary>
         /// <param name="entities"></param>
         /// <returns>影响行数</returns>
-        Task<long> InsertBatchAsync(IEnumerable<TAuditEntity> entities);
+        public Task<long> InsertBatchAsync(IEnumerable<TAuditEntity> entities)
+        {
+            return InsertBatchAsync(entities.ToArray());
+        }
 
         /// <summary>
         /// 删
         /// </summary>
         /// <param name="primaryKey">指定主键</param>
         /// <returns>成功与否</returns>
-        Task<bool> DeleteAsync(TPrimaryKey primaryKey);
+        public async Task<bool> DeleteAsync(TPrimaryKey primaryKey)
+        {
+            return await DeleteBatchAsync(x => x.Id.Equals(primaryKey)) == 1;
+        }
 
         /// <summary>
         /// 删 批量 
         /// </summary>
         /// <param name="primaryKeys">指定主键集合</param>
         /// <returns>影响行数</returns>
-        Task<long> DeleteBatchAsync(TPrimaryKey[] primaryKeys);
+        public Task<long> DeleteBatchAsync(TPrimaryKey[] primaryKeys)
+        {
+            return DeleteBatchAsync(x => primaryKeys.Contains(x.Id));
+        }
 
         /// <summary>
         /// 删 批量 
         /// </summary>
         /// <param name="primaryKeys">指定主键集合</param>
         /// <returns>影响行数</returns>
-        Task<long> DeleteBatchAsync(IEnumerable<TPrimaryKey> primaryKeys);
+        public Task<long> DeleteBatchAsync(IEnumerable<TPrimaryKey> primaryKeys)
+        {
+            return DeleteBatchAsync(primaryKeys.ToArray());
+        }
 
         /// <summary>
         /// 删 批量 
@@ -84,7 +100,10 @@ namespace Aspire
         /// </summary>
         /// <param name="newEntity">新实体</param>
         /// <returns>成功与否</returns>
-        Task<bool> UpdateAsync(TAuditEntity newEntity);
+        public async Task<bool> UpdateAsync(TAuditEntity newEntity)
+        {
+            return await UpdateBatchAsync(new[] { newEntity }) == 1;
+        }
 
         /// <summary>
         /// 改 批量 
@@ -98,28 +117,40 @@ namespace Aspire
         /// </summary>
         /// <param name="newEntities">新实体集合</param>
         /// <returns>影响行数</returns>
-        Task<long> UpdateBatchAsync(IEnumerable<TAuditEntity> newEntities);
+        public Task<long> UpdateBatchAsync(IEnumerable<TAuditEntity> newEntities)
+        {
+            return UpdateBatchAsync(newEntities.ToArray());
+        }
 
         /// <summary>
         /// 查 
         /// </summary>
         /// <param name="primaryKey">主键</param>
         /// <returns>数据库内容</returns>
-        Task<TAuditEntity> GetAsync(TPrimaryKey primaryKey);
+        public Task<TAuditEntity> GetAsync(TPrimaryKey primaryKey)
+        {
+            return GetBatchAsync(x => x.Id.Equals(primaryKey), 1).FirstOrDefaultAsync();
+        }
 
         /// <summary>
         /// 查 
         /// </summary>
         /// <param name="primaryKeys">主键集合</param>
         /// <returns>数据库内容</returns>
-        Task<TAuditEntity[]> GetBatchAsync(TPrimaryKey[] primaryKeys);
+        public Task<TAuditEntity[]> GetBatchAsync(TPrimaryKey[] primaryKeys)
+        {
+            return GetBatchAsync(x => primaryKeys.Contains(x.Id), primaryKeys.Length);
+        }
 
         /// <summary>
         /// 查 
         /// </summary>
         /// <param name="primaryKeys">主键集合</param>
         /// <returns>数据库内容</returns>
-        Task<TAuditEntity[]> GetBatchAsync(IEnumerable<TPrimaryKey> primaryKeys);
+        Task<TAuditEntity[]> GetBatchAsync(IEnumerable<TPrimaryKey> primaryKeys)
+        {
+            return GetBatchAsync(primaryKeys.ToArray());
+        }
 
         /// <summary>
         /// 查 

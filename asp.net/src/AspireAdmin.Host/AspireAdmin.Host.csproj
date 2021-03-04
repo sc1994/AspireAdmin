@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\source\Aspire.Serilog.ElasticSearch.Provider\Aspire.Serilog.ElasticSearch.Provider.csproj" />
     <ProjectReference Include="..\AspireAdmin.Application\AspireAdmin.Application.csproj" />
-    <ProjectReference Include="..\..\source\Aspire.AutoMapper.Provider\Aspire.AutoMapper.Provider.csproj" />
     <ProjectReference Include="..\..\source\Aspire.CSRedis.Provider\Aspire.CSRedis.Provider.csproj" />
     <ProjectReference Include="..\..\source\Aspire.FreeSql.Provider\Aspire.FreeSql.Provider.csproj" />
   </ItemGroup>

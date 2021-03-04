@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Aspire.Exceptions
+namespace Aspire
 {
     /// <summary>
     /// 友好异常

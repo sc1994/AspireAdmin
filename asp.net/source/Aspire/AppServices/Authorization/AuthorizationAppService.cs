@@ -1,7 +1,11 @@
 using System;
 using System.Threading.Tasks;
+
 using Aspire.Authenticate;
+using Aspire.Logger;
+
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace Aspire.Authorization
@@ -59,6 +63,7 @@ namespace Aspire.Authorization
     {
         private readonly AspireAppSettings _aspireAppSettings;
         private readonly IAuditRepository<TUserEntity, TPrimaryKey> _userRepository;
+        private readonly ILogWriter<AuthorizationAppService<TUserEntity, TPrimaryKey, TLoginDto, TCurrentUserDto, TRegisterDto>> _logWriter;
 
         /// <summary>
         /// 鉴权
@@ -67,6 +72,7 @@ namespace Aspire.Authorization
         {
             _aspireAppSettings = ServiceLocator.ServiceProvider.GetService<IOptions<AspireAppSettings>>().Value;
             _userRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TUserEntity, TPrimaryKey>>();
+            _logWriter = ServiceLocator.ServiceProvider.GetService<ILogWriter<AuthorizationAppService<TUserEntity, TPrimaryKey, TLoginDto, TCurrentUserDto, TRegisterDto>>>();
         }
 
         /// <summary>
@@ -75,8 +81,10 @@ namespace Aspire.Authorization
         /// <param name="input"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        public async Task<TokenDto> LoginAsync(TLoginDto input)
+        public virtual async Task<TokenDto> LoginAsync(TLoginDto input)
         {
+            _ = _logWriter.InfoAsync("哈哈哈哈哈哈哈", "f1xxx", "f2xxx");
+            _ = _logWriter.ErrorAsync(new Exception(), "呃呃呃呃呃呃呃呃");
             if (!TryAdminLogin(input, out var user)) {
                 user = await TryUserLogin(input);
             }
@@ -92,9 +100,12 @@ namespace Aspire.Authorization
         /// 获取当前用户
         /// </summary>
         /// <returns></returns>
-        public virtual TCurrentUserDto GetCurrentUser()
+        public virtual async Task<TCurrentUserDto> GetCurrentUserAsync([FromServices] ICurrentUser currentUser)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository
+                .GetBatchAsync(x => x.Account == currentUser.Account, 1)
+                .FirstOrDefaultAsync();
+            return MapTo<TCurrentUserDto>(user);
         }
 
         /// <summary>

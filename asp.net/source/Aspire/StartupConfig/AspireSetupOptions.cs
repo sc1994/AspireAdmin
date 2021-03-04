@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
+using Aspire.Logger;
 using Aspire.Mapper;
 
 using Microsoft.AspNetCore.Mvc;
@@ -56,5 +57,11 @@ namespace Aspire
         /// </summary>
         [NotNull]
         public IConfiguration Configuration { get; set; }
+
+        /// <summary>
+        /// 日志 设置项
+        /// </summary>
+        [NotNull]
+        public ILoggerOptionsSetup LoggerOptionsSetup { get; set; }
     }
 }

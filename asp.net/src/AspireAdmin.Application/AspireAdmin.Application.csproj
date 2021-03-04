@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\..\source\Aspire.Serilog.ElasticSearch.Provider\Aspire.Serilog.ElasticSearch.Provider.csproj" />
     <ProjectReference Include="..\AspireAdmin.Core\AspireAdmin.Core.csproj" />
   </ItemGroup>
 

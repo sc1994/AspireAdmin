@@ -1,4 +1,3 @@
-using Aspire.Exceptions;
 using Aspire.Mapper;
 
 using Panda.DynamicWebApi;
@@ -16,7 +15,7 @@ namespace Aspire
         /// <summary>
         /// Mapper
         /// </summary>
-        protected readonly IAspireMapper Mapper;
+        readonly protected IAspireMapper Mapper;
 
         /// <summary>
         /// 应用 

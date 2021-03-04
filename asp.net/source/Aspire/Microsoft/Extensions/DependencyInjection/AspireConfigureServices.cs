@@ -235,6 +235,9 @@ namespace Microsoft.Extensions.DependencyInjection
             });
 
             // LOG TODO
+            if (options.LoggerOptionsSetup == null)
+                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.LoggerOptionsSetup));
+            options.LoggerOptionsSetup.AddLogger(services, options.Configuration);
 
             // Redis
 
