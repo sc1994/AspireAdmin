@@ -6,7 +6,7 @@ namespace Aspire
     /// <summary>
     /// 友好异常
     /// </summary>
-    internal class FriendlyException : Exception
+    public class FriendlyException : Exception
     {
         public int Code { get; }
         public new EnhancedStackTrace StackTrace { get; }

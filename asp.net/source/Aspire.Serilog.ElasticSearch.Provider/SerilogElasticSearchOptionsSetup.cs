@@ -25,8 +25,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider
 
             services.AddSingleton(logger);
             services.AddSingleton<ILogger>(logger);
-            services.AddScoped(typeof(ILogWriter<>), typeof(LogWriter<>));
-            services.AddScoped<ILogReader<LogModel>, LogReader>();
+            services.AddScoped(typeof(ILogWriter), typeof(LogWriter));
         }
     }
 }

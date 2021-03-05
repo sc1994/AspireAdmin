@@ -12,7 +12,7 @@ namespace Aspire
         /// <summary>
         /// 序列化 对象
         /// </summary>
-        public static string ToJson(this object source)
+        public static string SerializeObject(this object source)
         {
             return JsonConvert.SerializeObject(source);
         }
@@ -23,10 +23,44 @@ namespace Aspire
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static async Task<string> ToJsonAsync<T>(this Task<T> source)
+        public static async Task<string> SerializeObjectAsync<T>(this Task<T> source)
         {
             var tmp = await source;
             return JsonConvert.SerializeObject(tmp);
+        }
+
+        /// <summary>
+        /// 序列化 对象
+        /// </summary>
+        public static T DeserializeObject<T>(this string source)
+        {
+            return JsonConvert.DeserializeObject<T>(source);
+        }
+
+        /// <summary>
+        /// 序列化异步任务的结果
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static async Task<T> DeserializeObjectAsync<T>(this Task<string> source)
+        {
+            var tmp = await source;
+            return JsonConvert.DeserializeObject<T>(tmp);
+        }
+
+        /// <summary>
+        /// try to double
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="def"></param>
+        /// <returns></returns>
+        public static double TryToDouble(this string source, double def = 0D)
+        {
+            if (source is not null && double.TryParse(source, out var val)) {
+                return val;
+            }
+            return def;
         }
     }
 }

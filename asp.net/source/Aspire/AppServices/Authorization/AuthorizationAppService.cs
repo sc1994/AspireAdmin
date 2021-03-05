@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 
 using Aspire.Authenticate;
-using Aspire.Logger;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -63,7 +62,6 @@ namespace Aspire.Authorization
     {
         private readonly AspireAppSettings _aspireAppSettings;
         private readonly IAuditRepository<TUserEntity, TPrimaryKey> _userRepository;
-        private readonly ILogWriter<AuthorizationAppService<TUserEntity, TPrimaryKey, TLoginDto, TCurrentUserDto, TRegisterDto>> _logWriter;
 
         /// <summary>
         /// 鉴权
@@ -72,7 +70,6 @@ namespace Aspire.Authorization
         {
             _aspireAppSettings = ServiceLocator.ServiceProvider.GetService<IOptions<AspireAppSettings>>().Value;
             _userRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TUserEntity, TPrimaryKey>>();
-            _logWriter = ServiceLocator.ServiceProvider.GetService<ILogWriter<AuthorizationAppService<TUserEntity, TPrimaryKey, TLoginDto, TCurrentUserDto, TRegisterDto>>>();
         }
 
         /// <summary>
@@ -83,8 +80,6 @@ namespace Aspire.Authorization
         [AllowAnonymous]
         public virtual async Task<TokenDto> LoginAsync(TLoginDto input)
         {
-            _ = _logWriter.InfoAsync("哈哈哈哈哈哈哈", "f1xxx", "f2xxx");
-            _ = _logWriter.ErrorAsync(new Exception(), "呃呃呃呃呃呃呃呃");
             if (!TryAdminLogin(input, out var user)) {
                 user = await TryUserLogin(input);
             }

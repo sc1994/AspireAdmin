@@ -9,14 +9,6 @@ namespace Aspire.AutoMapper.Provider
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// 空参构造，由 ServiceLocator 创建 AutoMapper 实例
-        /// </summary>
-        public AspireMapper()
-        {
-            _mapper = ServiceLocator.ServiceProvider.GetService<IMapper>();
-        }
-
-        /// <summary>
         /// 由 di 实例此构造函数
         /// </summary>
         /// <param name="mapper"></param>

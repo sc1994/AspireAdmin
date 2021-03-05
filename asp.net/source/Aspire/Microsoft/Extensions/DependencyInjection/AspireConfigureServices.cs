@@ -234,9 +234,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.DynamicWebApiOptionsSetup(optionsAction);
             });
 
-            // LOG TODO
+            // LOG 
             if (options.LoggerOptionsSetup == null)
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.LoggerOptionsSetup));
+
+            services.AddScoped<LogWriterHelper>();
             options.LoggerOptionsSetup.AddLogger(services, options.Configuration);
 
             // Redis

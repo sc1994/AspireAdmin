@@ -3,16 +3,26 @@ namespace Aspire
     /// <summary>
     /// 页输入
     /// </summary>
-    public class PageInputDto
+    public interface IPageInputDto
     {
         /// <summary>
         /// 页 索引
         /// </summary>
-        public int PageIndex { get; set; }
+        int PageIndex { get; set; }
 
         /// <summary>
         /// 页 大小
         /// </summary>
-        public int PageSize { get; set; }
+        int PageSize { get; set; }
+    }
+
+    /// <inheritdoc />
+    public class PageInputDto : IPageInputDto
+    {
+        /// <inheritdoc />
+        public int PageIndex { get; set; } = 1;
+
+        /// <inheritdoc />
+        public int PageSize { get; set; } = 10;
     }
 }
