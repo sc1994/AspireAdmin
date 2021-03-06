@@ -13,9 +13,12 @@ namespace Aspire
         /// </summary>
         public override void OnActionExecuted(ActionExecutedContext cxt)
         {
-            if (cxt.Exception != null) {
-                if (cxt.Exception is FriendlyException friendlyException) {
-                    cxt.Result = new OkObjectResult(new GlobalResponse {
+            if (cxt.Exception != null)
+            {
+                if (cxt.Exception is FriendlyException friendlyException)
+                {
+                    cxt.Result = new OkObjectResult(new GlobalResponse
+                    {
                         Code = friendlyException.Code,
                         Message = friendlyException.Messages,
 #if DEBUG
@@ -23,8 +26,10 @@ namespace Aspire
 #endif
                     });
                 }
-                else if (cxt.Exception is { } exception) {
-                    cxt.Result = new OkObjectResult(new GlobalResponse {
+                else if (cxt.Exception is { } exception)
+                {
+                    cxt.Result = new OkObjectResult(new GlobalResponse
+                    {
                         Code = ResponseCode.InternalServerError.GetHashCode(),
                         Message = new[] { exception.Message },
 #if DEBUG
@@ -34,9 +39,11 @@ namespace Aspire
                 }
                 cxt.Exception = null;
             }
-            else {
+            else
+            {
                 var result = (ObjectResult)cxt.Result;
-                cxt.Result = new OkObjectResult(new GlobalResponse {
+                cxt.Result = new OkObjectResult(new GlobalResponse
+                {
                     Code = ResponseCode.Ok.GetHashCode(),
                     Result = result.Value,
                 });

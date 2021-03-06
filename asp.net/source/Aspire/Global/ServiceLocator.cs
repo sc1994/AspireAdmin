@@ -6,7 +6,6 @@ namespace Aspire
 {
     using System;
     using System.Collections.Generic;
-
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -51,7 +50,7 @@ namespace Aspire
         /// </summary>
         public static IServiceProviderProxy ServiceProvider => _diProxy ?? throw new Exception("请先调用Initialize初始化服务");
 
-        static internal void Initialize(IServiceProviderProxy proxy)
+        internal static void Initialize(IServiceProviderProxy proxy)
         {
             _diProxy = proxy;
         }
@@ -63,32 +62,32 @@ namespace Aspire
 
         public HttpContextServiceProviderProxy(IHttpContextAccessor contextAccessor)
         {
-            _contextAccessor = contextAccessor;
+            this._contextAccessor = contextAccessor;
         }
 
         public T GetService<T>()
         {
-            return GetHttpContext().RequestServices.GetService<T>();
+            return this.GetHttpContext().RequestServices.GetService<T>();
         }
 
         public IEnumerable<T> GetServices<T>()
         {
-            return GetHttpContext().RequestServices.GetServices<T>();
+            return this.GetHttpContext().RequestServices.GetServices<T>();
         }
 
         public object GetService(Type type)
         {
-            return GetHttpContext().RequestServices.GetService(type);
+            return this.GetHttpContext().RequestServices.GetService(type);
         }
 
         public IEnumerable<object> GetServices(Type type)
         {
-            return GetHttpContext().RequestServices.GetServices(type);
+            return this.GetHttpContext().RequestServices.GetServices(type);
         }
 
         private HttpContext GetHttpContext()
         {
-            return _contextAccessor.HttpContext ?? throw new NotSupportedException("只能在http请求中使用此方式获取服务");
+            return this._contextAccessor.HttpContext ?? throw new NotSupportedException("只能在http请求中使用此方式获取服务");
         }
     }
 }

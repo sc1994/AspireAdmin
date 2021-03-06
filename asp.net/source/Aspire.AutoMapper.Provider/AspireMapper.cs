@@ -14,17 +14,17 @@ namespace Aspire.AutoMapper.Provider
         /// <param name="mapper"></param>
         public AspireMapper(IMapper mapper)
         {
-            _mapper = mapper;
+            this._mapper = mapper;
         }
 
         public TTarget MapTo<TTarget>(object source)
         {
-            return _mapper.Map<TTarget>(source);
+            return this._mapper.Map<TTarget>(source);
         }
 
         public TTarget MapTo<TSource, TTarget>(TSource source)
         {
-            return _mapper.Map<TSource, TTarget>(source);
+            return this._mapper.Map<TSource, TTarget>(source);
         }
     }
 }

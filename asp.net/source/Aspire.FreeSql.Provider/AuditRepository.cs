@@ -2,9 +2,7 @@ using System;
 using System.Data.SqlTypes;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-
 using Aspire.Authenticate;
-
 using FreeSql;
 
 namespace Aspire.FreeSql.Provider
@@ -26,44 +24,44 @@ namespace Aspire.FreeSql.Provider
 
         public AuditRepository(IFreeSql freeSql, ICurrentUser currentUser)
         {
-            _freeSql = freeSql;
-            CurrentUser = currentUser;
+            this._freeSql = freeSql;
+            this.CurrentUser = currentUser;
         }
 
-        public async virtual Task<TAuditEntity> InsertThenEntityAsync(TAuditEntity entity)
+        public virtual async Task<TAuditEntity> InsertThenEntityAsync(TAuditEntity entity)
         {
-            SetCreatedEntity(ref entity);
-            return await _freeSql.Insert(entity).ExecuteInsertedAsync().FirstOrDefaultAsync();
+            this.SetCreatedEntity(ref entity);
+            return await this._freeSql.Insert(entity).ExecuteInsertedAsync().FirstOrDefaultAsync();
         }
 
-        public async virtual Task<long> InsertBatchAsync(TAuditEntity[] entities)
+        public virtual async Task<long> InsertBatchAsync(TAuditEntity[] entities)
         {
-            entities.ForEach(x => SetCreatedEntity(ref x));
-            return await _freeSql.Insert(entities).ExecuteAffrowsAsync();
+            entities.ForEach(x => this.SetCreatedEntity(ref x));
+            return await this._freeSql.Insert(entities).ExecuteAffrowsAsync();
         }
 
-        public async virtual Task<long> DeleteBatchAsync(Expression<Func<TAuditEntity, bool>> filter)
+        public virtual async Task<long> DeleteBatchAsync(Expression<Func<TAuditEntity, bool>> filter)
         {
-            return await _freeSql.Update<TAuditEntity>()
+            return await this._freeSql.Update<TAuditEntity>()
                 .Where(filter)
                 .Set(x => x.DeletedAt, DateTime.Now)
-                .Set(x => x.DeletedUserName, CurrentUser.Name)
-                .Set(x => x.DeletedUserAccount, CurrentUser.Account)
+                .Set(x => x.DeletedUserName, this.CurrentUser.Name)
+                .Set(x => x.DeletedUserAccount, this.CurrentUser.Account)
                 .Set(x => x.Deleted, true)
                 .ExecuteAffrowsAsync();
         }
 
-        public async virtual Task<long> UpdateBatchAsync(TAuditEntity[] newEntities)
+        public virtual async Task<long> UpdateBatchAsync(TAuditEntity[] newEntities)
         {
-            newEntities.ForEach(x => SetUpdatedEntity(ref x));
-            return await _freeSql.Update<TAuditEntity>()
+            newEntities.ForEach(x => this.SetUpdatedEntity(ref x));
+            return await this._freeSql.Update<TAuditEntity>()
                 .SetSource(newEntities)
                 .ExecuteAffrowsAsync();
         }
 
-        public async virtual Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter)
+        public virtual async Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter)
         {
-            return await _freeSql
+            return await this._freeSql
                 .Select<TAuditEntity>()
                 .Where(x => !x.Deleted)
                 .Where(filter)
@@ -71,9 +69,9 @@ namespace Aspire.FreeSql.Provider
                 .ToArrayAsync();
         }
 
-        public async virtual Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter, long limit)
+        public virtual async Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter, long limit)
         {
-            return await _freeSql
+            return await this._freeSql
                 .Select<TAuditEntity>()
                 .Where(x => !x.Deleted)
                 .Where(filter)
@@ -82,9 +80,10 @@ namespace Aspire.FreeSql.Provider
                 .ToArrayAsync();
         }
 
-        public async virtual Task<(TAuditEntity[] items, long totalCount)> PagingAsync(object queryable, PageInputDto dto)
+        public virtual async Task<(TAuditEntity[] items, long totalCount)> PagingAsync(object queryable, PageInputDto dto)
         {
-            if (queryable is ISelect<TAuditEntity> iSelect) {
+            if (queryable is ISelect<TAuditEntity> iSelect)
+            {
                 var itemsAsync = iSelect.ToListAsync<TAuditEntity>().ToArrayAsync();
                 var totalCountAsync = iSelect.CountAsync();
                 return (await itemsAsync, await totalCountAsync);
@@ -99,8 +98,8 @@ namespace Aspire.FreeSql.Provider
         private void SetCreatedEntity(ref TAuditEntity entity)
         {
             entity.CreatedAt = DateTime.Now;
-            entity.CreatedUserName = CurrentUser.Name;
-            entity.CreatedUserAccount = CurrentUser.Account;
+            entity.CreatedUserName = this.CurrentUser.Name;
+            entity.CreatedUserAccount = this.CurrentUser.Account;
 
             entity.Deleted = false;
             entity.DeletedAt = SqlDateTime.MaxValue.Value;
@@ -119,8 +118,8 @@ namespace Aspire.FreeSql.Provider
         private void SetUpdatedEntity(ref TAuditEntity entity)
         {
             entity.UpdatedAt = DateTime.Now;
-            entity.UpdatedUserName = CurrentUser.Name;
-            entity.UpdatedUserAccount = CurrentUser.Account;
+            entity.UpdatedUserName = this.CurrentUser.Name;
+            entity.UpdatedUserAccount = this.CurrentUser.Account;
         }
     }
 

@@ -13,7 +13,6 @@ namespace Aspire
     /// <typeparam name="TItem">item.</typeparam>
     public class PagedResultDto<TItem>
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PagedResultDto{TItem}"/> class.
         /// </summary>
@@ -21,8 +20,8 @@ namespace Aspire
         /// <param name="totalCount">total count.</param>
         public PagedResultDto(IEnumerable<TItem> items, long totalCount)
         {
-            Items = items.ToList();
-            TotalCount = totalCount;
+            this.Items = items.ToList();
+            this.TotalCount = totalCount;
         }
 
         /// <summary>

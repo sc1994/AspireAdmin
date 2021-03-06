@@ -1,7 +1,7 @@
-using System;
-
 namespace Aspire.SystemLog
 {
+    using System;
+
     /// <summary>
     /// 系统日志 过滤 输出
     /// </summary>

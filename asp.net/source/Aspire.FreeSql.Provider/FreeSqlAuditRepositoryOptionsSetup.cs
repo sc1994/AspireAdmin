@@ -11,15 +11,16 @@ namespace Aspire.FreeSql.Provider
 
         public FreeSqlAuditRepositoryOptionsSetup(string connectionString, DataType dataType)
         {
-            _connectionString = connectionString;
-            _dataType = dataType;
+            this._connectionString = connectionString;
+            this._dataType = dataType;
         }
 
         public void AddAuditRepository(IServiceCollection services)
         {
-            services.AddSingleton(serviceProvider => {
+            services.AddSingleton(serviceProvider =>
+            {
                 var freeSql = new FreeSqlBuilder()
-                .UseConnectionString(_dataType, _connectionString)
+                .UseConnectionString(this._dataType, this._connectionString)
 #if DEBUG
                 .UseAutoSyncStructure(true) // 本地自动同步数据库
 #endif

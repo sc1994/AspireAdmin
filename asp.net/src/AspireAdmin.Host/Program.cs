@@ -15,7 +15,8 @@ namespace AspireAdmin.Host
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return MicrosoftHost.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => {
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
                     webBuilder
                         .UseUrls("http://*:5000")
                         .UseStartup<Startup>();

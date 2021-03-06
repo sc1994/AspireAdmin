@@ -1,6 +1,5 @@
 using System;
 using System.Net;
-
 using Microsoft.AspNetCore.Http;
 
 namespace Aspire
@@ -19,12 +18,13 @@ namespace Aspire
         /// <param name="httpContextAccessor">httpContextAccessor.</param>
         public LogWriterHelper(IHttpContextAccessor httpContextAccessor)
         {
-            _httpContextAccessor = httpContextAccessor;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
         private static string GetTrace(HttpContext cxt)
         {
-            if (cxt?.Items == null) {
+            if (cxt?.Items == null)
+            {
                 return null;
             }
 
@@ -32,14 +32,17 @@ namespace Aspire
 
             if (cxt.Items.TryGetValue(traceKey, out var traceId)
                 && traceId is string id
-                && !string.IsNullOrWhiteSpace(id)) {
+                && !string.IsNullOrWhiteSpace(id))
+            {
                 return id;
             }
 
-            lock (traceKey) {
+            lock (traceKey)
+            {
                 if (cxt.Items.TryGetValue(traceKey, out var traceId2)
                     && traceId2 is string id2
-                    && !string.IsNullOrWhiteSpace(id2)) {
+                    && !string.IsNullOrWhiteSpace(id2))
+                {
                     return id2;
                 }
 
@@ -52,7 +55,8 @@ namespace Aspire
         private static string RemoveIpV6Zero(IPAddress ipAddress)
         {
             var ip = ipAddress?.ToString() ?? "Unknown";
-            if (ip.StartsWith("::ffff:")) {
+            if (ip.StartsWith("::ffff:"))
+            {
                 return ip.Remove(0, 7);
             }
             return ip;
@@ -63,8 +67,11 @@ namespace Aspire
         /// </summary>
         public (string apiMethod, string apiRouter, string traceId, string clientAddress, string serverAddress) GetPartialStandardParams()
         {
-            var cxt = _httpContextAccessor.HttpContext;
-            if (cxt is null) goto Default;
+            var cxt = this._httpContextAccessor.HttpContext;
+            if (cxt is null)
+            {
+                goto Default;
+            }
 
             return (cxt.Request.Method,
                 cxt.Request.Path.Value,
@@ -73,7 +80,7 @@ namespace Aspire
                 $"{RemoveIpV6Zero(cxt.Connection.LocalIpAddress)}:{cxt.Connection.LocalPort}");
 
 
-            Default:
+        Default:
             return (string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
         }
     }

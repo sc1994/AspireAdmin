@@ -1,29 +1,35 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+// <copyright file="LinqUtility.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     /// <summary>
-    /// Linq 工具
+    /// Linq 工具.
     /// </summary>
     public static class LinqUtility
     {
         /// <summary>
-        /// 迭代 Array 
+        /// 迭代 Array
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="array"></param>
-        /// <param name="action"></param>
+        /// <typeparam name="T">T.</typeparam>
+        /// <param name="array">array.</param>
+        /// <param name="action">action.</param>
         public static void ForEach<T>(this T[] array, Action<T> action)
         {
             foreach (var item in array)
+            {
                 action(item);
+            }
         }
 
         /// <summary>
-        /// 迭代 IEnumerable 
+        /// 迭代 IEnumerable
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="array"></param>
@@ -31,7 +37,9 @@ namespace Aspire
         public static void ForEach<T>(this IEnumerable<T> array, Action<T> action)
         {
             foreach (var item in array)
+            {
                 action(item);
+            }
         }
 
         /// <summary>

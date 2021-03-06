@@ -1,17 +1,17 @@
 namespace Aspire.Authorization
 {
     /// <summary>
-    /// 当前用户
+    /// 当前用户.
     /// </summary>
     public class CurrentUserDto
     {
         /// <summary>
-        /// 用户名
+        /// Gets or sets name.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 角色
+        /// Gets or sets roles.
         /// </summary>
         public string[] Roles { get; set; }
     }

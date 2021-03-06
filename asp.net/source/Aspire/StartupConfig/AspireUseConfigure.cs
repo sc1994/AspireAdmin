@@ -1,13 +1,16 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Routing;
+// <copyright file="AspireUseConfigure.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using Microsoft.AspNetCore.Cors.Infrastructure;
+    using Microsoft.AspNetCore.Routing;
+
     /// <summary>
-    /// Aspire 配置项
+    /// Aspire 配置项.
     /// </summary>
     public class AspireUseConfigure
     {

@@ -1,5 +1,4 @@
 using System;
-
 using FreeSql.DataAnnotations;
 
 namespace Aspire.FreeSql.Provider
@@ -9,7 +8,7 @@ namespace Aspire.FreeSql.Provider
         /// <inheritdoc />
         public void InitId()
         {
-            Id = GuidUtility.NewOrderlyGuid();
+            this.Id = GuidUtility.NewOrderlyGuid();
         }
 
         /// <inheritdoc />

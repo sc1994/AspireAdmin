@@ -1,5 +1,4 @@
 using System;
-
 using Aspire.SystemLog;
 
 namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog

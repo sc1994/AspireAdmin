@@ -31,7 +31,7 @@ namespace Aspire
         /// <returns>成功与否</returns>
         public async Task<bool> InsertAsync(TAuditEntity entity)
         {
-            return await InsertBatchAsync(new[] { entity }) == 1;
+            return await this.InsertBatchAsync(new[] { entity }) == 1;
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Aspire
         /// <returns>影响行数</returns>
         public Task<long> InsertBatchAsync(IEnumerable<TAuditEntity> entities)
         {
-            return InsertBatchAsync(entities.ToArray());
+            return this.InsertBatchAsync(entities.ToArray());
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Aspire
         /// <returns>成功与否</returns>
         public async Task<bool> DeleteAsync(TPrimaryKey primaryKey)
         {
-            return await DeleteBatchAsync(x => x.Id.Equals(primaryKey)) == 1;
+            return await this.DeleteBatchAsync(x => x.Id.Equals(primaryKey)) == 1;
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Aspire
         /// <returns>影响行数</returns>
         public Task<long> DeleteBatchAsync(TPrimaryKey[] primaryKeys)
         {
-            return DeleteBatchAsync(x => primaryKeys.Contains(x.Id));
+            return this.DeleteBatchAsync(x => primaryKeys.Contains(x.Id));
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Aspire
         /// <returns>影响行数</returns>
         public Task<long> DeleteBatchAsync(IEnumerable<TPrimaryKey> primaryKeys)
         {
-            return DeleteBatchAsync(primaryKeys.ToArray());
+            return this.DeleteBatchAsync(primaryKeys.ToArray());
         }
 
         /// <summary>
@@ -102,11 +102,11 @@ namespace Aspire
         /// <returns>成功与否</returns>
         public async Task<bool> UpdateAsync(TAuditEntity newEntity)
         {
-            return await UpdateBatchAsync(new[] { newEntity }) == 1;
+            return await this.UpdateBatchAsync(new[] { newEntity }) == 1;
         }
 
         /// <summary>
-        /// 改 批量 
+        /// 改 批量
         /// </summary>
         /// <param name="newEntities">新实体集合</param>
         /// <returns>影响行数</returns>
@@ -119,7 +119,7 @@ namespace Aspire
         /// <returns>影响行数</returns>
         public Task<long> UpdateBatchAsync(IEnumerable<TAuditEntity> newEntities)
         {
-            return UpdateBatchAsync(newEntities.ToArray());
+            return this.UpdateBatchAsync(newEntities.ToArray());
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Aspire
         /// <returns>数据库内容</returns>
         public Task<TAuditEntity> GetAsync(TPrimaryKey primaryKey)
         {
-            return GetBatchAsync(x => x.Id.Equals(primaryKey), 1).FirstOrDefaultAsync();
+            return this.GetBatchAsync(x => x.Id.Equals(primaryKey), 1).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Aspire
         /// <returns>数据库内容</returns>
         public Task<TAuditEntity[]> GetBatchAsync(TPrimaryKey[] primaryKeys)
         {
-            return GetBatchAsync(x => primaryKeys.Contains(x.Id), primaryKeys.Length);
+            return this.GetBatchAsync(x => primaryKeys.Contains(x.Id), primaryKeys.Length);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Aspire
         /// <returns>数据库内容</returns>
         Task<TAuditEntity[]> GetBatchAsync(IEnumerable<TPrimaryKey> primaryKeys)
         {
-            return GetBatchAsync(primaryKeys.ToArray());
+            return this.GetBatchAsync(primaryKeys.ToArray());
         }
 
         /// <summary>

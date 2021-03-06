@@ -27,7 +27,7 @@ namespace Aspire
         /// <param name="filter2">filter2.</param>
         public void Information(object message, string filter1 = null, string filter2 = null)
         {
-            Information(message.SerializeObject(), filter1, filter2);
+            this.Information(message.SerializeObject(), filter1, filter2);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Aspire
         /// <param name="filter2">filter2.</param>
         public void Warning(object message, string filter1 = null, string filter2 = null)
         {
-            Warning(message.SerializeObject(), filter1, filter2);
+            this.Warning(message.SerializeObject(), filter1, filter2);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Aspire
         /// <param name="filter2">filter2.</param>
         public void Error(Exception ex, object message, string filter1 = null, string filter2 = null)
         {
-            Error(ex, message.SerializeObject(), filter1, filter2);
+            this.Error(ex, message.SerializeObject(), filter1, filter2);
         }
     }
 }

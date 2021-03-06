@@ -1,18 +1,16 @@
-using System;
-using System.Data;
-
-using Aspire;
-using Aspire.Authenticate;
-
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Builder
 {
+    using System;
+    using System.Data;
+    using Aspire;
+    using Aspire.Authenticate;
+    using Microsoft.AspNetCore.Cors.Infrastructure;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Routing;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+
     /// <summary>
     /// aspire 启动
     /// </summary>
@@ -63,7 +61,8 @@ namespace Microsoft.AspNetCore.Builder
             Action<CorsPolicyBuilder> corsPolicyBuilderConfigure)
             where TUserEntity : class, IUserEntity<TPrimaryKey>, new()
         {
-            return UseAspire<TUserEntity, TPrimaryKey>(app, actionConfigure => {
+            return UseAspire<TUserEntity, TPrimaryKey>(app, actionConfigure =>
+            {
                 actionConfigure.ServiceProvider = serviceProvider;
                 actionConfigure.EndpointRouteConfigure = endpointRouteConfigure;
                 actionConfigure.SwaggerUiName = swaggerUiName;
@@ -104,20 +103,32 @@ namespace Microsoft.AspNetCore.Builder
             var configure = new AspireUseConfigure();
             actionConfigure(configure);
             if (configure.ServiceProvider == null)
+            {
                 throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.ServiceProvider));
+            }
+
             if (configure.CorsPolicyBuilderConfigure == null)
+            {
                 throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.CorsPolicyBuilderConfigure));
+            }
+
             if (configure.EndpointRouteConfigure == null)
+            {
                 throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.EndpointRouteConfigure));
+            }
+
             if (configure.SwaggerUiName.IsNullOrWhiteSpace())
+            {
                 throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.SwaggerUiName));
+            }
 
             // 初始化 di服务代理 到 静态服务定位类中
             ServiceLocator.Initialize(configure.ServiceProvider.GetService<IServiceProviderProxy>());
 
             // 启用 swagger ui
             var env = configure.ServiceProvider.GetService<IWebHostEnvironment>();
-            if (env.IsDevelopment()) {
+            if (env.IsDevelopment())
+            {
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", configure.SwaggerUiName));
             }

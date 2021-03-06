@@ -1,8 +1,8 @@
-using System;
-using System.Text;
-
 namespace Aspire
 {
+    using System;
+    using System.Text;
+
     /// <summary>
     /// 编码工具
     /// </summary>

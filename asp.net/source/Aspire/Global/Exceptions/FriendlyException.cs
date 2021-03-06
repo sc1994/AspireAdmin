@@ -38,9 +38,9 @@ namespace Aspire
             EnhancedStackTrace stackTrace,
             params string[] messages)
         {
-            Code = code;
-            StackTrace = stackTrace;
-            Messages = messages;
+            this.Code = code;
+            this.StackTrace = stackTrace;
+            this.Messages = messages;
         }
     }
 

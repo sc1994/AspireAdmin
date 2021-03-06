@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-
 using Newtonsoft.Json;
 
 namespace Aspire
@@ -20,11 +19,17 @@ namespace Aspire
         public object StackTrace { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string[] StackTraceText {
-            get {
-                if (StackTrace is null) return null;
+        public string[] StackTraceText
+        {
+            get
+            {
+                if (this.StackTrace is null)
+                {
+                    return null;
+                }
 
-                return StackTrace switch {
+                return this.StackTrace switch
+                {
                     FriendlyException friendlyException => friendlyException.StackTrace.ToString()
                         .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                         .Where(x => !x.Contains(
@@ -37,13 +42,13 @@ namespace Aspire
                     Exception exception => exception.StackTrace
                         ?.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                         .ToArray(),
-                    EnhancedStackTrace _ => StackTrace.ToString()
+                    EnhancedStackTrace _ => this.StackTrace.ToString()
                         ?.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                         .ToArray(),
-                    StackTrace _ => StackTrace.ToString()
+                    StackTrace _ => this.StackTrace.ToString()
                         ?.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                         .ToArray(),
-                    _ => new[] { StackTrace.ToString() }
+                    _ => new[] { this.StackTrace.ToString() }
                 };
             }
         }

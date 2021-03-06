@@ -1,9 +1,6 @@
 using System.Reflection;
-
 using Aspire.Mapper;
-
 using AutoMapper;
-
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Aspire.AutoMapper.Provider
@@ -18,20 +15,25 @@ namespace Aspire.AutoMapper.Provider
         /// <param name="applicationAssembly">应用程序集，默认为启动入口的程序集</param>
         public AutoMapperOptionsSetup(Assembly applicationAssembly = null)
         {
-            _applicationAssembly = applicationAssembly ?? Assembly.GetEntryAssembly();
+            this._applicationAssembly = applicationAssembly ?? Assembly.GetEntryAssembly();
         }
 
         public void AddAspireMapper(IServiceCollection services)
         {
-            services.AddSingleton(_ => {
-                return new MapperConfiguration(cfg => {
-                    cfg.AddMaps(_applicationAssembly);
-                    _applicationAssembly
+            services.AddSingleton(_ =>
+            {
+                return new MapperConfiguration(cfg =>
+                {
+                    cfg.AddMaps(this._applicationAssembly);
+                    this._applicationAssembly
                         .GetTypes()
-                        .ForEach(type => {
+                        .ForEach(type =>
+                        {
                             var mapperCase = type.GetCustomAttribute<MapperProfileAttribute>();
-                            if (mapperCase is not null) {
-                                cfg.CreateProfile($"{type.FullName}_mutually_{mapperCase.Type.FullName}", profileConfig => {
+                            if (mapperCase is not null)
+                            {
+                                cfg.CreateProfile($"{type.FullName}_mutually_{mapperCase.Type.FullName}", profileConfig =>
+                                {
                                     profileConfig.CreateMap(type, mapperCase.Type).ReverseMap();
                                 });
                             }

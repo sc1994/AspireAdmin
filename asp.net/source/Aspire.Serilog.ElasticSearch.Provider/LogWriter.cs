@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-
 using Serilog;
 
 namespace Aspire.Serilog.ElasticSearch.Provider
@@ -16,13 +15,13 @@ namespace Aspire.Serilog.ElasticSearch.Provider
 
         public LogWriter(ILogger logger, LogWriterHelper writerHelper)
         {
-            _writerHelper = writerHelper;
-            _logger = logger;
+            this._writerHelper = writerHelper;
+            this._logger = logger;
         }
 
         private object[] GetLogParams(string message, string filter1 = null, string filter2 = null)
         {
-            var (apiMethod, apiRouter, traceId, clientAddress, serverAddress) = _writerHelper.GetPartialStandardParams();
+            (var apiMethod, var apiRouter, var traceId, var clientAddress, var serverAddress) = this._writerHelper.GetPartialStandardParams();
 
             return new object[] {
                 clientAddress,
@@ -38,20 +37,20 @@ namespace Aspire.Serilog.ElasticSearch.Provider
 
         public void Information(string message, string filter1 = null, string filter2 = null)
         {
-            _logger.Information(LogTemplate, GetLogParams(message, filter1, filter2));
+            this._logger.Information(LogTemplate, this.GetLogParams(message, filter1, filter2));
         }
 
         public void Warning(string message, string filter1 = null, string filter2 = null)
         {
-            _logger.Warning(LogTemplate, GetLogParams(message, filter1, filter2));
+            this._logger.Warning(LogTemplate, this.GetLogParams(message, filter1, filter2));
         }
 
         public void Error(Exception ex, string message, string filter1 = null, string filter2 = null)
         {
-            var @params = GetLogParams(message, filter1, filter2)
+            var @params = this.GetLogParams(message, filter1, filter2)
                     .Append(ex.ToString())
                     .ToArray();
-            _logger.Error(LogTemplate + "\r\n····error  :{error}", @params);
+            this._logger.Error(LogTemplate + "\r\n····error  :{error}", @params);
         }
     }
 }

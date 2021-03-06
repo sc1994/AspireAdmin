@@ -1,15 +1,11 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-
 using Aspire.AutoMapper.Provider;
 using Aspire.FreeSql.Provider;
 using Aspire.Serilog.ElasticSearch.Provider;
-
 using AspireAdmin.Core.Users;
-
 using FreeSql;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,28 +21,33 @@ namespace AspireAdmin.Host
 
         public Startup(IConfiguration configuration)
         {
-            _configuration = configuration;
+            this._configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAspire<User>(options => {
+            services.AddAspire<User>(options =>
+            {
                 var applicationAssembly = Assembly.Load("AspireAdmin.Application");
 
-                options.NewtonsoftJsonOptionsSetup = setup => {
+                options.NewtonsoftJsonOptionsSetup = setup =>
+                {
                     setup.AllowInputFormatterExceptionMessages = false;
                     setup.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 };
 
-                options.DynamicWebApiOptionsSetup = setup => {
+                options.DynamicWebApiOptionsSetup = setup =>
+                {
                     // 指定全局默认的 api 前缀
                     setup.DefaultApiPrefix = "api";
                     // 指定程序集 
                     setup.AddAssemblyOptions(applicationAssembly);
                 };
 
-                options.SwaggerGenOptionsSetup = setup => {
-                    setup.SwaggerDoc("v1", new OpenApiInfo {
+                options.SwaggerGenOptionsSetup = setup =>
+                {
+                    setup.SwaggerDoc("v1", new OpenApiInfo
+                    {
                         Title = "AspireAdmin.Host",
                         Version = "v1"
                     });
@@ -57,9 +58,9 @@ namespace AspireAdmin.Host
 
                 options.MapperOptions = new AutoMapperOptionsSetup(applicationAssembly);
 
-                options.AuditRepositoryOptions = new FreeSqlAuditRepositoryOptionsSetup(_configuration.GetConnectionString("DbMain"), DataType.Sqlite);
+                options.AuditRepositoryOptions = new FreeSqlAuditRepositoryOptionsSetup(this._configuration.GetConnectionString("DbMain"), DataType.Sqlite);
 
-                options.Configuration = _configuration;
+                options.Configuration = this._configuration;
 
                 options.LoggerOptionsSetup = new SerilogElasticSearchOptionsSetup();
             });
@@ -70,24 +71,29 @@ namespace AspireAdmin.Host
             IWebHostEnvironment env,
             IServiceProvider serviceProvider)
         {
-            if (env.IsDevelopment()) {
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseAspire<User>(configure => {
+            app.UseAspire<User>(configure =>
+            {
                 configure.ServiceProvider = serviceProvider;
 
-                configure.CorsPolicyBuilderConfigure = corsPolicy => {
+                configure.CorsPolicyBuilderConfigure = corsPolicy =>
+                {
                     corsPolicy.AllowAnyHeader();
                     corsPolicy.AllowAnyMethod();
                     corsPolicy.AllowCredentials();
-                    corsPolicy.WithOrigins(_configuration.GetSection("WithOrigins").Value.Split(","));
+                    corsPolicy.WithOrigins(this._configuration.GetSection("WithOrigins").Value.Split(","));
                 };
 
-                configure.EndpointRouteConfigure = endpoint => {
+                configure.EndpointRouteConfigure = endpoint =>
+                {
                     endpoint.MapControllers();
 
-                    endpoint.Map("/", async cxt => {
+                    endpoint.Map("/", async cxt =>
+                    {
                         await Task.Run(() => cxt.Response.Redirect("/swagger"));
                     });
                 };

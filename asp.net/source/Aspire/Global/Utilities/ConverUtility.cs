@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-
 using Newtonsoft.Json;
 
 namespace Aspire
@@ -57,7 +56,8 @@ namespace Aspire
         /// <returns></returns>
         public static double TryToDouble(this string source, double def = 0D)
         {
-            if (source is not null && double.TryParse(source, out var val)) {
+            if (source is not null && double.TryParse(source, out var val))
+            {
                 return val;
             }
             return def;
