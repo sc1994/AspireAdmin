@@ -102,7 +102,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
             };
         }
 
-        async override public Task<PagedResultDto<SystemLogFilterOutputDto>> FilterAsync(SystemLogFilterInputDto filterInput)
+        public async override Task<PagedResultDto<SystemLogFilterOutputDto>> FilterAsync(SystemLogFilterInputDto filterInput)
         {
             var items = new List<object>();
             if (!string.IsNullOrWhiteSpace(filterInput.ApiMethod)) {
@@ -162,14 +162,14 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
                 data["hits"]["total"]["value"].ToObject<int>());
         }
 
-        async override public Task<SystemLogDetailOutputDto> GetDetailAsync(string id)
+        public async override Task<SystemLogDetailOutputDto> GetDetailAsync(string id)
         {
             using var client = new HttpClient { BaseAddress = new Uri(_node) };
             var data = await client.GetStringAsync(id).DeserializeObjectAsync<JObject>();
             return ToLogModel<SystemLogDetailOutputDto>(data);
         }
 
-        async override public Task<SystemLogSelectItemsDto> GetSelectItems(SystemLogFilterInputDto filterInput)
+        public async override Task<SystemLogSelectItemsDto> GetSelectItems(SystemLogFilterInputDto filterInput)
         {
             throw new NotImplementedException();
         }

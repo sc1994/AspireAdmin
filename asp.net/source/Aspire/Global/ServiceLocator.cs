@@ -6,6 +6,7 @@ namespace Aspire
 {
     using System;
     using System.Collections.Generic;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -50,7 +51,7 @@ namespace Aspire
         /// </summary>
         public static IServiceProviderProxy ServiceProvider => _diProxy ?? throw new Exception("请先调用Initialize初始化服务");
 
-        internal static void Initialize(IServiceProviderProxy proxy)
+        static internal void Initialize(IServiceProviderProxy proxy)
         {
             _diProxy = proxy;
         }

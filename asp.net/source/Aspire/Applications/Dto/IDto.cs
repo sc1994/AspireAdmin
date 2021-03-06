@@ -1,13 +1,13 @@
 namespace Aspire
 {
     /// <summary>
-    /// 数据传输对象
+    /// 数据传输对象.
     /// </summary>
-    /// <typeparam name="TPrimaryKey"></typeparam>
+    /// <typeparam name="TPrimaryKey">主键.</typeparam>
     public interface IDto<TPrimaryKey>
     {
         /// <summary>
-        /// 主键
+        /// Gets or sets 主键.
         /// </summary>
         public TPrimaryKey Id { get; set; }
     }

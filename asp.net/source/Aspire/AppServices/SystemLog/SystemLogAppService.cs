@@ -5,7 +5,7 @@ namespace Aspire.SystemLog
     /// <summary>
     /// 日志查询 应用服务
     /// </summary>
-    abstract public class SystemLogAppService<
+    public abstract class SystemLogAppService<
         TId,
         TFilterInputDto,
         TFilterOutputDto,
@@ -20,20 +20,20 @@ namespace Aspire.SystemLog
         /// </summary>
         /// <param name="filterInput"></param>
         /// <returns></returns>
-        abstract public Task<PagedResultDto<TFilterOutputDto>> FilterAsync(TFilterInputDto filterInput);
+        public abstract Task<PagedResultDto<TFilterOutputDto>> FilterAsync(TFilterInputDto filterInput);
 
         /// <summary>
         /// get
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        abstract public Task<TDetailOutputDto> GetDetailAsync(TId id);
+        public abstract Task<TDetailOutputDto> GetDetailAsync(TId id);
 
         /// <summary>
         /// 可选择项
         /// </summary>
         /// <param name="filterInput"></param>
         /// <returns></returns>
-        abstract public Task<SystemLogSelectItemsDto> GetSelectItems(TFilterInputDto filterInput);
+        public abstract Task<SystemLogSelectItemsDto> GetSelectItems(TFilterInputDto filterInput);
     }
 }

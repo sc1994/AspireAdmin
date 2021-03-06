@@ -5,6 +5,7 @@
 namespace Aspire
 {
     using Mapper;
+
     using Panda.DynamicWebApi;
     using Panda.DynamicWebApi.Attributes;
 
@@ -20,7 +21,7 @@ namespace Aspire
         /// <summary>
         /// Mapper.
         /// </summary>
-        protected readonly IAspireMapper Mapper;
+        readonly protected IAspireMapper Mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Application"/> class.
@@ -57,7 +58,7 @@ namespace Aspire
         /// 失败
         /// </summary>
         /// <param name="messages">错误编码</param>
-        protected static T Failure<T>(params string[] messages)
+        static protected T Failure<T>(params string[] messages)
         {
             FriendlyThrowException.ThrowException(messages);
             return default;
@@ -68,7 +69,7 @@ namespace Aspire
         /// </summary>
         /// <param name="code">错误编码.</param>
         /// <param name="messages">消息.</param>
-        protected static T Failure<T>(ResponseCode code, params string[] messages)
+        static protected T Failure<T>(ResponseCode code, params string[] messages)
         {
             FriendlyThrowException.ThrowException(code, messages);
             return default;
@@ -79,7 +80,7 @@ namespace Aspire
         /// </summary>
         /// <param name="code">错误编码.</param>
         /// <param name="messages">消息.</param>
-        protected static T Failure<T>(int code, params string[] messages)
+        static protected T Failure<T>(int code, params string[] messages)
         {
             FriendlyThrowException.ThrowException(code, messages);
             return default;

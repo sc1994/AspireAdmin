@@ -41,7 +41,7 @@ namespace Aspire
         /// <param name="sourceAsync"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        async public static Task<T> FirstOrDefaultAsync<T>(this Task<T[]> sourceAsync, Func<T, bool> predicate = null)
+        public static async Task<T> FirstOrDefaultAsync<T>(this Task<T[]> sourceAsync, Func<T, bool> predicate = null)
         {
             var source = await sourceAsync;
             return source.FirstOrDefault(predicate ?? (x => true));
@@ -54,7 +54,7 @@ namespace Aspire
         /// <param name="sourceAsync"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        async public static Task<T> FirstOrDefaultAsync<T>(this Task<List<T>> sourceAsync, Func<T, bool> predicate = null)
+        public static async Task<T> FirstOrDefaultAsync<T>(this Task<List<T>> sourceAsync, Func<T, bool> predicate = null)
         {
             var source = await sourceAsync;
             return source.FirstOrDefault(predicate ?? (x => true));
@@ -66,7 +66,7 @@ namespace Aspire
         /// <typeparam name="T"></typeparam>
         /// <param name="sourceAsync"></param>
         /// <returns></returns>
-        async public static Task<T[]> ToArrayAsync<T>(this Task<List<T>> sourceAsync)
+        public static async Task<T[]> ToArrayAsync<T>(this Task<List<T>> sourceAsync)
         {
             var source = await sourceAsync;
             return source.ToArray();

@@ -12,7 +12,7 @@ namespace Aspire.Authorization
     /// <summary>
     /// 鉴权
     /// </summary>
-    abstract public class AuthorizationAppService<TUserEntity> :
+    public abstract class AuthorizationAppService<TUserEntity> :
         AuthorizationAppService<
             TUserEntity,
             Guid,
@@ -27,7 +27,7 @@ namespace Aspire.Authorization
     /// <summary>
     /// 鉴权
     /// </summary>
-    abstract public class AuthorizationAppService<
+    public abstract class AuthorizationAppService<
         TUserEntity,
         TLoginDto,
         TCurrentUserDto,
@@ -49,7 +49,7 @@ namespace Aspire.Authorization
     /// <summary>
     /// 鉴权
     /// </summary>
-    abstract public class AuthorizationAppService<
+    public abstract class AuthorizationAppService<
         TUserEntity,
         TPrimaryKey,
         TLoginDto,
@@ -80,7 +80,7 @@ namespace Aspire.Authorization
         /// <param name="input"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        virtual async public Task<TokenDto> LoginAsync(TLoginDto input)
+        public virtual async Task<TokenDto> LoginAsync(TLoginDto input)
         {
             _logWriter.Information("Information", "xx", "cc");
             _logWriter.Warning("Warning", "xx", "cc");
@@ -101,7 +101,7 @@ namespace Aspire.Authorization
         /// 获取当前用户
         /// </summary>
         /// <returns></returns>
-        virtual async public Task<TCurrentUserDto> GetCurrentUserAsync([FromServices] ICurrentUser currentUser)
+        public virtual async Task<TCurrentUserDto> GetCurrentUserAsync([FromServices] ICurrentUser currentUser)
         {
             var user = await _userRepository
                 .GetBatchAsync(x => x.Account == currentUser.Account, 1)
@@ -113,7 +113,7 @@ namespace Aspire.Authorization
         /// 登出
         /// </summary>
         /// <returns></returns>
-        virtual public string Logout()
+        public virtual string Logout()
         {
             throw new NotImplementedException();
         }
@@ -124,7 +124,7 @@ namespace Aspire.Authorization
         /// <param name="input"></param>
         /// <returns></returns>
         [AuthorizeFilter(Roles.Admin)]
-        virtual async public Task<bool> RegisterAsync(TRegisterDto input)
+        public virtual async Task<bool> RegisterAsync(TRegisterDto input)
         {
             return await _userRepository.InsertAsync(new TUserEntity {
                 Account = input.Account,
