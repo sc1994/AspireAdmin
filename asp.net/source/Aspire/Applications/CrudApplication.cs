@@ -10,7 +10,7 @@ namespace Aspire
     /// CRUD 服务
     /// </summary>
     /// <typeparam name="TAuditEntity">数据库审计实体</typeparam>
-    public abstract class CrudApplication<
+    abstract public class CrudApplication<
         TAuditEntity> : CrudAppService<
         TAuditEntity,
         Guid>
@@ -24,7 +24,7 @@ namespace Aspire
     /// </summary>
     /// <typeparam name="TAuditEntity">数据库审计实体</typeparam>
     /// <typeparam name="TPrimaryKey">实体主键</typeparam>
-    public abstract class CrudAppService<
+    abstract public class CrudAppService<
         TAuditEntity,
         TPrimaryKey> : CrudAppService<
         TAuditEntity,
@@ -41,7 +41,7 @@ namespace Aspire
     /// <typeparam name="TAuditEntity">数据库审计实体</typeparam>
     /// <typeparam name="TPrimaryKey">实体主键</typeparam>
     /// <typeparam name="TPageInputDto">数据传输对象 分页输入</typeparam>
-    public abstract class CrudAppService<
+    abstract public class CrudAppService<
         TAuditEntity,
         TPrimaryKey,
         TPageInputDto> : CrudAppService<
@@ -62,7 +62,7 @@ namespace Aspire
     /// <typeparam name="TPrimaryKey">实体主键</typeparam>
     /// <typeparam name="TPageInputDto">数据传输对象 分页输入</typeparam>
     /// <typeparam name="TDto">数据传输对象</typeparam>
-    public abstract class CrudAppService<
+    abstract public class CrudAppService<
         TAuditEntity,
         TPrimaryKey,
         TPageInputDto,
@@ -87,7 +87,7 @@ namespace Aspire
     /// <typeparam name="TPageInputDto">数据传输对象 分页输入</typeparam>
     /// <typeparam name="TOutputDto">数据传输 输出对象</typeparam>
     /// <typeparam name="TCreateOrUpdateDto">数据传输 创建或者更新 对象</typeparam>
-    public abstract class CrudAppService<
+    abstract public class CrudAppService<
         TAuditEntity,
         TPrimaryKey,
         TPageInputDto,
@@ -115,7 +115,7 @@ namespace Aspire
     /// <typeparam name="TOutputDto">数据传输 输出对象</typeparam>
     /// <typeparam name="TCreateDto">数据传输 创建对象</typeparam>
     /// <typeparam name="TUpdateDto">数据传输 更新对象</typeparam>
-    public abstract class CrudAppService<
+    abstract public class CrudAppService<
         TAuditEntity,
         TPrimaryKey,
         TPageInputDto,
@@ -129,7 +129,7 @@ namespace Aspire
         /// <summary>
         /// 当前服务仓储
         /// </summary>
-        readonly protected IAuditRepository<TAuditEntity, TPrimaryKey> CurrentRepository;
+        protected readonly IAuditRepository<TAuditEntity, TPrimaryKey> CurrentRepository;
 
         /// <summary>
         /// 默认 构造 ，实例CRUD必须的服务
@@ -179,7 +179,7 @@ namespace Aspire
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        public virtual async Task<TOutputDto> CreateAsync(TCreateDto dto)
+        virtual async public Task<TOutputDto> CreateAsync(TCreateDto dto)
         {
             var entity = MapToEntity(dto);
             return MapToDto(await CurrentRepository.InsertThenEntityAsync(entity));
@@ -191,7 +191,7 @@ namespace Aspire
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public virtual async Task<bool> DeleteAsync(TPrimaryKey id)
+        virtual async public Task<bool> DeleteAsync(TPrimaryKey id)
         {
             return await CurrentRepository.DeleteAsync(id);
         }
@@ -201,7 +201,7 @@ namespace Aspire
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        public virtual async Task<TOutputDto> UpdateAsync(TUpdateDto dto)
+        virtual async public Task<TOutputDto> UpdateAsync(TUpdateDto dto)
         {
             var entity = MapToEntity(dto);
             var success = await CurrentRepository.UpdateAsync(entity);
@@ -217,7 +217,7 @@ namespace Aspire
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public virtual async Task<TOutputDto> GetAsync(TPrimaryKey id)
+        virtual async public Task<TOutputDto> GetAsync(TPrimaryKey id)
         {
             return MapToDto<TOutputDto>(await CurrentRepository.GetAsync(id));
         }
@@ -228,7 +228,7 @@ namespace Aspire
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost]
-        public virtual async Task<PagedResultDto<TOutputDto>> PagingAsync(TPageInputDto dto)
+        virtual async public Task<PagedResultDto<TOutputDto>> PagingAsync(TPageInputDto dto)
         {
             var filer = FilterPage(dto);
             var (items, totalCount) = await CurrentRepository.PagingAsync(filer, dto);

@@ -14,43 +14,43 @@ namespace Aspire.FreeSql.Provider
 
         /// <inheritdoc />
         [Column(CanUpdate = false, IsPrimary = true)]
-        public override Guid Id { get; set; }
+        override public Guid Id { get; set; }
     }
 
     public class AuditEntity<TPrimaryKey> : IAuditEntity<TPrimaryKey>
     {
         /// <inheritdoc />
         [Column(IsIdentity = true, CanUpdate = false, IsPrimary = true)]
-        public virtual TPrimaryKey Id { get; set; }
+        virtual public TPrimaryKey Id { get; set; }
         /// <inheritdoc />
         [Column(IsNullable = false, CanUpdate = false)]
-        public virtual DateTime CreatedAt { get; set; }
+        virtual public DateTime CreatedAt { get; set; }
         /// <inheritdoc />
         [Column(StringLength = 50, IsNullable = false, CanUpdate = false)]
-        public virtual string CreatedUserName { get; set; }
+        virtual public string CreatedUserName { get; set; }
         /// <inheritdoc />
         [Column(IsNullable = false, CanUpdate = false)]
-        public virtual string CreatedUserAccount { get; set; }
+        virtual public string CreatedUserAccount { get; set; }
         /// <inheritdoc />
         [Column(IsNullable = false)]
-        public virtual DateTime UpdatedAt { get; set; }
+        virtual public DateTime UpdatedAt { get; set; }
         /// <inheritdoc />
         [Column(StringLength = 50, IsNullable = false)]
-        public virtual string UpdatedUserName { get; set; }
+        virtual public string UpdatedUserName { get; set; }
         /// <inheritdoc />
         [Column(IsNullable = false)]
-        public virtual string UpdatedUserAccount { get; set; }
+        virtual public string UpdatedUserAccount { get; set; }
         /// <inheritdoc />
         [Column(IsNullable = false)]
-        public virtual bool Deleted { get; set; }
+        virtual public bool Deleted { get; set; }
         /// <inheritdoc />
         [Column(IsNullable = false)]
-        public virtual DateTime DeletedAt { get; set; }
+        virtual public DateTime DeletedAt { get; set; }
         /// <inheritdoc />
         [Column(StringLength = 50, IsNullable = false)]
-        public virtual string DeletedUserName { get; set; }
+        virtual public string DeletedUserName { get; set; }
         /// <inheritdoc />
         [Column(IsNullable = false)]
-        public virtual string DeletedUserAccount { get; set; }
+        virtual public string DeletedUserAccount { get; set; }
     }
 }

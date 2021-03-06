@@ -1,17 +1,38 @@
-using System;
-using System.Diagnostics;
+// <copyright file="FriendlyException.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire
 {
+    using System;
+    using System.Diagnostics;
+
     /// <summary>
-    /// 友好异常
+    /// 友好异常.
     /// </summary>
     public class FriendlyException : Exception
     {
+        /// <summary>
+        /// code.
+        /// </summary>
         public int Code { get; }
+
+        /// <summary>
+        /// 堆栈.
+        /// </summary>
         public new EnhancedStackTrace StackTrace { get; }
+
+        /// <summary>
+        /// 消息.
+        /// </summary>
         public string[] Messages { get; }
 
+        /// <summary>
+        /// 实例化 异常.
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="stackTrace"></param>
+        /// <param name="messages"></param>
         public FriendlyException(
             int code,
             EnhancedStackTrace stackTrace,

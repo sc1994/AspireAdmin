@@ -39,5 +39,10 @@ namespace Aspire.SystemLog
         /// 服务端 地址
         /// </summary>
         string ServerAddress { get; set; }
+
+        /// <summary>
+        /// 等级
+        /// </summary>
+        LogLevelEnum? Level { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Serilog;
+using Serilog.Events;
 using Serilog.Formatting.Elasticsearch;
 using Serilog.Sinks.Elasticsearch;
 
@@ -21,6 +22,9 @@ namespace Aspire.Serilog.ElasticSearch.Provider
                       CustomFormatter = new ElasticsearchJsonFormatter(renderMessage: false, renderMessageTemplate: false),
                       IndexFormat = configuration.GetConnectionString("ElasticSearchIndex") + "{0:yyyyMMdd}"
                   })
+#if DEBUG
+                  .WriteTo.Console(LogEventLevel.Information)
+#endif
                   .CreateLogger();
 
             services.AddSingleton(logger);

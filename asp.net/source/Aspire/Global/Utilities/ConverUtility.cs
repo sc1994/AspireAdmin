@@ -23,7 +23,7 @@ namespace Aspire
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static async Task<string> SerializeObjectAsync<T>(this Task<T> source)
+        async public static Task<string> SerializeObjectAsync<T>(this Task<T> source)
         {
             var tmp = await source;
             return JsonConvert.SerializeObject(tmp);
@@ -43,7 +43,7 @@ namespace Aspire
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static async Task<T> DeserializeObjectAsync<T>(this Task<string> source)
+        async public static Task<T> DeserializeObjectAsync<T>(this Task<string> source)
         {
             var tmp = await source;
             return JsonConvert.DeserializeObject<T>(tmp);

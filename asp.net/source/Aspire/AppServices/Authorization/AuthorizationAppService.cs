@@ -12,7 +12,7 @@ namespace Aspire.Authorization
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthorizationAppService<TUserEntity> :
+    abstract public class AuthorizationAppService<TUserEntity> :
         AuthorizationAppService<
             TUserEntity,
             Guid,
@@ -27,7 +27,7 @@ namespace Aspire.Authorization
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthorizationAppService<
+    abstract public class AuthorizationAppService<
         TUserEntity,
         TLoginDto,
         TCurrentUserDto,
@@ -49,7 +49,7 @@ namespace Aspire.Authorization
     /// <summary>
     /// 鉴权
     /// </summary>
-    public abstract class AuthorizationAppService<
+    abstract public class AuthorizationAppService<
         TUserEntity,
         TPrimaryKey,
         TLoginDto,
@@ -62,6 +62,7 @@ namespace Aspire.Authorization
     {
         private readonly AspireAppSettings _aspireAppSettings;
         private readonly IAuditRepository<TUserEntity, TPrimaryKey> _userRepository;
+        private readonly ILogWriter _logWriter;
 
         /// <summary>
         /// 鉴权
@@ -70,6 +71,7 @@ namespace Aspire.Authorization
         {
             _aspireAppSettings = ServiceLocator.ServiceProvider.GetService<IOptions<AspireAppSettings>>().Value;
             _userRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TUserEntity, TPrimaryKey>>();
+            _logWriter = ServiceLocator.ServiceProvider.GetService<ILogWriter>();
         }
 
         /// <summary>
@@ -78,8 +80,12 @@ namespace Aspire.Authorization
         /// <param name="input"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        public virtual async Task<TokenDto> LoginAsync(TLoginDto input)
+        virtual async public Task<TokenDto> LoginAsync(TLoginDto input)
         {
+            _logWriter.Information("Information", "xx", "cc");
+            _logWriter.Warning("Warning", "xx", "cc");
+            _logWriter.Error(new Exception(), "Error", "xx", "cc");
+
             if (!TryAdminLogin(input, out var user)) {
                 user = await TryUserLogin(input);
             }
@@ -95,7 +101,7 @@ namespace Aspire.Authorization
         /// 获取当前用户
         /// </summary>
         /// <returns></returns>
-        public virtual async Task<TCurrentUserDto> GetCurrentUserAsync([FromServices] ICurrentUser currentUser)
+        virtual async public Task<TCurrentUserDto> GetCurrentUserAsync([FromServices] ICurrentUser currentUser)
         {
             var user = await _userRepository
                 .GetBatchAsync(x => x.Account == currentUser.Account, 1)
@@ -107,7 +113,7 @@ namespace Aspire.Authorization
         /// 登出
         /// </summary>
         /// <returns></returns>
-        public virtual string Logout()
+        virtual public string Logout()
         {
             throw new NotImplementedException();
         }
@@ -118,7 +124,7 @@ namespace Aspire.Authorization
         /// <param name="input"></param>
         /// <returns></returns>
         [AuthorizeFilter(Roles.Admin)]
-        public virtual async Task<bool> RegisterAsync(TRegisterDto input)
+        virtual async public Task<bool> RegisterAsync(TRegisterDto input)
         {
             return await _userRepository.InsertAsync(new TUserEntity {
                 Account = input.Account,

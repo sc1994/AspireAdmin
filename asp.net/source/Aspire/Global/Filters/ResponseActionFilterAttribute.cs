@@ -11,7 +11,7 @@ namespace Aspire
         /// <summary>
         /// 在控制器完成后检验控制器结果
         /// </summary>
-        public override void OnActionExecuted(ActionExecutedContext cxt)
+        override public void OnActionExecuted(ActionExecutedContext cxt)
         {
             if (cxt.Exception != null) {
                 if (cxt.Exception is FriendlyException friendlyException) {

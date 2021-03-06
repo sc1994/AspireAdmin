@@ -1,24 +1,29 @@
-using Aspire.Mapper;
-
-using Panda.DynamicWebApi;
-using Panda.DynamicWebApi.Attributes;
+// <copyright file="Application.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire
 {
+    using Mapper;
+    using Panda.DynamicWebApi;
+    using Panda.DynamicWebApi.Attributes;
+
     /// <summary>
     /// 应用
-    /// 作为控制器的最基层
+    /// 作为控制器的最基层.
     /// </summary>
-    [DynamicWebApi, AuthorizeFilter, ResponseActionFilter]
+    [DynamicWebApi]
+    [AuthorizeFilter]
+    [ResponseActionFilter]
     public abstract class Application : IDynamicWebApi
     {
         /// <summary>
-        /// Mapper
+        /// Mapper.
         /// </summary>
-        readonly protected IAspireMapper Mapper;
+        protected readonly IAspireMapper Mapper;
 
         /// <summary>
-        /// 应用 
+        /// Initializes a new instance of the <see cref="Application"/> class.
         /// </summary>
         protected Application()
         {
@@ -26,7 +31,7 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 映射到
+        /// 映射到.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
@@ -52,29 +57,29 @@ namespace Aspire
         /// 失败
         /// </summary>
         /// <param name="messages">错误编码</param>
-        static protected T Failure<T>(params string[] messages)
+        protected static T Failure<T>(params string[] messages)
         {
             FriendlyThrowException.ThrowException(messages);
             return default;
         }
 
         /// <summary>
-        /// 失败
+        /// 失败.
         /// </summary>
-        /// <param name="code">错误编码</param>
-        /// <param name="messages">消息</param>
-        static protected T Failure<T>(ResponseCode code, params string[] messages)
+        /// <param name="code">错误编码.</param>
+        /// <param name="messages">消息.</param>
+        protected static T Failure<T>(ResponseCode code, params string[] messages)
         {
             FriendlyThrowException.ThrowException(code, messages);
             return default;
         }
 
         /// <summary>
-        /// 失败
+        /// 失败.
         /// </summary>
-        /// <param name="code">错误编码</param>
-        /// <param name="messages">消息</param>
-        static protected T Failure<T>(int code, params string[] messages)
+        /// <param name="code">错误编码.</param>
+        /// <param name="messages">消息.</param>
+        protected static T Failure<T>(int code, params string[] messages)
         {
             FriendlyThrowException.ThrowException(code, messages);
             return default;

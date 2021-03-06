@@ -26,10 +26,5 @@ namespace Aspire.SystemLog
         /// Id
         /// </summary>
         TId Id { get; set; }
-
-        /// <summary>
-        /// level
-        /// </summary>
-        LogLevelEnum Level { get; set; }
     }
 }

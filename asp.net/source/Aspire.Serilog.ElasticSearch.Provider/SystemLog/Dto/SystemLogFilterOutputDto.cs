@@ -10,6 +10,5 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
         public double TickForRequest { get; set; }
         public string Body { get; set; }
         public string Id { get; set; }
-        public LogLevelEnum Level { get; set; }
     }
 }

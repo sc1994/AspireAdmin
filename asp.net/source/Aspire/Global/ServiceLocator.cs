@@ -1,13 +1,16 @@
-using System;
-using System.Collections.Generic;
-
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
+// <copyright file="ServiceLocator.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire
 {
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.DependencyInjection;
+
     /// <summary>
-    /// di 服务提供 代理
+    /// di 服务提供 代理.
     /// </summary>
     public interface IServiceProviderProxy
     {
@@ -47,7 +50,7 @@ namespace Aspire
         /// </summary>
         public static IServiceProviderProxy ServiceProvider => _diProxy ?? throw new Exception("请先调用Initialize初始化服务");
 
-        static internal void Initialize(IServiceProviderProxy proxy)
+        internal static void Initialize(IServiceProviderProxy proxy)
         {
             _diProxy = proxy;
         }

@@ -29,7 +29,7 @@ namespace Aspire
         /// </summary>
         /// <param name="entity"></param>
         /// <returns>成功与否</returns>
-        public async Task<bool> InsertAsync(TAuditEntity entity)
+        async public Task<bool> InsertAsync(TAuditEntity entity)
         {
             return await InsertBatchAsync(new[] { entity }) == 1;
         }
@@ -63,7 +63,7 @@ namespace Aspire
         /// </summary>
         /// <param name="primaryKey">指定主键</param>
         /// <returns>成功与否</returns>
-        public async Task<bool> DeleteAsync(TPrimaryKey primaryKey)
+        async public Task<bool> DeleteAsync(TPrimaryKey primaryKey)
         {
             return await DeleteBatchAsync(x => x.Id.Equals(primaryKey)) == 1;
         }
@@ -100,7 +100,7 @@ namespace Aspire
         /// </summary>
         /// <param name="newEntity">新实体</param>
         /// <returns>成功与否</returns>
-        public async Task<bool> UpdateAsync(TAuditEntity newEntity)
+        async public Task<bool> UpdateAsync(TAuditEntity newEntity)
         {
             return await UpdateBatchAsync(new[] { newEntity }) == 1;
         }

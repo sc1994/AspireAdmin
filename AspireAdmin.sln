@@ -29,7 +29,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{883EEAC2-3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aspire.FreeSql.Test", "asp.net\test\Aspire.FreeSql.Test\Aspire.FreeSql.Test.csproj", "{A41E5BC6-5DAC-418F-912A-A26342E16FCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aspire.Serilog.ElasticSearch.Provider", "asp.net\source\Aspire.Serilog.ElasticSearch.Provider\Aspire.Serilog.ElasticSearch.Provider.csproj", "{FC6491C6-2069-40DF-BEF9-ECDCD88A4992}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aspire.Serilog.ElasticSearch.Provider", "asp.net\source\Aspire.Serilog.ElasticSearch.Provider\Aspire.Serilog.ElasticSearch.Provider.csproj", "{FC6491C6-2069-40DF-BEF9-ECDCD88A4992}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{04ADA218-1B43-42DB-A0B5-DA440FAADDB6}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig.inferred = .editorconfig.inferred
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

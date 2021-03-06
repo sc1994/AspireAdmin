@@ -18,5 +18,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
         public string ClientAddress { get; set; }
 
         public string ServerAddress { get; set; }
+
+        public LogLevelEnum? Level { get; set; }
     }
 }

@@ -30,19 +30,19 @@ namespace Aspire.FreeSql.Provider
             CurrentUser = currentUser;
         }
 
-        public async virtual Task<TAuditEntity> InsertThenEntityAsync(TAuditEntity entity)
+        async virtual public Task<TAuditEntity> InsertThenEntityAsync(TAuditEntity entity)
         {
             SetCreatedEntity(ref entity);
             return await _freeSql.Insert(entity).ExecuteInsertedAsync().FirstOrDefaultAsync();
         }
 
-        public async virtual Task<long> InsertBatchAsync(TAuditEntity[] entities)
+        async virtual public Task<long> InsertBatchAsync(TAuditEntity[] entities)
         {
             entities.ForEach(x => SetCreatedEntity(ref x));
             return await _freeSql.Insert(entities).ExecuteAffrowsAsync();
         }
 
-        public async virtual Task<long> DeleteBatchAsync(Expression<Func<TAuditEntity, bool>> filter)
+        async virtual public Task<long> DeleteBatchAsync(Expression<Func<TAuditEntity, bool>> filter)
         {
             return await _freeSql.Update<TAuditEntity>()
                 .Where(filter)
@@ -53,7 +53,7 @@ namespace Aspire.FreeSql.Provider
                 .ExecuteAffrowsAsync();
         }
 
-        public async virtual Task<long> UpdateBatchAsync(TAuditEntity[] newEntities)
+        async virtual public Task<long> UpdateBatchAsync(TAuditEntity[] newEntities)
         {
             newEntities.ForEach(x => SetUpdatedEntity(ref x));
             return await _freeSql.Update<TAuditEntity>()
@@ -61,7 +61,7 @@ namespace Aspire.FreeSql.Provider
                 .ExecuteAffrowsAsync();
         }
 
-        public async virtual Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter)
+        async virtual public Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter)
         {
             return await _freeSql
                 .Select<TAuditEntity>()
@@ -71,7 +71,7 @@ namespace Aspire.FreeSql.Provider
                 .ToArrayAsync();
         }
 
-        public async virtual Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter, long limit)
+        async virtual public Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter, long limit)
         {
             return await _freeSql
                 .Select<TAuditEntity>()
@@ -82,7 +82,7 @@ namespace Aspire.FreeSql.Provider
                 .ToArrayAsync();
         }
 
-        public async virtual Task<(TAuditEntity[] items, long totalCount)> PagingAsync(object queryable, PageInputDto dto)
+        async virtual public Task<(TAuditEntity[] items, long totalCount)> PagingAsync(object queryable, PageInputDto dto)
         {
             if (queryable is ISelect<TAuditEntity> iSelect) {
                 var itemsAsync = iSelect.ToListAsync<TAuditEntity>().ToArrayAsync();

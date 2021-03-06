@@ -20,7 +20,7 @@ namespace Aspire
             _aspireSetupOptions = aspireAppSettings.Value;
         }
 
-        public async Task Invoke(HttpContext context)
+        async public Task Invoke(HttpContext context)
         {
             var token = context.Request.Headers[_aspireSetupOptions.Jwt.HeaderKey].FirstOrDefault()?.Split(" ").Last();
 

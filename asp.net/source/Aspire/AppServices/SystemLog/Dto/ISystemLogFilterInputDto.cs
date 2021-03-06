@@ -10,6 +10,6 @@ namespace Aspire.SystemLog
         /// <summary>
         /// 创建时间 范围
         /// </summary>
-        public DateTime[] CreatedAtRange { get; set; }
+        DateTime[] CreatedAtRange { get; set; }
     }
 }

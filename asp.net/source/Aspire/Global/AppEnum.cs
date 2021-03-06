@@ -44,11 +44,11 @@ namespace Aspire
         /// <summary>
         /// info
         /// </summary>
-        Info,
+        Information,
         /// <summary>
         /// warn
         /// </summary>
-        Warn,
+        Warning,
         /// <summary>
         /// error
         /// </summary>
