@@ -1,7 +1,11 @@
-using System;
+// <copyright file="TokenDto.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire.Authorization
 {
+    using System;
+
     /// <summary>
     /// token 
     /// </summary>
