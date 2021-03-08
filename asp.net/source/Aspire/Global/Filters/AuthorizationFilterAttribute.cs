@@ -1,4 +1,4 @@
-// <copyright file="AuthorizeFilterAttribute.cs" company="PlaceholderCompany">
+// <copyright file="AuthorizationFilterAttribute.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -15,24 +15,24 @@ namespace Aspire
     using Microsoft.AspNetCore.Mvc.Filters;
 
     /// <summary>
-    /// 鉴权
+    /// Authorization.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class AuthorizeFilterAttribute : Attribute, IAuthorizationFilter
+    public class AuthorizationFilterAttribute : Attribute, IAuthorizationFilter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AuthorizeFilterAttribute"/> class.
+        /// Initializes a new instance of the <see cref="AuthorizationFilterAttribute"/> class.
         /// </summary>
-        public AuthorizeFilterAttribute()
+        public AuthorizationFilterAttribute()
         {
             this.CurrentRoles = Array.Empty<string>();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AuthorizeFilterAttribute"/> class.
+        /// Initializes a new instance of the <see cref="AuthorizationFilterAttribute"/> class.
         /// </summary>
         /// <param name="roles">角色集合以,分割.</param>
-        public AuthorizeFilterAttribute(string roles)
+        public AuthorizationFilterAttribute(string roles)
         {
             this.CurrentRoles = roles
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
@@ -68,19 +68,19 @@ namespace Aspire
             // 尝试查找鉴权特性
             var authorize = contextActionDescriptor
                 .MethodInfo
-                .GetCustomAttributes<AuthorizeFilterAttribute>()
+                .GetCustomAttributes<AuthorizationFilterAttribute>()
                 .FirstOrDefault() ?? contextActionDescriptor
                 .ControllerTypeInfo
-                .GetCustomAttributes<AuthorizeFilterAttribute>()
+                .GetCustomAttributes<AuthorizationFilterAttribute>()
                 .FirstOrDefault() ?? contextActionDescriptor
                 .ControllerTypeInfo.BaseType?
-                .GetCustomAttributes<AuthorizeFilterAttribute>()
+                .GetCustomAttributes<AuthorizationFilterAttribute>()
                 .FirstOrDefault() ?? contextActionDescriptor
                 .ControllerTypeInfo.BaseType?.BaseType?
-                .GetCustomAttributes<AuthorizeFilterAttribute>()
+                .GetCustomAttributes<AuthorizationFilterAttribute>()
                 .FirstOrDefault() ?? contextActionDescriptor
                 .ControllerTypeInfo.BaseType?.BaseType?.BaseType?
-                .GetCustomAttributes<AuthorizeFilterAttribute>()
+                .GetCustomAttributes<AuthorizationFilterAttribute>()
                 .FirstOrDefault();
 
             if (authorize is null)
@@ -105,6 +105,7 @@ namespace Aspire
                 Message = new[] { $"接口需要指定[{authorize.CurrentRoles.Join(",")}]的角色权限" },
                 Code = ResponseCode.UnauthorizedRoles.GetHashCode(),
             };
+
             // 配置了指定角色
             if (authorize.CurrentRoles.Any())
             {

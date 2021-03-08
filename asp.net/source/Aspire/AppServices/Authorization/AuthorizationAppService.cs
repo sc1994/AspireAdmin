@@ -73,18 +73,18 @@ namespace Aspire.Authorization
         where TCurrentUserDto : CurrentUserDto
         where TRegisterDto : RegisterDto
     {
-        private readonly AspireAppSettings _aspireAppSettings;
-        private readonly IAuditRepository<TUserEntity, TPrimaryKey> _userRepository;
-        private readonly ILogWriter _logWriter;
+        private readonly AspireAppSettings aspireAppSettings;
+        private readonly IAuditRepository<TUserEntity, TPrimaryKey> userRepository;
+        private readonly ILogWriter logWriter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthorizationAppService{        TUserEntity,         TPrimaryKey,         TLoginDto,         TCurrentUserDto,         TRegisterDto}"/> class.
         /// </summary>
         protected AuthorizationAppService()
         {
-            this._aspireAppSettings = ServiceLocator.ServiceProvider.GetService<IOptions<AspireAppSettings>>().Value;
-            this._userRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TUserEntity, TPrimaryKey>>();
-            this._logWriter = ServiceLocator.ServiceProvider.GetService<ILogWriter>();
+            this.aspireAppSettings = ServiceLocator.ServiceProvider.GetService<IOptions<AspireAppSettings>>().Value;
+            this.userRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TUserEntity, TPrimaryKey>>();
+            this.logWriter = ServiceLocator.ServiceProvider.GetService<ILogWriter>();
         }
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace Aspire.Authorization
         [AllowAnonymous]
         public virtual async Task<TokenDto> LoginAsync(TLoginDto input)
         {
-            this._logWriter.Information("Information", "xx", "cc");
-            this._logWriter.Warning("Warning", "xx", "cc");
-            this._logWriter.Error(new Exception(), "Error", "xx", "cc");
+            this.logWriter.Information("Information", "xx", "cc");
+            this.logWriter.Warning("Warning", "xx", "cc");
+            this.logWriter.Error(new Exception(), "Error", "xx", "cc");
 
             if (!this.TryAdminLogin(input, out var user))
             {
@@ -109,16 +109,17 @@ namespace Aspire.Authorization
                 return Failure<TokenDto>(ResponseCode.UnauthorizedAccountOrPassword, "用户名或者密码错误");
             }
 
-            return new JwtManage(this._aspireAppSettings.Jwt).GenerateJwtToken(user);
+            return new JwtManage(this.aspireAppSettings.Jwt).GenerateJwtToken(user);
         }
 
         /// <summary>
         /// 获取当前用户.
         /// </summary>
+        /// <param name="currentUser">Current User.</param>
         /// <returns>当前用户.</returns>
         public virtual async Task<TCurrentUserDto> GetCurrentUserAsync([FromServices] ICurrentUser currentUser)
         {
-            var user = await this._userRepository
+            var user = await this.userRepository
                 .GetBatchAsync(x => x.Account == currentUser.Account, 1)
                 .FirstOrDefaultAsync();
             return this.MapTo<TCurrentUserDto>(user);
@@ -138,10 +139,10 @@ namespace Aspire.Authorization
         /// </summary>
         /// <param name="input">Register Dto.</param>
         /// <returns>注册结果.</returns>
-        [AuthorizeFilter(Roles.Admin)]
+        [AuthorizationFilter(Roles.Admin)]
         public virtual async Task<bool> RegisterAsync(TRegisterDto input)
         {
-            return await this._userRepository.InsertAsync(new TUserEntity
+            return await this.userRepository.InsertAsync(new TUserEntity
             {
                 Account = input.Account,
                 Password = input.Password,
@@ -157,7 +158,7 @@ namespace Aspire.Authorization
         /// <returns>登入用户实体.</returns>
         protected virtual async Task<TUserEntity> TryUserLogin(TLoginDto input)
         {
-            return await this._userRepository
+            return await this.userRepository
                 .GetBatchAsync(x => x.Account == input.Account && x.Password == input.Password, 1)
                 .FirstOrDefaultAsync();
         }
@@ -170,13 +171,13 @@ namespace Aspire.Authorization
         /// <returns>管理员是否登陆成功.</returns>
         protected virtual bool TryAdminLogin(TLoginDto input, out TUserEntity userEntity)
         {
-            if (input.Password == this._aspireAppSettings.Administrator.Password
-                && input.Account == this._aspireAppSettings.Administrator.Account)
+            if (input.Password == this.aspireAppSettings.Administrator.Password
+                && input.Account == this.aspireAppSettings.Administrator.Account)
             {
                 userEntity = new TUserEntity
                 {
-                    Account = this._aspireAppSettings.Administrator.Account,
-                    Name = this._aspireAppSettings.Administrator.Name,
+                    Account = this.aspireAppSettings.Administrator.Account,
+                    Name = this.aspireAppSettings.Administrator.Name,
                     Roles = Roles.Admin,
                 };
                 return true;

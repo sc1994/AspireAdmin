@@ -44,7 +44,6 @@ namespace Aspire
         [NotNull]
         public IAspireMapperOptionsSetup MapperOptions { get; set; }
 
-
         /// <summary>
         /// Gets or sets 审计仓储 设置项.
         /// <para>比如 new FreeSqlAuditRepositoryOptionsSetup().</para>

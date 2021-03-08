@@ -134,15 +134,85 @@ namespace Aspire
         /// <summary>
         /// 当前服务仓储.
         /// </summary>
-        protected readonly IAuditRepository<TAuditEntity, TPrimaryKey> CurrentRepository;
+        private readonly IAuditRepository<TAuditEntity, TPrimaryKey> currentRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CrudAppService{        TAuditEntity,         TPrimaryKey,         TPageInputDto,         TOutputDto,         TCreateDto,         TUpdateDto}"/> class.
         /// </summary>
         protected CrudAppService()
         {
-            this.CurrentRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TAuditEntity, TPrimaryKey>>();
+            this.currentRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TAuditEntity, TPrimaryKey>>();
         }
+
+        /// <summary>
+        /// Create.
+        /// </summary>
+        /// <param name="input">Input Dto.</param>
+        /// <returns>Output Dto.</returns>
+        public virtual async Task<TOutputDto> CreateAsync(TCreateDto input)
+        {
+            var entity = this.MapToEntity(input);
+            return this.MapToDto(await this.currentRepository.InsertThenEntityAsync(entity));
+        }
+
+        /// <summary>
+        /// Delete.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>Is Success.</returns>
+        [HttpDelete("{id}")]
+        public virtual async Task<bool> DeleteAsync(TPrimaryKey id)
+        {
+            return await this.currentRepository.DeleteAsync(id);
+        }
+
+        /// <summary>
+        /// Update.
+        /// </summary>
+        /// <param name="input">Input.</param>
+        /// <returns>Output.</returns>
+        public virtual async Task<TOutputDto> UpdateAsync(TUpdateDto input)
+        {
+            var entity = this.MapToEntity(input);
+            var success = await this.currentRepository.UpdateAsync(entity);
+            if (success)
+            {
+                return await this.GetAsync(input.Id);
+            }
+
+            return Failure<TOutputDto>(ResponseCode.InternalServerDatabaseError, $"执行 {nameof(TAuditEntity)} 实体更新失败");
+        }
+
+        /// <summary>
+        /// Get.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>Output.</returns>
+        [HttpGet("{id}")]
+        public virtual async Task<TOutputDto> GetAsync(TPrimaryKey id)
+        {
+            return this.MapToDto<TOutputDto>(await this.currentRepository.GetAsync(id));
+        }
+
+        /// <summary>
+        /// Paging.
+        /// </summary>
+        /// <param name="input">Input.</param>
+        /// <returns>Page Output.</returns>
+        [HttpPost]
+        public virtual async Task<PagedResultDto<TOutputDto>> PagingAsync(TPageInputDto input)
+        {
+            var filer = this.FilterPage(input);
+            var (items, totalCount) = await this.currentRepository.PagingAsync(filer, input);
+            return new PagedResultDto<TOutputDto>(items.Select(this.MapToDto), totalCount);
+        }
+
+        /// <summary>
+        /// Filter Page.
+        /// </summary>
+        /// <param name="input">Input.</param>
+        /// <returns>Queryable.</returns>
+        protected abstract object FilterPage(TPageInputDto input);
 
         /// <summary>
         /// 映射到 数据传输对象.
@@ -175,75 +245,5 @@ namespace Aspire
         {
             return this.MapTo<TSourceDto, TAuditEntity>(dto);
         }
-
-        /// <summary>
-        /// Create.
-        /// </summary>
-        /// <param name="input">Input Dto.</param>
-        /// <returns>Output Dto.</returns>
-        public virtual async Task<TOutputDto> CreateAsync(TCreateDto input)
-        {
-            var entity = this.MapToEntity(input);
-            return this.MapToDto(await this.CurrentRepository.InsertThenEntityAsync(entity));
-        }
-
-        /// <summary>
-        /// Delete.
-        /// </summary>
-        /// <param name="id">id.</param>
-        /// <returns>Is Success.</returns>
-        [HttpDelete("{id}")]
-        public virtual async Task<bool> DeleteAsync(TPrimaryKey id)
-        {
-            return await this.CurrentRepository.DeleteAsync(id);
-        }
-
-        /// <summary>
-        /// Update.
-        /// </summary>
-        /// <param name="input">Input.</param>
-        /// <returns>Output.</returns>
-        public virtual async Task<TOutputDto> UpdateAsync(TUpdateDto input)
-        {
-            var entity = this.MapToEntity(input);
-            var success = await this.CurrentRepository.UpdateAsync(entity);
-            if (success)
-            {
-                return await this.GetAsync(input.Id);
-            }
-
-            return Failure<TOutputDto>(ResponseCode.InternalServerDatabaseError, $"执行 {nameof(TAuditEntity)} 实体更新失败");
-        }
-
-        /// <summary>
-        /// Get.
-        /// </summary>
-        /// <param name="id">id.</param>
-        /// <returns>Output.</returns>
-        [HttpGet("{id}")]
-        public virtual async Task<TOutputDto> GetAsync(TPrimaryKey id)
-        {
-            return this.MapToDto<TOutputDto>(await this.CurrentRepository.GetAsync(id));
-        }
-
-        /// <summary>
-        /// Paging.
-        /// </summary>
-        /// <param name="input">Input.</param>
-        /// <returns>Page Output.</returns>
-        [HttpPost]
-        public virtual async Task<PagedResultDto<TOutputDto>> PagingAsync(TPageInputDto input)
-        {
-            var filer = this.FilterPage(input);
-            var (items, totalCount) = await this.CurrentRepository.PagingAsync(filer, input);
-            return new PagedResultDto<TOutputDto>(items.Select(this.MapToDto), totalCount);
-        }
-
-        /// <summary>
-        /// Filter Page.
-        /// </summary>
-        /// <param name="input">Input</param>
-        /// <returns>Queryable.</returns>
-        protected abstract object FilterPage(TPageInputDto input);
     }
 }

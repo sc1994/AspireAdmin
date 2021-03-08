@@ -1,4 +1,4 @@
-// <copyright file="ServiceLocator.cs" company="PlaceholderCompany">
+// <copyright file="IServiceProviderProxy.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -6,8 +6,6 @@ namespace Aspire
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
     /// di 服务提供 代理.

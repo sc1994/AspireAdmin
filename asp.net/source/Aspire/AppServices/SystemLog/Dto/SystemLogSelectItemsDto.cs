@@ -4,6 +4,8 @@
 
 namespace Aspire.SystemLog
 {
+    using System;
+
     /// <summary>
     /// 选项集合.
     /// </summary>
@@ -12,41 +14,41 @@ namespace Aspire.SystemLog
         /// <summary>
         /// Gets or sets API路由.
         /// </summary>
-        public string[] ApiMethods { get; set; }
+        public string[] ApiMethods { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Gets or sets API方法.
         /// </summary>
-        public string[] ApiRouters { get; set; }
+        public string[] ApiRouters { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Gets or sets 过滤1.
         /// </summary>
-        public string[] Filter1s { get; set; }
+        public string[] Filter1s { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Gets or sets 过滤2.
         /// </summary>
-        public string[] Filter2S { get; set; }
+        public string[] Filter2S { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Gets or sets 过滤3.
         /// </summary>
-        public string[] Filter3s { get; set; }
+        public string[] Filter3s { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Gets or sets 过滤4.
         /// </summary>
-        public string[] Filter4s { get; set; }
+        public string[] Filter4s { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Gets or sets 客户端地址.
         /// </summary>
-        public string[] ClientAddress { get; set; }
+        public string[] ClientAddress { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Gets or sets 服务端地址.
         /// </summary>
-        public string[] ServerAddress { get; set; }
+        public string[] ServerAddress { get; set; } = Array.Empty<string>();
     }
 }

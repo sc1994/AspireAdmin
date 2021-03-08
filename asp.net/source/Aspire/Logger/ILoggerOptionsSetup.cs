@@ -8,15 +8,15 @@ namespace Aspire.Logger
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// logger 启动配置
+    /// logger 启动配置.
     /// </summary>
     public interface ILoggerOptionsSetup
     {
         /// <summary>
-        /// add logger 
+        /// Add Logger .
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
+        /// <param name="services">Service Collection.</param>
+        /// <param name="configuration">Configuration.</param>
         void AddLogger(IServiceCollection services, IConfiguration configuration);
     }
 }

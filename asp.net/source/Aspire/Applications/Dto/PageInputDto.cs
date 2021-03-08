@@ -4,9 +4,12 @@
 
 namespace Aspire
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// 页输入.
     /// </summary>
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "<挂起>")]
     public interface IPageInputDto
     {
         /// <summary>

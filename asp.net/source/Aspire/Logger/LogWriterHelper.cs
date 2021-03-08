@@ -13,7 +13,7 @@ namespace Aspire
     /// </summary>
     public class LogWriterHelper
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogWriterHelper"/> class.
@@ -21,7 +21,35 @@ namespace Aspire
         /// <param name="httpContextAccessor">httpContextAccessor.</param>
         public LogWriterHelper(IHttpContextAccessor httpContextAccessor)
         {
-            this._httpContextAccessor = httpContextAccessor;
+            this.httpContextAccessor = httpContextAccessor;
+        }
+
+        /// <summary>
+        /// 获取部分标准参数.
+        /// </summary>
+        /// <returns>
+        /// <para>Api Method.</para>
+        /// <para>Api Router.</para>
+        /// <para>Trace Id.</para>
+        /// <para>Client Address.</para>
+        /// <para>Server Address.</para>
+        /// </returns>
+        public (string apiMethod, string apiRouter, string traceId, string clientAddress, string serverAddress) GetPartialStandardParams()
+        {
+            var cxt = this.httpContextAccessor.HttpContext;
+            if (cxt is null)
+            {
+                goto Default;
+            }
+
+            return (cxt.Request.Method,
+                cxt.Request.Path.Value,
+                GetTrace(cxt),
+                $"{RemoveIpV6Zero(cxt.Connection.RemoteIpAddress)}:{cxt.Connection.RemotePort}",
+                $"{RemoveIpV6Zero(cxt.Connection.LocalIpAddress)}:{cxt.Connection.LocalPort}");
+
+        Default:
+            return (string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
         }
 
         private static string GetTrace(HttpContext cxt)
@@ -62,29 +90,8 @@ namespace Aspire
             {
                 return ip.Remove(0, 7);
             }
+
             return ip;
-        }
-
-        /// <summary>
-        /// 获取部分标准参数
-        /// </summary>
-        public (string apiMethod, string apiRouter, string traceId, string clientAddress, string serverAddress) GetPartialStandardParams()
-        {
-            var cxt = this._httpContextAccessor.HttpContext;
-            if (cxt is null)
-            {
-                goto Default;
-            }
-
-            return (cxt.Request.Method,
-                cxt.Request.Path.Value,
-                GetTrace(cxt),
-                $"{RemoveIpV6Zero(cxt.Connection.RemoteIpAddress)}:{cxt.Connection.RemotePort}",
-                $"{RemoveIpV6Zero(cxt.Connection.LocalIpAddress)}:{cxt.Connection.LocalPort}");
-
-
-        Default:
-            return (string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
         }
     }
 }

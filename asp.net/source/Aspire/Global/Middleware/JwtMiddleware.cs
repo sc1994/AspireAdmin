@@ -10,27 +10,41 @@ namespace Aspire
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Options;
 
+    /// <summary>
+    /// Jwt Middleware.
+    /// </summary>
+    /// <typeparam name="TCurrentUser">Current User.</typeparam>
     internal class JwtMiddleware<TCurrentUser>
         where TCurrentUser : ICurrentUser, new()
     {
-        private readonly RequestDelegate _next;
-        private readonly AspireAppSettings _aspireSetupOptions;
+        private readonly RequestDelegate next;
+        private readonly AspireAppSettings aspireSetupOptions;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JwtMiddleware{TCurrentUser}"/> class.
+        /// </summary>
+        /// <param name="next">Next Middleware.</param>
+        /// <param name="aspireAppSettings">App Settings.</param>
         public JwtMiddleware(RequestDelegate next, IOptions<AspireAppSettings> aspireAppSettings)
         {
-            this._next = next;
-            this._aspireSetupOptions = aspireAppSettings.Value;
+            this.next = next;
+            this.aspireSetupOptions = aspireAppSettings.Value;
         }
 
+        /// <summary>
+        /// Invoke.
+        /// </summary>
+        /// <param name="context">Context.</param>
+        /// <returns>Task.</returns>
         public async Task Invoke(HttpContext context)
         {
-            var token = context.Request.Headers[this._aspireSetupOptions.Jwt.HeaderKey].FirstOrDefault()?.Split(" ").Last();
+            var token = context.Request.Headers[this.aspireSetupOptions.Jwt.HeaderKey].FirstOrDefault()?.Split(" ").Last();
 
             if (token != null)
             {
                 try
                 {
-                    var current = new JwtManage(this._aspireSetupOptions.Jwt).DeconstructionJwtToken<TCurrentUser>(token);
+                    var current = new JwtManage(this.aspireSetupOptions.Jwt).DeconstructionJwtToken<TCurrentUser>(token);
 
                     // attach user to context on successful jwt validation
                     context.Items["User"] = current;
@@ -42,7 +56,7 @@ namespace Aspire
                 }
             }
 
-            await this._next(context);
+            await this.next(context);
         }
     }
 }

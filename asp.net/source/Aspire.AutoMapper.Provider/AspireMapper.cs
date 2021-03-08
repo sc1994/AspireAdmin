@@ -1,30 +1,38 @@
-using Aspire.Mapper;
-
-using AutoMapper;
+// <copyright file="AspireMapper.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire.AutoMapper.Provider
 {
+    using Aspire.Mapper;
+    using global::AutoMapper;
+
+    /// <summary>
+    /// Aspire Mapper.
+    /// </summary>
     internal class AspireMapper : IAspireMapper
     {
-        private readonly IMapper _mapper;
+        private readonly IMapper mapper;
 
         /// <summary>
-        /// 由 di 实例此构造函数
+        /// Initializes a new instance of the <see cref="AspireMapper"/> class.
         /// </summary>
-        /// <param name="mapper"></param>
+        /// <param name="mapper">AutoMapper.IMapper.</param>
         public AspireMapper(IMapper mapper)
         {
-            this._mapper = mapper;
+            this.mapper = mapper;
         }
 
+        /// <inheritdoc/>
         public TTarget MapTo<TTarget>(object source)
         {
-            return this._mapper.Map<TTarget>(source);
+            return this.mapper.Map<TTarget>(source);
         }
 
+        /// <inheritdoc/>
         public TTarget MapTo<TSource, TTarget>(TSource source)
         {
-            return this._mapper.Map<TSource, TTarget>(source);
+            return this.mapper.Map<TSource, TTarget>(source);
         }
     }
 }

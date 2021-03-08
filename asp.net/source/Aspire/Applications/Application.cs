@@ -15,7 +15,7 @@ namespace Aspire
     /// 作为控制器的最基层.
     /// </summary>
     [DynamicWebApi]
-    [AuthorizeFilter]
+    [AuthorizationFilter]
     [ResponseActionFilter]
     public abstract class Application : IDynamicWebApi
     {

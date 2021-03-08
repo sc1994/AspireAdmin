@@ -35,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="auditRepositoryOptions">Audit Repository OptionsSetup.</param>
         /// <param name="configuration">Configuration.</param>
         /// <param name="newtonsoftJsonOptionsSetup">NewtonsoftJson OptionsSetup.</param>
-        /// <returns>Service Collection.</returns>
+        /// <returns>Service Collection .</returns>
         public static IServiceCollection AddAspire<TUserEntity>(
             this IServiceCollection services,
             Action<DynamicWebApiOptions> dynamicWebApiOptionsSetup,
@@ -69,7 +69,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="auditRepositoryOptions">Audit Repository OptionsSetup.</param>
         /// <param name="configuration">Configuration.</param>
         /// <param name="newtonsoftJsonOptionsSetup">NewtonsoftJson OptionsSetup.</param>
-        /// <returns>Service Collection.</returns>
+        /// <returns>Service Collection .</returns>
         public static IServiceCollection AddAspire<TUserEntity, TPrimaryKey>(
             this IServiceCollection services,
             Action<DynamicWebApiOptions> dynamicWebApiOptionsSetup,
@@ -98,7 +98,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services">Service Collection.</param>
         /// <param name="setupAction">Setup Action.</param>
         /// <exception cref="ArgumentNullException">请注意 [NotNull] 标识.</exception>
-        /// <returns>Service Collection.</returns>
+        /// <returns>Service Collection .</returns>
         public static IServiceCollection AddAspire<TUserEntity>(
             this IServiceCollection services,
             Action<AspireSetupOptions> setupAction)
@@ -115,7 +115,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services">Service Collection.</param>
         /// <param name="setupAction">Setup Action.</param>
         /// <exception cref="ArgumentNullException">请注意 [NotNull] 标识.</exception>
-        /// <returns>Service Collection.</returns>
+        /// <returns>Service Collection .</returns>
         public static IServiceCollection AddAspire<TUserEntity, TPrimaryKey>(
             this IServiceCollection services,
             Action<AspireSetupOptions> setupAction)
@@ -164,7 +164,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     Scheme = "Bearer",
                 });
 
-                x.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                x.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
                     {
                         new OpenApiSecurityScheme
                         {
@@ -179,7 +180,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         },
                         new List<string>()
                     },
-                  });
+                });
 
                 // 一定要返回true！这是 Panda.DynamicWebApi 的限制
                 x.DocInclusionPredicate((docName, description) => true);
@@ -204,7 +205,7 @@ namespace Microsoft.Extensions.DependencyInjection
             // aspire configure options
             services.Configure<AspireAppSettings>(options.Configuration.GetSection("Aspire"));
 
-            // current user 
+            // current user
             services.AddScoped(x =>
             {
                 var httpContext = x.GetService<IHttpContextAccessor>().HttpContext;
@@ -266,12 +267,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<LogWriterHelper>();
             options.LoggerOptionsSetup.AddLogger(services, options.Configuration);
 
-            // Redis
-
             return services;
         }
-
-
 
         private static AspireAppSettings GetAspireConfigureOptions(IConfiguration configuration)
         {

@@ -14,7 +14,7 @@ namespace Aspire
     /// </summary>
     internal class HttpContextServiceProviderProxy : IServiceProviderProxy
     {
-        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IHttpContextAccessor contextAccessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpContextServiceProviderProxy"/> class.
@@ -22,7 +22,7 @@ namespace Aspire
         /// <param name="contextAccessor">Http Context Accessor.</param>
         public HttpContextServiceProviderProxy(IHttpContextAccessor contextAccessor)
         {
-            this._contextAccessor = contextAccessor;
+            this.contextAccessor = contextAccessor;
         }
 
         /// <inheritdoc/>
@@ -51,7 +51,8 @@ namespace Aspire
 
         private HttpContext GetHttpContext()
         {
-            return this._contextAccessor.HttpContext ?? throw new NotSupportedException("只能在http请求中使用此方式获取服务");
+            return this.contextAccessor.HttpContext
+                ?? throw new NotSupportedException("只能在http请求中使用此方式获取服务");
         }
     }
 }

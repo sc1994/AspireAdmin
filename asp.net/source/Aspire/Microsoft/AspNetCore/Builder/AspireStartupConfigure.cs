@@ -29,7 +29,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <param name="endpointRouteConfigure">终结点【配置.</param>
         /// <param name="swaggerUiName">swagger ui name.</param>
         /// <param name="corsPolicyBuilderConfigure">跨域代理配置.</param>
-        /// <returns>Application Builder.</returns>
+        /// <returns>Application Builder .</returns>
         public static IApplicationBuilder UseAspire<TUserEntity>(
             this IApplicationBuilder app,
             IServiceProvider serviceProvider,
@@ -56,7 +56,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <param name="endpointRouteConfigure">终结点 配置.</param>
         /// <param name="swaggerUiName">swagger ui name.</param>
         /// <param name="corsPolicyBuilderConfigure">跨域代理配置.</param>
-        /// <returns>Application Builder.</returns>
+        /// <returns>Application Builder .</returns>
         public static IApplicationBuilder UseAspire<TUserEntity, TPrimaryKey>(
             this IApplicationBuilder app,
             IServiceProvider serviceProvider,
@@ -81,7 +81,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <param name="app">Application Builder.</param>
         /// <param name="actionConfigure">Aspire Use Configure.</param>
         /// <exception cref="ArgumentNullException">请注意 [NotNull] 标识.</exception>
-        /// <returns>Application Builder.</returns>
+        /// <returns>Application Builder .</returns>
         public static IApplicationBuilder UseAspire<TUserEntity>(
             this IApplicationBuilder app,
             Action<AspireUseConfigure> actionConfigure)
@@ -97,7 +97,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <typeparam name="TPrimaryKey">实体主键.</typeparam>
         /// <param name="app">Application Builder.</param>
         /// <param name="actionConfigure">请注意 [NotNull] 标识.</param>
-        /// <returns>Application Builder.</returns>
+        /// <returns>Application Builder .</returns>
         public static IApplicationBuilder UseAspire<TUserEntity, TPrimaryKey>(
             this IApplicationBuilder app,
             Action<AspireUseConfigure> actionConfigure)

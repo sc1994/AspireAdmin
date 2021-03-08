@@ -17,7 +17,7 @@ namespace Aspire.Authenticate
     /// </summary>
     internal class JwtManage
     {
-        private readonly JwtAppSettings _jwtAppSettings;
+        private readonly JwtAppSettings jwtAppSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JwtManage"/> class.
@@ -25,7 +25,7 @@ namespace Aspire.Authenticate
         /// <param name="jwtAppSettings">jwt app settings.</param>
         public JwtManage(JwtAppSettings jwtAppSettings)
         {
-            this._jwtAppSettings = jwtAppSettings;
+            this.jwtAppSettings = jwtAppSettings;
         }
 
         /// <summary>
@@ -36,14 +36,14 @@ namespace Aspire.Authenticate
         public TokenDto GenerateJwtToken(ICurrentUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(this._jwtAppSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(this.jwtAppSettings.Secret);
             DateTime expiryTime;
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(typeof(ICurrentUser).GetProperties()
                     .Select(x => new Claim(x.Name, x.GetValue(user)?.ToString() ?? string.Empty))
                     .ToArray()),
-                Expires = expiryTime = DateTime.Now.AddSeconds(this._jwtAppSettings.ExpireSeconds),
+                Expires = expiryTime = DateTime.Now.AddSeconds(this.jwtAppSettings.ExpireSeconds),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature),
@@ -53,22 +53,22 @@ namespace Aspire.Authenticate
             {
                 BearerToken = $"Bearer {tokenHandler.WriteToken(token)}",
                 ExpiryTime = expiryTime,
-                Ttl = this._jwtAppSettings.ExpireSeconds,
-                HeaderKey = this._jwtAppSettings.HeaderKey,
+                Ttl = this.jwtAppSettings.ExpireSeconds,
+                HeaderKey = this.jwtAppSettings.HeaderKey,
             };
         }
 
         /// <summary>
         /// Deconstruction JwtToken.
         /// </summary>
-        /// <typeparam name="TCurrentUser">Current User</typeparam>
+        /// <typeparam name="TCurrentUser">Current User.</typeparam>
         /// <param name="jwtToken">jwt token value.</param>
-        /// <returns>Current User.</returns>
+        /// <returns>Current User .</returns>
         public ICurrentUser DeconstructionJwtToken<TCurrentUser>(string jwtToken)
             where TCurrentUser : ICurrentUser, new()
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(this._jwtAppSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(this.jwtAppSettings.Secret);
             _ = tokenHandler.ValidateToken(
                 jwtToken.Split(' ').LastOrDefault(),
                 new TokenValidationParameters

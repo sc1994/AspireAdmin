@@ -1,10 +1,9 @@
-﻿// <copyright file="FriendlyException.cs" company="PlaceholderCompany">
+// <copyright file="FriendlyThrowException.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Aspire
 {
-    using System;
     using System.Diagnostics;
 
     /// <summary>
