@@ -1,3 +1,7 @@
+// <copyright file="AspireStartupConfigure.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Builder
 {
@@ -12,20 +16,20 @@ namespace Microsoft.AspNetCore.Builder
     using Microsoft.Extensions.Hosting;
 
     /// <summary>
-    /// aspire 启动
+    /// aspire 启动.
     /// </summary>
     public static class AspireStartupConfigure
     {
         /// <summary>
-        /// 使用 aspire
+        /// 使用 aspire.
         /// </summary>
-        /// <typeparam name="TUserEntity">用户实体</typeparam>
-        /// <param name="app"></param>
-        /// <param name="serviceProvider">提供服务</param>
-        /// <param name="endpointRouteConfigure">终结点【配置</param>
-        /// <param name="swaggerUiName">swagger ui name</param>
-        /// <param name="corsPolicyBuilderConfigure">跨域代理配置</param>
-        /// <returns></returns>
+        /// <typeparam name="TUserEntity">用户实体.</typeparam>
+        /// <param name="app">Application Builder.</param>
+        /// <param name="serviceProvider">提供服务.</param>
+        /// <param name="endpointRouteConfigure">终结点【配置.</param>
+        /// <param name="swaggerUiName">swagger ui name.</param>
+        /// <param name="corsPolicyBuilderConfigure">跨域代理配置.</param>
+        /// <returns>Application Builder.</returns>
         public static IApplicationBuilder UseAspire<TUserEntity>(
             this IApplicationBuilder app,
             IServiceProvider serviceProvider,
@@ -43,16 +47,16 @@ namespace Microsoft.AspNetCore.Builder
         }
 
         /// <summary>
-        /// 使用 aspire
+        /// 使用 aspire.
         /// </summary>
-        /// <typeparam name="TUserEntity">用户实体</typeparam>
-        /// <typeparam name="TPrimaryKey">实体主键</typeparam>
-        /// <param name="app"></param>
-        /// <param name="serviceProvider">提供服务</param>
-        /// <param name="endpointRouteConfigure">终结点【配置</param>
-        /// <param name="swaggerUiName">swagger ui name</param>
-        /// <param name="corsPolicyBuilderConfigure">跨域代理配置</param>
-        /// <returns></returns>
+        /// <typeparam name="TUserEntity">用户实体.</typeparam>
+        /// <typeparam name="TPrimaryKey">实体主键.</typeparam>
+        /// <param name="app">Application Builder.</param>
+        /// <param name="serviceProvider">提供服务.</param>
+        /// <param name="endpointRouteConfigure">终结点 配置.</param>
+        /// <param name="swaggerUiName">swagger ui name.</param>
+        /// <param name="corsPolicyBuilderConfigure">跨域代理配置.</param>
+        /// <returns>Application Builder.</returns>
         public static IApplicationBuilder UseAspire<TUserEntity, TPrimaryKey>(
             this IApplicationBuilder app,
             IServiceProvider serviceProvider,
@@ -71,13 +75,13 @@ namespace Microsoft.AspNetCore.Builder
         }
 
         /// <summary>
-        /// 使用 aspire
+        /// 使用 aspire.
         /// </summary>
-        /// <typeparam name="TUserEntity">用户实体</typeparam>
-        /// <param name="app"></param>
-        /// <param name="actionConfigure"></param>
-        /// <exception cref="ArgumentNullException">请注意 [NotNull] 标识</exception>
-        /// <returns></returns>
+        /// <typeparam name="TUserEntity">用户实体.</typeparam>
+        /// <param name="app">Application Builder.</param>
+        /// <param name="actionConfigure">Aspire Use Configure.</param>
+        /// <exception cref="ArgumentNullException">请注意 [NotNull] 标识.</exception>
+        /// <returns>Application Builder.</returns>
         public static IApplicationBuilder UseAspire<TUserEntity>(
             this IApplicationBuilder app,
             Action<AspireUseConfigure> actionConfigure)
@@ -86,15 +90,14 @@ namespace Microsoft.AspNetCore.Builder
             return UseAspire<TUserEntity, Guid>(app, actionConfigure);
         }
 
-
         /// <summary>
-        /// 使用 aspire
+        /// 使用 aspire.
         /// </summary>
-        /// <typeparam name="TUserEntity">用户实体</typeparam>
-        /// <typeparam name="TPrimaryKey">实体主键</typeparam>
-        /// <param name="app"></param>
-        /// <param name="actionConfigure">请注意 [NotNull] 标识</param>
-        /// <returns></returns>
+        /// <typeparam name="TUserEntity">用户实体.</typeparam>
+        /// <typeparam name="TPrimaryKey">实体主键.</typeparam>
+        /// <param name="app">Application Builder.</param>
+        /// <param name="actionConfigure">请注意 [NotNull] 标识.</param>
+        /// <returns>Application Builder.</returns>
         public static IApplicationBuilder UseAspire<TUserEntity, TPrimaryKey>(
             this IApplicationBuilder app,
             Action<AspireUseConfigure> actionConfigure)
@@ -138,10 +141,11 @@ namespace Microsoft.AspNetCore.Builder
 
             app.UseRouting();
 
-            #region 暂时放弃 asp.net identity 方案，实现过于繁琐
-            //app.UseAuthentication();
-            //app.UseAuthorization();
-            #endregion
+            /*
+             暂时放弃 asp.net identity 方案，实现过于繁琐
+             app.UseAuthentication();
+             app.UseAuthorization();
+            */
 
             app.UseMiddleware<JwtMiddleware<TUserEntity>>();
 

@@ -1,16 +1,19 @@
-using System;
-using System.Net;
-using Microsoft.AspNetCore.Http;
+// <copyright file="LogWriterHelper.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire
 {
+    using System;
+    using System.Net;
+    using Microsoft.AspNetCore.Http;
+
     /// <summary>
     /// 日志写入帮助.
     /// </summary>
     public class LogWriterHelper
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogWriterHelper"/> class.

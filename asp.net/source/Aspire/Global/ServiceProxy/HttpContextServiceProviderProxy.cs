@@ -1,4 +1,4 @@
-// <copyright file="ServiceLocator.cs" company="PlaceholderCompany">
+// <copyright file="HttpContextServiceProviderProxy.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -10,76 +10,40 @@ namespace Aspire
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// di 服务提供 代理.
+    /// Http Context Service Provider Proxy.
     /// </summary>
-    public interface IServiceProviderProxy
-    {
-        /// <summary>
-        /// 获取服务
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        T GetService<T>();
-        /// <summary>
-        /// 获取服务
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        IEnumerable<T> GetServices<T>();
-        /// <summary>
-        /// 获取服务
-        /// </summary>
-        /// <returns></returns>
-        object GetService(Type type);
-        /// <summary>
-        /// 获取服务
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<object> GetServices(Type type);
-    }
-
-    /// <summary>
-    /// 服务定位
-    /// </summary>
-    public static class ServiceLocator
-    {
-        private static IServiceProviderProxy _diProxy;
-
-        /// <summary>
-        /// di 服务提供 代理 实例
-        /// </summary>
-        public static IServiceProviderProxy ServiceProvider => _diProxy ?? throw new Exception("请先调用Initialize初始化服务");
-
-        internal static void Initialize(IServiceProviderProxy proxy)
-        {
-            _diProxy = proxy;
-        }
-    }
-
     internal class HttpContextServiceProviderProxy : IServiceProviderProxy
     {
         private readonly IHttpContextAccessor _contextAccessor;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpContextServiceProviderProxy"/> class.
+        /// </summary>
+        /// <param name="contextAccessor">Http Context Accessor.</param>
         public HttpContextServiceProviderProxy(IHttpContextAccessor contextAccessor)
         {
             this._contextAccessor = contextAccessor;
         }
 
+        /// <inheritdoc/>
         public T GetService<T>()
         {
             return this.GetHttpContext().RequestServices.GetService<T>();
         }
 
+        /// <inheritdoc/>
         public IEnumerable<T> GetServices<T>()
         {
             return this.GetHttpContext().RequestServices.GetServices<T>();
         }
 
+        /// <inheritdoc/>
         public object GetService(Type type)
         {
             return this.GetHttpContext().RequestServices.GetService(type);
         }
 
+        /// <inheritdoc/>
         public IEnumerable<object> GetServices(Type type)
         {
             return this.GetHttpContext().RequestServices.GetServices(type);

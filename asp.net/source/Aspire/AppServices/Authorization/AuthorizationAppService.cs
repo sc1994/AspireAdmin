@@ -51,7 +51,6 @@ namespace Aspire.Authorization
         where TCurrentUserDto : CurrentUserDto
         where TRegisterDto : RegisterDto
     {
-
     }
 
     /// <summary>

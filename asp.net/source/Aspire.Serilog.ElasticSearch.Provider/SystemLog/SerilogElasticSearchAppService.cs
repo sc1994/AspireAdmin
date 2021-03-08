@@ -86,7 +86,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
                 TraceId = x["_source"]["fields"]["traceId"]?.ToString() ?? string.Empty,
                 ApiRouter = x["_source"]["fields"]["className"]?.ToString() ?? string.Empty,
                 ApiMethod = x["_source"]["fields"]["className"]?.ToString() ?? string.Empty,
-                Body = x["_source"]["fields"]["message"]?.ToString() ?? string.Empty,
+                Message = x["_source"]["fields"]["message"]?.ToString() ?? string.Empty,
                 CreatedAt = x["_source"]["@timestamp"].ToObject<DateTime>(),
                 Filter1 = x["_source"]["fields"]["f1"]?.ToString() ?? string.Empty,
                 Filter2 = x["_source"]["fields"]["f2"]?.ToString() ?? string.Empty,

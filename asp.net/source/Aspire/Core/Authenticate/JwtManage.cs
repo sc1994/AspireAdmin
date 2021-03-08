@@ -69,16 +69,20 @@ namespace Aspire.Authenticate
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(this._jwtAppSettings.Secret);
-            _ = tokenHandler.ValidateToken(jwtToken.Split(' ').LastOrDefault(), new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                // set clocks kew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
-                // TODO what?
-                ClockSkew = TimeSpan.Zero,
-            }, out var validatedToken);
+            _ = tokenHandler.ValidateToken(
+                jwtToken.Split(' ').LastOrDefault(),
+                new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+
+                    // set clocks kew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
+                    // TODO what?
+                    ClockSkew = TimeSpan.Zero,
+                },
+                out var validatedToken);
 
             var token = (JwtSecurityToken)validatedToken;
             return new TCurrentUser

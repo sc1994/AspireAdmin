@@ -7,27 +7,27 @@ namespace Aspire.Authorization
     using System;
 
     /// <summary>
-    /// token 
+    /// Token.
     /// </summary>
     public class TokenDto
     {
         /// <summary>
-        /// BearerToken
+        /// Gets or sets BearerToken.
         /// </summary>
         public string BearerToken { get; set; }
 
         /// <summary>
-        /// 到期时间
+        /// Gets or sets 到期时间.
         /// </summary>
         public DateTime ExpiryTime { get; set; }
 
         /// <summary>
-        /// Ttl
+        /// Gets or sets Ttl.
         /// </summary>
         public int Ttl { get; set; }
 
         /// <summary>
-        /// header key
+        /// Gets or sets Header Key.
         /// </summary>
         public string HeaderKey { get; set; }
     }

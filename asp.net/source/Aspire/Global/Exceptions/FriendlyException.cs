@@ -13,26 +13,12 @@ namespace Aspire
     public class FriendlyException : Exception
     {
         /// <summary>
-        /// code.
-        /// </summary>
-        public int Code { get; }
-
-        /// <summary>
-        /// 堆栈.
-        /// </summary>
-        public new EnhancedStackTrace StackTrace { get; }
-
-        /// <summary>
-        /// 消息.
-        /// </summary>
-        public string[] Messages { get; }
-
-        /// <summary>
+        /// Initializes a new instance of the <see cref="FriendlyException"/> class.
         /// 实例化 异常.
         /// </summary>
-        /// <param name="code"></param>
-        /// <param name="stackTrace"></param>
-        /// <param name="messages"></param>
+        /// <param name="code">Code.</param>
+        /// <param name="stackTrace">Stack Trace.</param>
+        /// <param name="messages">Messages.</param>
         public FriendlyException(
             int code,
             EnhancedStackTrace stackTrace,
@@ -42,40 +28,20 @@ namespace Aspire
             this.StackTrace = stackTrace;
             this.Messages = messages;
         }
-    }
-
-    /// <summary>
-    /// 友好的异常抛出
-    /// </summary>
-    public static class FriendlyThrowException
-    {
-        /// <summary>
-        /// 抛出异常
-        /// </summary>
-        /// <param name="messages"></param>
-        public static void ThrowException(params string[] messages)
-        {
-            ThrowException(ResponseCode.InternalServerError, messages);
-        }
 
         /// <summary>
-        /// 抛出异常
+        /// Gets code.
         /// </summary>
-        /// <param name="code"></param>
-        /// <param name="messages"></param>
-        public static void ThrowException(int code, params string[] messages)
-        {
-            throw new FriendlyException(code, EnhancedStackTrace.Current(), messages);
-        }
+        public int Code { get; }
 
         /// <summary>
-        /// 抛出异常
+        /// Gets 堆栈.
         /// </summary>
-        /// <param name="code"></param>
-        /// <param name="messages"></param>
-        public static void ThrowException(ResponseCode code, params string[] messages)
-        {
-            ThrowException(code.GetHashCode(), messages);
-        }
+        public new EnhancedStackTrace StackTrace { get; }
+
+        /// <summary>
+        /// Gets 消息.
+        /// </summary>
+        public string[] Messages { get; }
     }
 }

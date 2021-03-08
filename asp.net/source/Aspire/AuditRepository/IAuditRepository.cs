@@ -1,13 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+// <copyright file="IAuditRepository.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
+
     /// <summary>
-    /// 审计仓储 （主键为GUID）
+    /// 审计仓储 （主键为GUID）.
     /// </summary>
     /// <typeparam name="TAuditEntity"></typeparam>
     public interface IAuditRepository<TAuditEntity> : IAuditRepository<TAuditEntity, Guid>
@@ -17,7 +21,7 @@ namespace Aspire
     }
 
     /// <summary>
-    /// 审计仓储
+    /// 审计仓储.
     /// </summary>
     /// <typeparam name="TAuditEntity"></typeparam>
     /// <typeparam name="TPrimaryKey"></typeparam>
@@ -25,7 +29,7 @@ namespace Aspire
         where TAuditEntity : IAuditEntity<TPrimaryKey>
     {
         /// <summary>
-        /// 增
+        /// Insert.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns>成功与否</returns>
@@ -35,21 +39,21 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 增 然后 取得实体
+        /// Insert Then Entity.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
         Task<TAuditEntity> InsertThenEntityAsync(TAuditEntity entity);
 
         /// <summary>
-        /// 增 批量 
+        /// Insert Batch.
         /// </summary>
         /// <param name="entities"></param>
         /// <returns>影响行数</returns>
         Task<long> InsertBatchAsync(TAuditEntity[] entities);
 
         /// <summary>
-        /// 增 批量 
+        /// Insert Batch.
         /// </summary>
         /// <param name="entities"></param>
         /// <returns>影响行数</returns>
@@ -59,7 +63,7 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 删
+        /// Delete.
         /// </summary>
         /// <param name="primaryKey">指定主键</param>
         /// <returns>成功与否</returns>
@@ -69,7 +73,7 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 删 批量 
+        /// Delete Batch.
         /// </summary>
         /// <param name="primaryKeys">指定主键集合</param>
         /// <returns>影响行数</returns>
@@ -79,7 +83,7 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 删 批量 
+        /// Delete Batch.
         /// </summary>
         /// <param name="primaryKeys">指定主键集合</param>
         /// <returns>影响行数</returns>
@@ -89,14 +93,14 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 删 批量 
+        /// Delete Batch.
         /// </summary>
         /// <param name="filter">过滤条件</param>
         /// <returns>影响行数</returns>
         Task<long> DeleteBatchAsync(Expression<Func<TAuditEntity, bool>> filter);
 
         /// <summary>
-        /// 改 
+        /// Update.
         /// </summary>
         /// <param name="newEntity">新实体</param>
         /// <returns>成功与否</returns>
@@ -106,7 +110,7 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 改 批量
+        /// Update Batch.
         /// </summary>
         /// <param name="newEntities">新实体集合</param>
         /// <returns>影响行数</returns>

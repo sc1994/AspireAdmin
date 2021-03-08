@@ -15,7 +15,7 @@ namespace Aspire
     public static class LinqUtility
     {
         /// <summary>
-        /// 迭代 Array
+        /// 迭代 Array.
         /// </summary>
         /// <typeparam name="T">T.</typeparam>
         /// <param name="array">array.</param>
@@ -29,11 +29,11 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 迭代 IEnumerable
+        /// 迭代 IEnumerable.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="array"></param>
-        /// <param name="action"></param>
+        /// <typeparam name="T">T.</typeparam>
+        /// <param name="array">array.</param>
+        /// <param name="action">action.</param>
         public static void ForEach<T>(this IEnumerable<T> array, Action<T> action)
         {
             foreach (var item in array)
@@ -43,12 +43,12 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 第一个或者默认
+        /// 第一个或者默认.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sourceAsync"></param>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">T.</typeparam>
+        /// <param name="sourceAsync">Source Async.</param>
+        /// <param name="predicate">Predicate.</param>
+        /// <returns>Task T.</returns>
         public static async Task<T> FirstOrDefaultAsync<T>(this Task<T[]> sourceAsync, Func<T, bool> predicate = null)
         {
             var source = await sourceAsync;
@@ -56,12 +56,12 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 第一个或者默认
+        /// 第一个或者默认.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sourceAsync"></param>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">T.</typeparam>
+        /// <param name="sourceAsync">Source Async.</param>
+        /// <param name="predicate">Predicate.</param>
+        /// <returns>Task T.</returns>
         public static async Task<T> FirstOrDefaultAsync<T>(this Task<List<T>> sourceAsync, Func<T, bool> predicate = null)
         {
             var source = await sourceAsync;
@@ -69,11 +69,11 @@ namespace Aspire
         }
 
         /// <summary>
-        /// To Array
+        /// To Array.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="sourceAsync"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">T.</typeparam>
+        /// <param name="sourceAsync">Source Async.</param>
+        /// <returns>Task T.</returns>
         public static async Task<T[]> ToArrayAsync<T>(this Task<List<T>> sourceAsync)
         {
             var source = await sourceAsync;
@@ -81,11 +81,11 @@ namespace Aspire
         }
 
         /// <summary>
-        /// Join 
+        /// Join.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="separator"></param>
-        /// <returns></returns>
+        /// <param name="source">Source.</param>
+        /// <param name="separator">Separator.</param>
+        /// <returns>String.</returns>
         public static string Join(this IEnumerable<string> source, string separator)
         {
             return string.Join(separator, source);

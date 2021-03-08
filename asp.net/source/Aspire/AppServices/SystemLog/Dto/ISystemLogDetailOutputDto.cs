@@ -5,10 +5,10 @@
 namespace Aspire.SystemLog
 {
     /// <summary>
-    /// 系统日志 详情 输出
+    /// System Log Detail Output Dto.
     /// </summary>
-    public interface ISystemLogDetailOutputDto<TId> : ISystemLogFilterOutputDto<TId>
+    /// <typeparam name="TPrimaryKey">Id.</typeparam>
+    public interface ISystemLogDetailOutputDto<TPrimaryKey> : ISystemLogFilterOutputDto<TPrimaryKey>
     {
-
     }
 }

@@ -1,32 +1,36 @@
+// <copyright file="JwtAppSettings.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace Aspire
 {
     /// <summary>
-    /// Jwt 配置项
+    /// Jwt 配置项.
     /// </summary>
     public class JwtAppSettings
     {
         /// <summary>
-        /// Secret
+        /// Gets or sets Secret.
         /// </summary>
         public string Secret { get; set; }
 
         /// <summary>
-        /// Audience
+        /// Gets or sets Audience.
         /// </summary>
         public string ValidAudience { get; set; }
 
         /// <summary>
-        /// Issuer
+        /// Gets or sets Issuer.
         /// </summary>
         public string ValidIssuer { get; set; }
 
         /// <summary>
-        /// 到期秒
+        /// Gets or sets 到期秒.
         /// </summary>
         public int ExpireSeconds { get; set; }
 
         /// <summary>
-        /// Header Key
+        /// Gets or sets Header Key.
         /// </summary>
         public string HeaderKey { get; set; }
     }

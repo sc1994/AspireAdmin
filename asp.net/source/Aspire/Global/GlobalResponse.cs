@@ -1,23 +1,45 @@
-using System;
-using System.Diagnostics;
-using System.Linq;
-using Newtonsoft.Json;
+// <copyright file="GlobalResponse.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire
 {
+    using System;
+    using System.Diagnostics;
+    using System.Linq;
+    using Newtonsoft.Json;
+
+    /// <summary>
+    /// Global Response.
+    /// </summary>
     internal class GlobalResponse
     {
+        /// <summary>
+        /// Gets or sets Code.
+        /// </summary>
         public int Code { get; set; }
 
+        /// <summary>
+        /// Gets or sets Message.
+        /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string[] Message { get; set; }
 
+        /// <summary>
+        /// Gets or sets Result.
+        /// </summary>
         public object Result { get; set; } = new { };
 
 #if DEBUG
+        /// <summary>
+        /// Gets or sets Stack Trace.
+        /// </summary>
         [JsonIgnore]
         public object StackTrace { get; set; }
 
+        /// <summary>
+        /// Gets Stack Trace Text.
+        /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string[] StackTraceText
         {

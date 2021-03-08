@@ -1,6 +1,11 @@
+// <copyright file="CrudApplication.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace Aspire
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -16,7 +21,6 @@ namespace Aspire
         Guid>
         where TAuditEntity : IAuditEntity
     {
-
     }
 
     /// <summary>
@@ -24,6 +28,7 @@ namespace Aspire
     /// </summary>
     /// <typeparam name="TAuditEntity">数据库审计实体.</typeparam>
     /// <typeparam name="TPrimaryKey">实体主键.</typeparam>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<挂起>")]
     public abstract class CrudAppService<
         TAuditEntity,
         TPrimaryKey> : CrudAppService<
@@ -32,7 +37,6 @@ namespace Aspire
         PageInputDto>
         where TAuditEntity : IAuditEntity<TPrimaryKey>
     {
-
     }
 
     /// <summary>
@@ -41,6 +45,7 @@ namespace Aspire
     /// <typeparam name="TAuditEntity">数据库审计实体.</typeparam>
     /// <typeparam name="TPrimaryKey">实体主键.</typeparam>
     /// <typeparam name="TPageInputDto">数据传输对象 分页输入.</typeparam>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<挂起>")]
     public abstract class CrudAppService<
         TAuditEntity,
         TPrimaryKey,
@@ -52,7 +57,6 @@ namespace Aspire
         where TAuditEntity : IAuditEntity<TPrimaryKey>
         where TPageInputDto : PageInputDto
     {
-
     }
 
     /// <summary>
@@ -62,6 +66,7 @@ namespace Aspire
     /// <typeparam name="TPrimaryKey">实体主键.</typeparam>
     /// <typeparam name="TPageInputDto">数据传输对象 分页输入.</typeparam>
     /// <typeparam name="TDto">数据传输对象.</typeparam>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<挂起>")]
     public abstract class CrudAppService<
         TAuditEntity,
         TPrimaryKey,
@@ -76,7 +81,6 @@ namespace Aspire
         where TPageInputDto : PageInputDto
         where TDto : IDto<TPrimaryKey>
     {
-
     }
 
     /// <summary>
@@ -87,6 +91,7 @@ namespace Aspire
     /// <typeparam name="TPageInputDto">数据传输对象 分页输入.</typeparam>
     /// <typeparam name="TOutputDto">数据传输 输出对象.</typeparam>
     /// <typeparam name="TCreateOrUpdateDto">数据传输 创建或者更新 对象.</typeparam>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<挂起>")]
     public abstract class CrudAppService<
         TAuditEntity,
         TPrimaryKey,
@@ -103,7 +108,6 @@ namespace Aspire
         where TPageInputDto : PageInputDto
         where TCreateOrUpdateDto : IDto<TPrimaryKey>
     {
-
     }
 
     /// <summary>
@@ -115,6 +119,7 @@ namespace Aspire
     /// <typeparam name="TOutputDto">数据传输 输出对象.</typeparam>
     /// <typeparam name="TCreateDto">数据传输 创建对象.</typeparam>
     /// <typeparam name="TUpdateDto">数据传输 更新对象.</typeparam>
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<挂起>")]
     public abstract class CrudAppService<
         TAuditEntity,
         TPrimaryKey,
@@ -150,10 +155,11 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 映射到 数据传输对象
+        /// 映射到 数据传输对象.
         /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
+        /// <typeparam name="TTargetDto">Target Dto.</typeparam>
+        /// <param name="entity">Entity.</param>
+        /// <returns>Target.</returns>
         protected virtual TTargetDto MapToDto<TTargetDto>(TAuditEntity entity)
         {
             return this.MapTo<TAuditEntity, TTargetDto>(entity);
@@ -162,29 +168,30 @@ namespace Aspire
         /// <summary>
         /// 映射到 实体.
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
+        /// <typeparam name="TSourceDto">Source Dto.</typeparam>
+        /// <param name="dto">Dto.</param>
+        /// <returns>Audit Entity.</returns>
         protected virtual TAuditEntity MapToEntity<TSourceDto>(TSourceDto dto)
         {
             return this.MapTo<TSourceDto, TAuditEntity>(dto);
         }
 
         /// <summary>
-        /// 创建.
+        /// Create.
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        public virtual async Task<TOutputDto> CreateAsync(TCreateDto dto)
+        /// <param name="input">Input Dto.</param>
+        /// <returns>Output Dto.</returns>
+        public virtual async Task<TOutputDto> CreateAsync(TCreateDto input)
         {
-            var entity = this.MapToEntity(dto);
+            var entity = this.MapToEntity(input);
             return this.MapToDto(await this.CurrentRepository.InsertThenEntityAsync(entity));
         }
 
         /// <summary>
-        /// 删除
+        /// Delete.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">id.</param>
+        /// <returns>Is Success.</returns>
         [HttpDelete("{id}")]
         public virtual async Task<bool> DeleteAsync(TPrimaryKey id)
         {
@@ -192,26 +199,27 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 更新
+        /// Update.
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        public virtual async Task<TOutputDto> UpdateAsync(TUpdateDto dto)
+        /// <param name="input">Input.</param>
+        /// <returns>Output.</returns>
+        public virtual async Task<TOutputDto> UpdateAsync(TUpdateDto input)
         {
-            var entity = this.MapToEntity(dto);
+            var entity = this.MapToEntity(input);
             var success = await this.CurrentRepository.UpdateAsync(entity);
             if (success)
             {
-                return await this.GetAsync(dto.Id);
+                return await this.GetAsync(input.Id);
             }
+
             return Failure<TOutputDto>(ResponseCode.InternalServerDatabaseError, $"执行 {nameof(TAuditEntity)} 实体更新失败");
         }
 
         /// <summary>
-        /// 获取.
+        /// Get.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">id.</param>
+        /// <returns>Output.</returns>
         [HttpGet("{id}")]
         public virtual async Task<TOutputDto> GetAsync(TPrimaryKey id)
         {
@@ -219,24 +227,23 @@ namespace Aspire
         }
 
         /// <summary>
-        /// 分页
+        /// Paging.
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
+        /// <param name="input">Input.</param>
+        /// <returns>Page Output.</returns>
         [HttpPost]
-        public virtual async Task<PagedResultDto<TOutputDto>> PagingAsync(TPageInputDto dto)
+        public virtual async Task<PagedResultDto<TOutputDto>> PagingAsync(TPageInputDto input)
         {
-            var filer = this.FilterPage(dto);
-            var (items, totalCount) = await this.CurrentRepository.PagingAsync(filer, dto);
+            var filer = this.FilterPage(input);
+            var (items, totalCount) = await this.CurrentRepository.PagingAsync(filer, input);
             return new PagedResultDto<TOutputDto>(items.Select(this.MapToDto), totalCount);
-
         }
 
         /// <summary>
-        /// 过滤分页
+        /// Filter Page.
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        protected abstract object FilterPage(TPageInputDto dto);
+        /// <param name="input">Input</param>
+        /// <returns>Queryable.</returns>
+        protected abstract object FilterPage(TPageInputDto input);
     }
 }

@@ -1,30 +1,35 @@
+// <copyright file="ISystemLogFilterOutputDto.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace Aspire.SystemLog
 {
     using System;
 
     /// <summary>
-    /// 系统日志 过滤 输出
+    /// 系统日志 过滤 输出.
     /// </summary>
-    public interface ISystemLogFilterOutputDto<TId> : ISystemLogCommonDto
+    /// <typeparam name="TPrimaryKey">Primary Key.</typeparam>
+    public interface ISystemLogFilterOutputDto<TPrimaryKey> : ISystemLogCommonDto
     {
         /// <summary>
-        /// 创建时间
+        /// Gets or sets 创建时间.
         /// </summary>
         DateTime CreatedAt { get; set; }
 
         /// <summary>
-        /// 对于请求开始消逝的毫秒数
+        /// Gets or sets 对于请求开始消逝的毫秒数.
         /// </summary>
         double TickForRequest { get; set; }
 
         /// <summary>
-        /// 主体
+        /// Gets or sets Message.
         /// </summary>
-        string Body { get; set; }
+        string Message { get; set; }
 
         /// <summary>
-        /// Id
+        /// Gets or sets Id.
         /// </summary>
-        TId Id { get; set; }
+        TPrimaryKey Id { get; set; }
     }
 }

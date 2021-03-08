@@ -34,32 +34,11 @@ namespace Aspire
         }
 
         /// <summary>
-        /// Map To.
+        /// 失败.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        protected T MapTo<T>(object source)
-        {
-            return this.Mapper.MapTo<T>(source);
-        }
-
-        /// <summary>
-        /// Map To.
-        /// </summary>
-        /// <typeparam name="TSource"></typeparam>
-        /// <typeparam name="TTarget"></typeparam>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        protected TTarget MapTo<TSource, TTarget>(TSource source)
-        {
-            return this.Mapper.MapTo<TSource, TTarget>(source);
-        }
-
-        /// <summary>
-        /// 失败
-        /// </summary>
-        /// <param name="messages">错误编码</param>
+        /// <typeparam name="T">T.</typeparam>
+        /// <param name="messages">错误编码.</param>
+        /// <returns>Return T.</returns>
         protected static T Failure<T>(params string[] messages)
         {
             FriendlyThrowException.ThrowException(messages);
@@ -69,8 +48,10 @@ namespace Aspire
         /// <summary>
         /// Failure.
         /// </summary>
+        /// <typeparam name="T">T.</typeparam>
         /// <param name="code">错误编码.</param>
         /// <param name="messages">消息.</param>
+        /// <returns>Return T.</returns>
         protected static T Failure<T>(ResponseCode code, params string[] messages)
         {
             FriendlyThrowException.ThrowException(code, messages);
@@ -80,12 +61,37 @@ namespace Aspire
         /// <summary>
         /// Failure.
         /// </summary>
+        /// <typeparam name="T">T.</typeparam>
         /// <param name="code">错误编码.</param>
         /// <param name="messages">消息.</param>
+        /// <returns>Return T.</returns>
         protected static T Failure<T>(int code, params string[] messages)
         {
             FriendlyThrowException.ThrowException(code, messages);
             return default;
+        }
+
+        /// <summary>
+        /// Map To.
+        /// </summary>
+        /// <typeparam name="T">T.</typeparam>
+        /// <param name="source">Source.</param>
+        /// <returns>Return T.</returns>
+        protected T MapTo<T>(object source)
+        {
+            return this.Mapper.MapTo<T>(source);
+        }
+
+        /// <summary>
+        /// Map To.
+        /// </summary>
+        /// <typeparam name="TSource">Source.</typeparam>
+        /// <typeparam name="TTarget">Target.</typeparam>
+        /// <param name="source">Input Source.</param>
+        /// <returns>Return Target.</returns>
+        protected TTarget MapTo<TSource, TTarget>(TSource source)
+        {
+            return this.Mapper.MapTo<TSource, TTarget>(source);
         }
     }
 }

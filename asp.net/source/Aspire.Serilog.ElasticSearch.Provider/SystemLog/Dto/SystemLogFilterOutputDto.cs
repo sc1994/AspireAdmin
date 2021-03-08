@@ -7,7 +7,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
     {
         public DateTime CreatedAt { get; set; }
         public double TickForRequest { get; set; }
-        public string Body { get; set; }
+        public string Message { get; set; }
         public string Id { get; set; }
     }
 }

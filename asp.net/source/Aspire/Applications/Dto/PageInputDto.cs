@@ -1,17 +1,21 @@
+// <copyright file="PageInputDto.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace Aspire
 {
     /// <summary>
-    /// 页输入
+    /// 页输入.
     /// </summary>
     public interface IPageInputDto
     {
         /// <summary>
-        /// 页 索引
+        /// Gets or sets 页 索引.
         /// </summary>
         int PageIndex { get; set; }
 
         /// <summary>
-        /// 页 大小
+        /// Gets or sets 页 大小.
         /// </summary>
         int PageSize { get; set; }
     }

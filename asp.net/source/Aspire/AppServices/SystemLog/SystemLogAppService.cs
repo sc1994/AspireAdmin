@@ -1,39 +1,46 @@
-using System.Threading.Tasks;
+// <copyright file="SystemLogAppService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire.SystemLog
 {
+    using System.Threading.Tasks;
+
     /// <summary>
-    /// 日志查询 应用服务
+    /// System Log.
     /// </summary>
+    /// <typeparam name="TPrimaryKey">Primary Key.</typeparam>
+    /// <typeparam name="TFilterInputDto">Filter Input Dto.</typeparam>
+    /// <typeparam name="TFilterOutputDto">Filter Output Dto.</typeparam>
+    /// <typeparam name="TDetailOutputDto">Detail Output Dto.</typeparam>
     public abstract class SystemLogAppService<
-        TId,
+        TPrimaryKey,
         TFilterInputDto,
         TFilterOutputDto,
         TDetailOutputDto> : Application
         where TFilterInputDto : ISystemLogFilterInputDto
-        where TFilterOutputDto : ISystemLogFilterOutputDto<TId>
-        where TDetailOutputDto : ISystemLogDetailOutputDto<TId>
+        where TFilterOutputDto : ISystemLogFilterOutputDto<TPrimaryKey>
+        where TDetailOutputDto : ISystemLogDetailOutputDto<TPrimaryKey>
     {
-
         /// <summary>
-        /// filter
+        /// filter.
         /// </summary>
-        /// <param name="filterInput"></param>
-        /// <returns></returns>
+        /// <param name="filterInput">Filter Input.</param>
+        /// <returns>分页过滤输出.</returns>
         public abstract Task<PagedResultDto<TFilterOutputDto>> FilterAsync(TFilterInputDto filterInput);
 
         /// <summary>
-        /// get
+        /// Get Detail.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public abstract Task<TDetailOutputDto> GetDetailAsync(TId id);
+        /// <param name="id">Primary Key.</param>
+        /// <returns>详情输出.</returns>
+        public abstract Task<TDetailOutputDto> GetDetailAsync(TPrimaryKey id);
 
         /// <summary>
-        /// 可选择项
+        /// 获取选择项.
         /// </summary>
-        /// <param name="filterInput"></param>
-        /// <returns></returns>
+        /// <param name="filterInput">Filter Input.</param>
+        /// <returns>选择项集合.</returns>
         public abstract Task<SystemLogSelectItemsDto> GetSelectItems(TFilterInputDto filterInput);
     }
 }
