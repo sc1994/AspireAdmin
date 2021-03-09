@@ -2,14 +2,12 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Aspire
+namespace Aspire.AuditEntity
 {
     using System;
     using System.ComponentModel;
 
-    /// <summary>
-    /// 审计实体.
-    /// </summary>
+    /// <inheritdoc />
     public interface IAuditEntity : IAuditEntity<Guid>
     {
         /// <summary>

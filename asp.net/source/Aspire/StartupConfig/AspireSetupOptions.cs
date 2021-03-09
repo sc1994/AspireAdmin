@@ -6,6 +6,8 @@ namespace Aspire
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Aspire.AuditRepository;
+    using Aspire.Cache;
     using Aspire.Logger;
     using Aspire.Mapper;
     using Microsoft.AspNetCore.Mvc;
@@ -62,5 +64,11 @@ namespace Aspire
         /// </summary>
         [NotNull]
         public ILoggerOptionsSetup LoggerOptionsSetup { get; set; }
+
+        /// <summary>
+        /// Gets or sets 缓存 设置项.
+        /// </summary>
+        [NotNull]
+        public IAspireRedisOptionsSetup CacheOptionsSetup { get; set; }
     }
 }

@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Aspire.FreeSql.Provider</name>
+    </assembly>
+    <members>
+        <member name="T:Aspire.FreeSql.Provider.AuditEntity">
+            <inheritdoc cref="T:Aspire.FreeSql.Provider.AuditEntity`1" />
+        </member>
+        <member name="P:Aspire.FreeSql.Provider.AuditEntity.Id">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.AuditEntity.InitId">
+            <inheritdoc />
+        </member>
+        <member name="T:Aspire.FreeSql.Provider.AuditEntity`1">
+            <inheritdoc />
+        </member>
+        <member name="P:Aspire.FreeSql.Provider.AuditEntity`1.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:Aspire.FreeSql.Provider.AuditEntity`1.CreatedAt">
+            <inheritdoc />
+        </member>
+        <member name="P:Aspire.FreeSql.Provider.AuditEntity`1.CreatedUserName">
+            <inheritdoc />
+        </member>
+        <member name="P:Aspire.FreeSql.Provider.AuditEntity`1.CreatedUserAccount">
+            <inheritdoc />
+        </member>
+        <member name="P:Aspire.FreeSql.Provider.AuditEntity`1.UpdatedAt">
+            <inheritdoc />
+        </member>
+        <member name="P:Aspire.FreeSql.Provider.AuditEntity`1.UpdatedUserName">
+            <inheritdoc />
+        </member>
+        <member name="P:Aspire.FreeSql.Provider.AuditEntity`1.UpdatedUserAccount">
+            <inheritdoc />
+        </member>
+        <member name="P:Aspire.FreeSql.Provider.AuditEntity`1.Deleted">
+            <inheritdoc />
+        </member>
+        <member name="P:Aspire.FreeSql.Provider.AuditEntity`1.DeletedAt">
+            <inheritdoc />
+        </member>
+        <member name="P:Aspire.FreeSql.Provider.AuditEntity`1.DeletedUserName">
+            <inheritdoc />
+        </member>
+        <member name="P:Aspire.FreeSql.Provider.AuditEntity`1.DeletedUserAccount">
+            <inheritdoc />
+        </member>
+        <member name="T:Aspire.FreeSql.Provider.AuditRepository`1">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.AuditRepository`1.#ctor(IFreeSql,Aspire.Authenticate.ICurrentUser)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aspire.FreeSql.Provider.AuditRepository`1"/> class.
+            </summary>
+            <param name="freeSql">FreeSql.</param>
+            <param name="currentUser">CurrentUser.</param>
+        </member>
+        <member name="T:Aspire.FreeSql.Provider.AuditRepository`2">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.AuditRepository`2.#ctor(IFreeSql,Aspire.Authenticate.ICurrentUser)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aspire.FreeSql.Provider.AuditRepository`2"/> class.
+            </summary>
+            <param name="freeSql">FreeSql.</param>
+            <param name="currentUser">CurrentUser.</param>
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.AuditRepository`2.InsertThenEntityAsync(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.AuditRepository`2.InsertBatchAsync(`0[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.AuditRepository`2.DeleteBatchAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.AuditRepository`2.UpdateBatchAsync(`0[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.AuditRepository`2.GetBatchAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.AuditRepository`2.GetBatchAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int64)">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.AuditRepository`2.PagingAsync(System.Object,Aspire.PageInputDto)">
+            <inheritdoc />
+        </member>
+        <member name="T:Aspire.FreeSql.Provider.FreeSqlAuditRepositoryOptionsSetup">
+            <inheritdoc/>
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.FreeSqlAuditRepositoryOptionsSetup.#ctor(System.String,FreeSql.DataType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aspire.FreeSql.Provider.FreeSqlAuditRepositoryOptionsSetup"/> class.
+            </summary>
+            <param name="connectionString">Connection String.</param>
+            <param name="dataType">Database Type.</param>
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.FreeSqlAuditRepositoryOptionsSetup.AddAuditRepository(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Aspire.FreeSql.Provider.FreeSqlExtension">
+            <summary>
+            FreeSql Extension.
+            </summary>
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.FreeSqlExtension.Select``1(IFreeSql)">
+            <summary>
+            Select.
+            </summary>
+            <typeparam name="TAuditEntity">Audit Entity.</typeparam>
+            <param name="freeSql">freeSql.</param>
+            <returns>Audit Entity Object.</returns>
+        </member>
+        <member name="M:Aspire.FreeSql.Provider.FreeSqlExtension.Select``2(IFreeSql)">
+            <summary>
+            Select.
+            </summary>
+            <typeparam name="TAuditEntity">Audit Entity.</typeparam>
+            <typeparam name="TPrimaryKey">Primary Key.</typeparam>
+            <param name="freeSql">freeSql.</param>
+            <returns>Audit Entity Object.</returns>
+        </member>
+    </members>
+</doc>

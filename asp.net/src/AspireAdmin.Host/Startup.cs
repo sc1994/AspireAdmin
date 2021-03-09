@@ -15,13 +15,15 @@ using Microsoft.OpenApi.Models;
 
 namespace AspireAdmin.Host
 {
+    using Aspire.CSRedis.Provider;
+
     public class Startup
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration configuration;
 
         public Startup(IConfiguration configuration)
         {
-            this._configuration = configuration;
+            this.configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -58,11 +60,15 @@ namespace AspireAdmin.Host
 
                 options.MapperOptions = new AutoMapperOptionsSetup(applicationAssembly);
 
-                options.AuditRepositoryOptions = new FreeSqlAuditRepositoryOptionsSetup(this._configuration.GetConnectionString("DbMain"), DataType.Sqlite);
+                options.AuditRepositoryOptions = new FreeSqlAuditRepositoryOptionsSetup(
+                    this.configuration.GetConnectionString("DbMain"),
+                    DataType.Sqlite);
 
-                options.Configuration = this._configuration;
+                options.Configuration = this.configuration;
 
                 options.LoggerOptionsSetup = new SerilogElasticSearchOptionsSetup();
+
+                options.CacheOptionsSetup = new AspireRedisOptionsSetup(this.configuration.GetConnectionString("Redis"));
             });
         }
 
@@ -85,7 +91,7 @@ namespace AspireAdmin.Host
                     corsPolicy.AllowAnyHeader();
                     corsPolicy.AllowAnyMethod();
                     corsPolicy.AllowCredentials();
-                    corsPolicy.WithOrigins(this._configuration.GetSection("WithOrigins").Value.Split(","));
+                    corsPolicy.WithOrigins(this.configuration.GetSection("WithOrigins").Value.Split(","));
                 };
 
                 configure.EndpointRouteConfigure = endpoint =>

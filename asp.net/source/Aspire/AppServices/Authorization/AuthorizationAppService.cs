@@ -7,6 +7,7 @@ namespace Aspire.Authorization
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
+    using Aspire.AuditRepository;
     using Aspire.Authenticate;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -75,7 +76,6 @@ namespace Aspire.Authorization
     {
         private readonly AspireAppSettings aspireAppSettings;
         private readonly IAuditRepository<TUserEntity, TPrimaryKey> userRepository;
-        private readonly ILogWriter logWriter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthorizationAppService{        TUserEntity,         TPrimaryKey,         TLoginDto,         TCurrentUserDto,         TRegisterDto}"/> class.
@@ -84,7 +84,6 @@ namespace Aspire.Authorization
         {
             this.aspireAppSettings = ServiceLocator.ServiceProvider.GetService<IOptions<AspireAppSettings>>().Value;
             this.userRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TUserEntity, TPrimaryKey>>();
-            this.logWriter = ServiceLocator.ServiceProvider.GetService<ILogWriter>();
         }
 
         /// <summary>
@@ -95,10 +94,6 @@ namespace Aspire.Authorization
         [AllowAnonymous]
         public virtual async Task<TokenDto> LoginAsync(TLoginDto input)
         {
-            this.logWriter.Information("Information", "xx", "cc");
-            this.logWriter.Warning("Warning", "xx", "cc");
-            this.logWriter.Error(new Exception(), "Error", "xx", "cc");
-
             if (!this.TryAdminLogin(input, out var user))
             {
                 user = await this.TryUserLogin(input);

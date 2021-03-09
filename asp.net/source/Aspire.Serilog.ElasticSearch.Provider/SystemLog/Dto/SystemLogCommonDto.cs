@@ -18,6 +18,9 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
         public string ApiRouter { get; set; }
 
         /// <inheritdoc/>
+        public string Title { get; set; }
+
+        /// <inheritdoc/>
         public string TraceId { get; set; }
 
         /// <inheritdoc/>

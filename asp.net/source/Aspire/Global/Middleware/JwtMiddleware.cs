@@ -47,7 +47,7 @@ namespace Aspire
                     var current = new JwtManage(this.aspireSetupOptions.Jwt).DeconstructionJwtToken<TCurrentUser>(token);
 
                     // attach user to context on successful jwt validation
-                    context.Items["User"] = current;
+                    context.Items[ICurrentUser.HttpItemsKey] = current;
                 }
                 catch
                 {

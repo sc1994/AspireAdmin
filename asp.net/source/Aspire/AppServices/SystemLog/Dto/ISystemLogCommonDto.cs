@@ -20,6 +20,11 @@ namespace Aspire.SystemLog
         string ApiRouter { get; set; }
 
         /// <summary>
+        /// Gets or sets title.
+        /// </summary>
+        string Title { get; set; }
+
+        /// <summary>
         /// Gets or sets traceId.
         /// </summary>
         string TraceId { get; set; }

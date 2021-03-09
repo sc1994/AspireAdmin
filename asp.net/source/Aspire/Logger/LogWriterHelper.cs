@@ -6,6 +6,7 @@ namespace Aspire
 {
     using System;
     using System.Net;
+    using Aspire.Authenticate;
     using Microsoft.AspNetCore.Http;
 
     /// <summary>
@@ -14,14 +15,17 @@ namespace Aspire
     public class LogWriterHelper
     {
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly ICurrentUser currentUser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogWriterHelper"/> class.
         /// </summary>
         /// <param name="httpContextAccessor">httpContextAccessor.</param>
-        public LogWriterHelper(IHttpContextAccessor httpContextAccessor)
+        /// <param name="currentUser">Current User.</param>
+        public LogWriterHelper(IHttpContextAccessor httpContextAccessor, ICurrentUser currentUser)
         {
             this.httpContextAccessor = httpContextAccessor;
+            this.currentUser = currentUser;
         }
 
         /// <summary>
@@ -34,7 +38,7 @@ namespace Aspire
         /// <para>Client Address.</para>
         /// <para>Server Address.</para>
         /// </returns>
-        public (string apiMethod, string apiRouter, string traceId, string clientAddress, string serverAddress) GetPartialStandardParams()
+        public (string apiMethod, string apiRouter, string traceId, string clientAddress, string serverAddress, string userAccount) GetPartialStandardParams()
         {
             var cxt = this.httpContextAccessor.HttpContext;
             if (cxt is null)
@@ -46,10 +50,11 @@ namespace Aspire
                 cxt.Request.Path.Value,
                 GetTrace(cxt),
                 $"{RemoveIpV6Zero(cxt.Connection.RemoteIpAddress)}:{cxt.Connection.RemotePort}",
-                $"{RemoveIpV6Zero(cxt.Connection.LocalIpAddress)}:{cxt.Connection.LocalPort}");
+                $"{RemoveIpV6Zero(cxt.Connection.LocalIpAddress)}:{cxt.Connection.LocalPort}",
+                this.currentUser.Account);
 
         Default:
-            return (string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
+            return (string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
         }
 
         private static string GetTrace(HttpContext cxt)

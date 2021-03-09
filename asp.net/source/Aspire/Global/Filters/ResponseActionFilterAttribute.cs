@@ -18,45 +18,51 @@ namespace Aspire
         /// <param name="context">Context.</param>
         public override void OnActionExecuted(ActionExecutedContext context)
         {
-            if (context.Exception == null)
+            if (context.Result is ObjectResult objectResult)
             {
-                var result = (ObjectResult)context.Result;
-                context.Result = new OkObjectResult(new GlobalResponse
+                OkObjectResult result;
+                if (context.Exception == null)
                 {
-                    Code = ResponseCode.Ok.GetHashCode(),
-                    Result = result.Value,
-                });
-            }
-            else
-            {
-                // 鉴定异常类型
-                if (context.Exception is FriendlyException friendlyException)
-                {
-                    context.Result = new OkObjectResult(new GlobalResponse
+                    context.Result = result = new OkObjectResult(new GlobalResponse
                     {
-                        Code = friendlyException.Code,
-                        Message = friendlyException.Messages,
-#if DEBUG
-                        StackTrace = friendlyException,
-#endif
+                        Code = ResponseCode.Ok.GetHashCode(),
+                        Result = objectResult.Value,
                     });
                 }
-                else if (context.Exception is { } exception)
+                else
                 {
-                    context.Result = new OkObjectResult(new GlobalResponse
+                    switch (context.Exception)
                     {
-                        Code = ResponseCode.InternalServerError.GetHashCode(),
-                        Message = new[] { exception.Message },
+                        // 鉴定异常类型
+                        case FriendlyException friendlyException:
+                            context.Result = result = new OkObjectResult(new GlobalResponse
+                            {
+                                Code = friendlyException.Code,
+                                Message = friendlyException.Messages,
 #if DEBUG
-                        StackTrace = exception,
+                                StackTrace = friendlyException,
 #endif
-                    });
+                            });
+                            break;
+                        default:
+                            context.Result = result = new OkObjectResult(new GlobalResponse
+                            {
+                                Code = ResponseCode.InternalServerError.GetHashCode(),
+                                Message = new[] { context.Exception.Message },
+#if DEBUG
+                                StackTrace = context.Exception,
+#endif
+                            });
+                            break;
+                    }
+
+                    context.Exception = null;
                 }
 
-                context.Exception = null;
+                var logWriter = ServiceLocator.ServiceProvider.GetService<ILogWriter>();
+                logWriter.Information("Response Action Executed", result.Value);
             }
 
-            // TODO 日志
             base.OnActionExecuted(context);
         }
     }

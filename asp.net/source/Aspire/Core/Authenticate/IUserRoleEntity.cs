@@ -5,6 +5,7 @@
 namespace Aspire.Authenticate
 {
     using System;
+    using Aspire.AuditEntity;
 
     /// <summary>
     /// 用户角色.

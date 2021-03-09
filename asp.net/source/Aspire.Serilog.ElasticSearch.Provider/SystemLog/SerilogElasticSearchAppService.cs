@@ -26,21 +26,18 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
     {
         private readonly string node;
         private readonly string index;
-        private readonly ILogWriter logWriter;
-        private readonly IAspireRedis redis;
+        private readonly IAspireCache cache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerilogElasticSearchAppService"/> class.
         /// </summary>
         /// <param name="config">Configuration.</param>
-        /// <param name="logWriter">Log Writer.</param>
-        /// <param name="redis">Redis.</param>
-        public SerilogElasticSearchAppService(IConfiguration config, ILogWriter logWriter, IAspireRedis redis)
+        /// <param name="cache">Redis.</param>
+        public SerilogElasticSearchAppService(IConfiguration config, IAspireCache cache)
         {
             this.node = config.GetConnectionString("ElasticSearch");
             this.index = config.GetConnectionString("ElasticSearchIndex");
-            this.logWriter = logWriter;
-            this.redis = redis;
+            this.cache = cache;
         }
 
         private enum OperatorEnum
@@ -50,11 +47,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
             Lte,
         }
 
-        /// <summary>
-        /// Filter.
-        /// </summary>
-        /// <param name="filterInput">Filter Input.</param>
-        /// <returns>Page Output.</returns>
+        /// <inheritdoc />
         public override async Task<PagedResultDto<SystemLogFilterOutputDto>> FilterAsync(SystemLogFilterInputDto filterInput)
         {
             var items = new List<object>();
@@ -66,6 +59,11 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
             if (!string.IsNullOrWhiteSpace(filterInput.ApiRouter))
             {
                 items.Add(GetQueryItem("fields.apiRouter.keyword", filterInput.ApiRouter, OperatorEnum.Term));
+            }
+
+            if (!string.IsNullOrWhiteSpace(filterInput.Title))
+            {
+                items.Add(GetQueryItem("fields.apiRouter.title", filterInput.Title, OperatorEnum.Term));
             }
 
             if (!string.IsNullOrWhiteSpace(filterInput.Filter1))
@@ -117,11 +115,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
                 },
             };
             var uri = $"/{this.index}*/_search";
-            this.logWriter.Information(new
-            {
-                uri,
-                dsl,
-            });
+
             using var client = new HttpClient { BaseAddress = new Uri(this.node) };
             var res = await client.PostAsJsonAsync(uri, dsl);
             var data = await res.Content
@@ -132,11 +126,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
                 data["hits"]["total"]["value"].ToObject<int>());
         }
 
-        /// <summary>
-        /// Get Detail.
-        /// </summary>
-        /// <param name="id">Id.</param>
-        /// <returns>Output.</returns>
+        /// <inheritdoc />
         public override async Task<SystemLogDetailOutputDto> GetDetailAsync(string id)
         {
             using var client = new HttpClient { BaseAddress = new Uri(this.node) };
@@ -144,19 +134,26 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
             return ToLogModel<SystemLogDetailOutputDto>(data);
         }
 
-        /// <summary>
-        /// Get Select Items.
-        /// </summary>
-        /// <param name="filterInput">Filter Input.</param>
-        /// <returns>Items.</returns>
-        public override async Task<SystemLogSelectItemsDto> GetSelectItems(SystemLogFilterInputDto filterInput)
+        /// <inheritdoc />
+        public override async Task<SystemLogSelectItemsDto> GetSelectItems()
         {
             return await Task.FromResult(new SystemLogSelectItemsDto
             {
-                ApiMethods = this.redis.GetSetAllMembers(LogWriter.RedisKeyApiMethod).ToArray(),
-                ServerAddress = this.redis.GetSetAllMembers(LogWriter.RedisKeyServerAddress).ToArray(),
-                ApiRouters = this.redis.GetSetAllMembers(LogWriter.RedisKeyApiRouter).ToArray(),
+                ApiMethods = this.cache.GetSetAllMembers(LogWriter.RedisKeyApiMethod).ToArray(),
+                ServerAddress = this.cache.GetSetAllMembers(LogWriter.RedisKeyServerAddress).ToArray(),
+                ApiRouters = this.cache.GetSetAllMembers(LogWriter.RedisKeyApiRouter).ToArray(),
+                Titles = this.cache.GetSetAllMembers(LogWriter.RedisKeyTitle).ToArray(),
             });
+        }
+
+        /// <inheritdoc />
+        public override async Task<bool> DeleteAllSelectItems()
+        {
+            return await Task.FromResult(
+                this.cache.DeleteKey(LogWriter.RedisKeyApiMethod)
+             && this.cache.DeleteKey(LogWriter.RedisKeyServerAddress)
+             && this.cache.DeleteKey(LogWriter.RedisKeyApiRouter)
+             && this.cache.DeleteKey(LogWriter.RedisKeyTitle));
         }
 
         private static object GetQueryItem(string field, object value, OperatorEnum operatorEnum)
@@ -201,6 +198,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
             {
                 TraceId = x["_source"]["fields"]["traceId"]?.ToString() ?? string.Empty,
                 ApiRouter = x["_source"]["fields"]["className"]?.ToString() ?? string.Empty,
+                Title = x["_source"]["fields"]["title"]?.ToString() ?? string.Empty,
                 ApiMethod = x["_source"]["fields"]["className"]?.ToString() ?? string.Empty,
                 Message = x["_source"]["fields"]["message"]?.ToString() ?? string.Empty,
                 CreatedAt = x["_source"]["@timestamp"].ToObject<DateTime>(),

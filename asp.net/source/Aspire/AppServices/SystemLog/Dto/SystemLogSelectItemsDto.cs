@@ -24,22 +24,12 @@ namespace Aspire.SystemLog
         /// <summary>
         /// Gets or sets 过滤1.
         /// </summary>
-        public string[] Filter1s { get; set; } = Array.Empty<string>();
+        public string[] Filters1 { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Gets or sets 过滤2.
         /// </summary>
-        public string[] Filter2S { get; set; } = Array.Empty<string>();
-
-        /// <summary>
-        /// Gets or sets 过滤3.
-        /// </summary>
-        public string[] Filter3s { get; set; } = Array.Empty<string>();
-
-        /// <summary>
-        /// Gets or sets 过滤4.
-        /// </summary>
-        public string[] Filter4s { get; set; } = Array.Empty<string>();
+        public string[] Filters2 { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Gets or sets 客户端地址.
@@ -50,5 +40,10 @@ namespace Aspire.SystemLog
         /// Gets or sets 服务端地址.
         /// </summary>
         public string[] ServerAddress { get; set; } = Array.Empty<string>();
+
+        /// <summary>
+        /// Gets or sets Titles.
+        /// </summary>
+        public string[] Titles { get; set; }
     }
 }

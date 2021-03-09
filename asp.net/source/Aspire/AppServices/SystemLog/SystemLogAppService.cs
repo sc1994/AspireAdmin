@@ -39,8 +39,13 @@ namespace Aspire.SystemLog
         /// <summary>
         /// 获取选择项.
         /// </summary>
-        /// <param name="filterInput">Filter Input.</param>
         /// <returns>选择项集合.</returns>
-        public abstract Task<SystemLogSelectItemsDto> GetSelectItems(TFilterInputDto filterInput);
+        public abstract Task<SystemLogSelectItemsDto> GetSelectItems();
+
+        /// <summary>
+        /// 删除全部选择项.
+        /// </summary>
+        /// <returns>Is Success.</returns>
+        public abstract Task<bool> DeleteAllSelectItems();
     }
 }

@@ -8,7 +8,8 @@ namespace Aspire
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Aspire.AuditEntity;
+    using Aspire.AuditRepository;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>

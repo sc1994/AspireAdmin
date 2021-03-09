@@ -1,4 +1,4 @@
-// <copyright file="IAspireRedis.cs" company="PlaceholderCompany">
+// <copyright file="IAspireCache.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -10,7 +10,7 @@ namespace Aspire.Cache
     /// <summary>
     /// Cache.
     /// </summary>
-    public interface IAspireRedis
+    public interface IAspireCache
     {
         /// <summary>
         /// Delete Key.
@@ -29,10 +29,29 @@ namespace Aspire.Cache
         /// <summary>
         /// Get String.
         /// </summary>
+        /// <param name="key">Key.</param>
+        /// <returns>Type Object.</returns>
+        string GetString(string key);
+
+        /// <summary>
+        /// Set String.
+        /// </summary>
+        /// <param name="key">Key.</param>
+        /// <param name="value">Value.</param>
+        /// <param name="ttl">TTL.</param>
+        /// <returns>Is Success.</returns>
+        bool SetString(string key, string value, int ttl);
+
+        /// <summary>
+        /// Get String.
+        /// </summary>
         /// <typeparam name="T">Json Deserialize Type.</typeparam>
         /// <param name="key">Key.</param>
         /// <returns>Type Object.</returns>
-        T GetString<T>(string key);
+        public T GetString<T>(string key)
+        {
+            return this.GetString(key).DeserializeObject<T>();
+        }
 
         /// <summary>
         /// Set String.
@@ -42,7 +61,10 @@ namespace Aspire.Cache
         /// <param name="value">Value.</param>
         /// <param name="ttl">TTL.</param>
         /// <returns>Is Success.</returns>
-        bool SetString<T>(string key, T value, double ttl);
+        public bool SetString<T>(string key, T value, int ttl)
+        {
+            return this.SetString(key, value.SerializeObject(), ttl);
+        }
 
         /// <summary>
         /// Add Set Members.

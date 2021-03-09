@@ -2,7 +2,7 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Aspire
+namespace Aspire.AuditRepository
 {
     using Microsoft.Extensions.DependencyInjection;
 

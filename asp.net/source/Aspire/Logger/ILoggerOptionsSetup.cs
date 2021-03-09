@@ -13,7 +13,7 @@ namespace Aspire.Logger
     public interface ILoggerOptionsSetup
     {
         /// <summary>
-        /// Add Logger .
+        /// Add Logger.
         /// </summary>
         /// <param name="services">Service Collection.</param>
         /// <param name="configuration">Configuration.</param>

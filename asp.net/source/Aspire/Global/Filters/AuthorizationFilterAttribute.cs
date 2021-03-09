@@ -5,6 +5,7 @@
 namespace Aspire
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using Aspire.Authenticate;
@@ -49,6 +50,7 @@ namespace Aspire
         /// 鉴权.
         /// </summary>
         /// <param name="context">Context.</param>
+        [SuppressMessage("Style", "IDE0083:使用模式匹配", Justification = "<挂起>")]
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             if (!(context.ActionDescriptor is ControllerActionDescriptor contextActionDescriptor))
@@ -89,7 +91,7 @@ namespace Aspire
             }
 
             // 类型错误
-            if (!(context.HttpContext.Items["User"] is ICurrentUser user))
+            if (!(context.HttpContext.Items[ICurrentUser.HttpItemsKey] is ICurrentUser user))
             {
                 return;
             }

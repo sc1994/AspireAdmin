@@ -14,39 +14,43 @@ namespace Aspire
         /// <summary>
         /// write info.
         /// </summary>
+        /// <param name="title">title.</param>
         /// <param name="message">message.</param>
         /// <param name="filter1">filter1.</param>
         /// <param name="filter2">filter2.</param>
-        void Information(string message, string filter1 = null, string filter2 = null);
+        void Information(string title, string message, string filter1 = null, string filter2 = null);
 
         /// <summary>
         /// write info.
         /// </summary>
+        /// <param name="title">title.</param>
         /// <param name="message">message.</param>
         /// <param name="filter1">filter1.</param>
         /// <param name="filter2">filter2.</param>
-        public void Information(object message, string filter1 = null, string filter2 = null)
+        public void Information(string title, object message, string filter1 = null, string filter2 = null)
         {
-            this.Information(message.SerializeObject(), filter1, filter2);
+            this.Information(title, message.SerializeObject(), filter1, filter2);
         }
 
         /// <summary>
         /// write warn.
         /// </summary>
+        /// <param name="title">title.</param>
         /// <param name="message">message.</param>
         /// <param name="filter1">filter1.</param>
         /// <param name="filter2">filter2.</param>
-        void Warning(string message, string filter1 = null, string filter2 = null);
+        void Warning(string title, string message, string filter1 = null, string filter2 = null);
 
         /// <summary>
         /// write warn.
         /// </summary>
+        /// <param name="title">title.</param>
         /// <param name="message">message.</param>
         /// <param name="filter1">filter1.</param>
         /// <param name="filter2">filter2.</param>
-        public void Warning(object message, string filter1 = null, string filter2 = null)
+        public void Warning(string title, object message, string filter1 = null, string filter2 = null)
         {
-            this.Warning(message.SerializeObject(), filter1, filter2);
+            this.Warning(title, message.SerializeObject(), filter1, filter2);
         }
 
         /// <summary>

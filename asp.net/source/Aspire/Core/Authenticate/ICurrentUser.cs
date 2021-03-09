@@ -10,6 +10,11 @@ namespace Aspire.Authenticate
     public interface ICurrentUser
     {
         /// <summary>
+        /// 用于在 http item 中 获取或设置 ICurrentUser 的 Key.
+        /// </summary>
+        public const string HttpItemsKey = "Aspire.CurrentUser";
+
+        /// <summary>
         /// Gets or sets 用户Id.
         /// </summary>
         string Account { get; set; }

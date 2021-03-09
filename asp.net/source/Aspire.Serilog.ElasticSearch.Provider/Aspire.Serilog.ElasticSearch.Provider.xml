@@ -24,18 +24,23 @@
             Redis Key Server Address.
             </summary>
         </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriter.#ctor(Serilog.ILogger,Aspire.LogWriterHelper,Aspire.Cache.IAspireRedis)">
+        <member name="F:Aspire.Serilog.ElasticSearch.Provider.LogWriter.RedisKeyTitle">
+            <summary>
+            Redis Key Title.
+            </summary>
+        </member>
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriter.#ctor(Serilog.ILogger,Aspire.LogWriterHelper,Aspire.Cache.IAspireCache)">
             <summary>
             Initializes a new instance of the <see cref="T:Aspire.Serilog.ElasticSearch.Provider.LogWriter"/> class.
             </summary>
             <param name="logger">Serilog.ILogger.</param>
             <param name="writerHelper">Log Writer Helper.</param>
-            <param name="redis">Redis.</param>
+            <param name="cache">Redis.</param>
         </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriter.Information(System.String,System.String,System.String)">
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriter.Information(System.String,System.String,System.String,System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriter.Warning(System.String,System.String,System.String)">
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriter.Warning(System.String,System.String,System.String,System.String)">
             <inheritdoc/>
         </member>
         <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriter.Error(System.Exception,System.String,System.String,System.String)">
@@ -58,6 +63,9 @@
             <inheritdoc/>
         </member>
         <member name="P:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SystemLogCommonDto.ApiRouter">
+            <inheritdoc/>
+        </member>
+        <member name="P:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SystemLogCommonDto.Title">
             <inheritdoc/>
         </member>
         <member name="P:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SystemLogCommonDto.TraceId">
@@ -119,34 +127,24 @@
             SerilogElastic Search AppService.
             </summary>
         </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Aspire.ILogWriter,Aspire.Cache.IAspireRedis)">
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Aspire.Cache.IAspireCache)">
             <summary>
             Initializes a new instance of the <see cref="T:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService"/> class.
             </summary>
             <param name="config">Configuration.</param>
-            <param name="logWriter">Log Writer.</param>
-            <param name="redis">Redis.</param>
+            <param name="cache">Redis.</param>
         </member>
         <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.FilterAsync(Aspire.Serilog.ElasticSearch.Provider.SystemLog.SystemLogFilterInputDto)">
-            <summary>
-            Filter.
-            </summary>
-            <param name="filterInput">Filter Input.</param>
-            <returns>Page Output.</returns>
+            <inheritdoc />
         </member>
         <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.GetDetailAsync(System.String)">
-            <summary>
-            Get Detail.
-            </summary>
-            <param name="id">Id.</param>
-            <returns>Output.</returns>
+            <inheritdoc />
         </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.GetSelectItems(Aspire.Serilog.ElasticSearch.Provider.SystemLog.SystemLogFilterInputDto)">
-            <summary>
-            Get Select Items.
-            </summary>
-            <param name="filterInput">Filter Input.</param>
-            <returns>Items.</returns>
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.GetSelectItems">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.DeleteAllSelectItems">
+            <inheritdoc />
         </member>
     </members>
 </doc>

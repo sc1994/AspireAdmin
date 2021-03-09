@@ -9,6 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
     using System.Collections.Generic;
     using System.Data;
     using Aspire;
+    using Aspire.AuditRepository;
     using Aspire.Authenticate;
     using Aspire.Mapper;
     using Microsoft.AspNetCore.Http;
@@ -266,6 +267,14 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<LogWriterHelper>();
             options.LoggerOptionsSetup.AddLogger(services, options.Configuration);
+
+            // Cache
+            if (options.CacheOptionsSetup == null)
+            {
+                throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.CacheOptionsSetup));
+            }
+
+            options.CacheOptionsSetup.AddAspireRedis(services);
 
             return services;
         }

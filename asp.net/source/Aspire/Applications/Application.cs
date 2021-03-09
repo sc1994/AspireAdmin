@@ -17,6 +17,7 @@ namespace Aspire
     [DynamicWebApi]
     [AuthorizationFilter]
     [ResponseActionFilter]
+    [RequestActionFilter]
     public abstract class Application : IDynamicWebApi
     {
         /// <summary>
