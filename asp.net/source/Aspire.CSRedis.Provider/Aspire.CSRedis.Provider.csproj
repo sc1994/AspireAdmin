@@ -4,8 +4,20 @@
     <ProjectReference Include="..\Aspire\Aspire.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CSRedisCore" Version="3.6.6" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>D:\Desktop\AspireAdmin\asp.net\source\Aspire.CSRedis.Provider\Aspire.CSRedis.Provider.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>

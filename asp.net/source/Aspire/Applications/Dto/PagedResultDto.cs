@@ -1,32 +1,36 @@
-using System.Collections.Generic;
-using System.Linq;
+// <copyright file="PagedResultDto.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
-    /// 分页后结果
+    /// 分页结果.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class PagedResultDto<T>
+    /// <typeparam name="TItem">item.</typeparam>
+    public class PagedResultDto<TItem>
     {
         /// <summary>
-        /// 实例 分页后结果 构造
+        /// Initializes a new instance of the <see cref="PagedResultDto{TItem}"/> class.
         /// </summary>
-        /// <param name="items"></param>
-        /// <param name="totalCount"></param>
-        public PagedResultDto(IEnumerable<T> items, long totalCount)
+        /// <param name="items">items.</param>
+        /// <param name="totalCount">total count.</param>
+        public PagedResultDto(IEnumerable<TItem> items, long totalCount)
         {
-            Items = items.ToList();
-            TotalCount = totalCount;
+            this.Items = items.ToList();
+            this.TotalCount = totalCount;
         }
 
         /// <summary>
-        /// 项
+        /// Gets items.
         /// </summary>
-        public List<T> Items { get; }
+        public List<TItem> Items { get; }
 
         /// <summary>
-        /// 总数量
+        /// Gets total count.
         /// </summary>
         public long TotalCount { get; }
     }

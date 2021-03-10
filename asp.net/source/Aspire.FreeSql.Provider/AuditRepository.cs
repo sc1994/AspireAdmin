@@ -1,68 +1,92 @@
-using System;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-
-using Aspire.Authenticate;
-
-using FreeSql;
+// <copyright file="AuditRepository.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire.FreeSql.Provider
 {
+    using System;
+    using System.Data.SqlTypes;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
+    using Aspire.AuditRepository;
+    using Aspire.Authenticate;
+    using global::FreeSql;
+
+    /// <inheritdoc />
     internal class AuditRepository<TAuditEntity> : AuditRepository<TAuditEntity, Guid>
         where TAuditEntity : AuditEntity
     {
-        public AuditRepository(IFreeSql freeSql, ICurrentUser currentUser) : base(freeSql, currentUser)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuditRepository{TAuditEntity}"/> class.
+        /// </summary>
+        /// <param name="freeSql">FreeSql.</param>
+        /// <param name="currentUser">CurrentUser.</param>
+        public AuditRepository(IFreeSql freeSql, ICurrentUser currentUser)
+            : base(freeSql, currentUser)
         {
         }
     }
 
-    internal class AuditRepository<TAuditEntity, TPrimaryKey> : RealizeAuditRepository<TAuditEntity, TPrimaryKey>
+    /// <inheritdoc />
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<挂起>")]
+    internal class AuditRepository<TAuditEntity, TPrimaryKey> : IAuditRepository<TAuditEntity, TPrimaryKey>
         where TAuditEntity : AuditEntity<TPrimaryKey>
     {
-        private readonly IFreeSql _freeSql;
-        private readonly ICurrentUser _currentUser;
+        private readonly IFreeSql freeSql;
 
+        private readonly ICurrentUser currentUser;
 
-        public AuditRepository(IFreeSql freeSql, ICurrentUser currentUser) : base(currentUser)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuditRepository{TAuditEntity, TPrimaryKey}"/> class.
+        /// </summary>
+        /// <param name="freeSql">FreeSql.</param>
+        /// <param name="currentUser">CurrentUser.</param>
+        public AuditRepository(IFreeSql freeSql, ICurrentUser currentUser)
         {
-            _freeSql = freeSql;
-            _currentUser = currentUser;
+            this.freeSql = freeSql;
+            this.currentUser = currentUser;
         }
 
-        public async override Task<TAuditEntity> InsertThenEntityAsync(TAuditEntity entity)
+        /// <inheritdoc />
+        public virtual async Task<TAuditEntity> InsertThenEntityAsync(TAuditEntity entity)
         {
-            SetCreatedEntity(ref entity);
-            return await _freeSql.Insert(entity).ExecuteInsertedAsync().FirstOrDefaultAsync();
+            this.SetCreatedEntity(ref entity);
+            return await this.freeSql.Insert(entity).ExecuteInsertedAsync().FirstOrDefaultAsync();
         }
 
-        public async override Task<long> InsertBatchAsync(TAuditEntity[] entities)
+        /// <inheritdoc />
+        public virtual async Task<long> InsertBatchAsync(TAuditEntity[] entities)
         {
-            entities.ForEach(x => SetCreatedEntity(ref x));
-            return await _freeSql.Insert(entities).ExecuteAffrowsAsync();
+            entities.ForEach(x => this.SetCreatedEntity(ref x));
+            return await this.freeSql.Insert(entities).ExecuteAffrowsAsync();
         }
 
-        public async override Task<long> DeleteBatchAsync(Expression<Func<TAuditEntity, bool>> filter)
+        /// <inheritdoc />
+        public virtual async Task<long> DeleteBatchAsync(Expression<Func<TAuditEntity, bool>> filter)
         {
-            return await _freeSql.Update<TAuditEntity>()
+            return await this.freeSql.Update<TAuditEntity>()
                 .Where(filter)
                 .Set(x => x.DeletedAt, DateTime.Now)
-                .Set(x => x.DeletedUserName, _currentUser.Name)
-                .Set(x => x.DeletedUserAccount, _currentUser.Account)
+                .Set(x => x.DeletedUserName, this.currentUser.Name)
+                .Set(x => x.DeletedUserAccount, this.currentUser.Account)
                 .Set(x => x.Deleted, true)
                 .ExecuteAffrowsAsync();
         }
 
-        public async override Task<long> UpdateBatchAsync(TAuditEntity[] newEntities)
+        /// <inheritdoc />
+        public virtual async Task<long> UpdateBatchAsync(TAuditEntity[] newEntities)
         {
-            newEntities.ForEach(x => SetUpdatedEntity(ref x));
-            return await _freeSql.Update<TAuditEntity>()
+            newEntities.ForEach(x => this.SetUpdatedEntity(ref x));
+            return await this.freeSql.Update<TAuditEntity>()
                 .SetSource(newEntities)
                 .ExecuteAffrowsAsync();
         }
 
-        public async override Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter)
+        /// <inheritdoc />
+        public virtual async Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter)
         {
-            return await _freeSql
+            return await this.freeSql
                 .Select<TAuditEntity>()
                 .Where(x => !x.Deleted)
                 .Where(filter)
@@ -70,9 +94,10 @@ namespace Aspire.FreeSql.Provider
                 .ToArrayAsync();
         }
 
-        public async override Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter, long limit)
+        /// <inheritdoc />
+        public virtual async Task<TAuditEntity[]> GetBatchAsync(Expression<Func<TAuditEntity, bool>> filter, long limit)
         {
-            return await _freeSql
+            return await this.freeSql
                 .Select<TAuditEntity>()
                 .Where(x => !x.Deleted)
                 .Where(filter)
@@ -81,29 +106,40 @@ namespace Aspire.FreeSql.Provider
                 .ToArrayAsync();
         }
 
-        public async override Task<(TAuditEntity[] items, long totalCount)> PagingAsync(object queryable, PageInputDto dto)
+        /// <inheritdoc />
+        public virtual async Task<(TAuditEntity[] items, long totalCount)> PagingAsync(object queryable, PageInputDto dto)
         {
-            if (queryable is ISelect<TAuditEntity> iSelect) {
+            if (queryable is ISelect<TAuditEntity> iSelect)
+            {
                 var itemsAsync = iSelect.ToListAsync<TAuditEntity>().ToArrayAsync();
                 var totalCountAsync = iSelect.CountAsync();
                 return (await itemsAsync, await totalCountAsync);
             }
-            throw new ArgumentException($"参数{nameof(queryable)}应该为ISelect<TAuditEntity>类型");
-        }
-    }
 
-    public static class FreeSqlExtension
-    {
-        public static ISelect<TAuditEntity> Select<TAuditEntity>(this IFreeSql freeSql)
-            where TAuditEntity : AuditEntity
-        {
-            return freeSql.Select<TAuditEntity>().Where(x => !x.Deleted);
+            throw new ArgumentException($"参数{nameof(queryable)}应该为ISelect<{typeof(TAuditEntity).Name}>类型");
         }
 
-        public static ISelect<TAuditEntity> Select<TAuditEntity, TPrimaryKey>(this IFreeSql freeSql)
-            where TAuditEntity : AuditEntity<TPrimaryKey>
+        private void SetCreatedEntity(ref TAuditEntity entity)
         {
-            return freeSql.Select<TAuditEntity>().Where(x => !x.Deleted);
+            entity.CreatedAt = DateTime.Now;
+            entity.CreatedUserName = this.currentUser.Name;
+            entity.CreatedUserAccount = this.currentUser.Account;
+
+            entity.Deleted = false;
+            entity.DeletedAt = SqlDateTime.MaxValue.Value;
+            entity.DeletedUserName = string.Empty;
+            entity.DeletedUserAccount = string.Empty;
+
+            entity.UpdatedAt = SqlDateTime.MaxValue.Value;
+            entity.UpdatedUserName = string.Empty;
+            entity.UpdatedUserAccount = string.Empty;
+        }
+
+        private void SetUpdatedEntity(ref TAuditEntity entity)
+        {
+            entity.UpdatedAt = DateTime.Now;
+            entity.UpdatedUserName = this.currentUser.Name;
+            entity.UpdatedUserAccount = this.currentUser.Account;
         }
     }
 }

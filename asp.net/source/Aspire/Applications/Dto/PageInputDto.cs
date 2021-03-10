@@ -1,18 +1,35 @@
+// <copyright file="PageInputDto.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace Aspire
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
-    /// 页输入
+    /// 页输入.
     /// </summary>
-    public class PageInputDto
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "<挂起>")]
+    public interface IPageInputDto
     {
         /// <summary>
-        /// 页 索引
+        /// Gets or sets 页 索引.
         /// </summary>
-        public int PageIndex { get; set; }
+        int PageIndex { get; set; }
 
         /// <summary>
-        /// 页 大小
+        /// Gets or sets 页 大小.
         /// </summary>
-        public int PageSize { get; set; }
+        int PageSize { get; set; }
+    }
+
+    /// <inheritdoc />
+    public class PageInputDto : IPageInputDto
+    {
+        /// <inheritdoc />
+        public int PageIndex { get; set; } = 1;
+
+        /// <inheritdoc />
+        public int PageSize { get; set; } = 10;
     }
 }

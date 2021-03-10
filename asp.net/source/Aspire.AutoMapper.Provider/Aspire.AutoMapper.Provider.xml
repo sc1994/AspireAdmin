@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Aspire.AutoMapper.Provider</name>
+    </assembly>
+    <members>
+        <member name="T:Aspire.AutoMapper.Provider.AspireMapper">
+            <summary>
+            Aspire Mapper.
+            </summary>
+        </member>
+        <member name="M:Aspire.AutoMapper.Provider.AspireMapper.#ctor(AutoMapper.IMapper)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aspire.AutoMapper.Provider.AspireMapper"/> class.
+            </summary>
+            <param name="mapper">AutoMapper.IMapper.</param>
+        </member>
+        <member name="M:Aspire.AutoMapper.Provider.AspireMapper.MapTo``1(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Aspire.AutoMapper.Provider.AspireMapper.MapTo``2(``0)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Aspire.AutoMapper.Provider.AutoMapperOptionsSetup">
+            <summary>
+            AutoMapper Options Setup.
+            </summary>
+        </member>
+        <member name="M:Aspire.AutoMapper.Provider.AutoMapperOptionsSetup.#ctor(System.Reflection.Assembly)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aspire.AutoMapper.Provider.AutoMapperOptionsSetup"/> class.
+            </summary>
+            <param name="applicationAssembly">应用程序集，默认为启动入口的程序集.</param>
+        </member>
+        <member name="M:Aspire.AutoMapper.Provider.AutoMapperOptionsSetup.AddAspireMapper(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

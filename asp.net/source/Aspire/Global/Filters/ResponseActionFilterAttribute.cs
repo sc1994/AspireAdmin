@@ -1,52 +1,69 @@
-using Aspire.Exceptions;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+// <copyright file="ResponseActionFilterAttribute.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Aspire
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Filters;
+
     /// <summary>
-    /// 响应过滤器
+    /// 响应过滤器.
     /// </summary>
     public class ResponseActionFilterAttribute : ActionFilterAttribute
     {
         /// <summary>
-        /// 在控制器完成后检验控制器结果
+        /// 在控制器完成后检验控制器结果.
         /// </summary>
-        public override void OnActionExecuted(ActionExecutedContext cxt)
+        /// <param name="context">Context.</param>
+        public override void OnActionExecuted(ActionExecutedContext context)
         {
-            if (cxt.Exception != null) {
-                if (cxt.Exception is FriendlyException friendlyException) {
-                    cxt.Result = new OkObjectResult(new GlobalResponse {
-                        Code = friendlyException.Code,
-                        Message = friendlyException.Messages,
-#if DEBUG
-                        StackTrace = friendlyException
-#endif
+            if (context.Result is ObjectResult objectResult)
+            {
+                OkObjectResult result;
+                if (context.Exception == null)
+                {
+                    context.Result = result = new OkObjectResult(new GlobalResponse
+                    {
+                        Code = ResponseCode.Ok.GetHashCode(),
+                        Result = objectResult.Value,
                     });
                 }
-                else if (cxt.Exception is { } exception) {
-                    cxt.Result = new OkObjectResult(new GlobalResponse {
-                        Code = ResponseCode.InternalServerError.GetHashCode(),
-                        Message = new[] { exception.Message },
+                else
+                {
+                    switch (context.Exception)
+                    {
+                        // 鉴定异常类型
+                        case FriendlyException friendlyException:
+                            context.Result = result = new OkObjectResult(new GlobalResponse
+                            {
+                                Code = friendlyException.Code,
+                                Message = friendlyException.Messages,
 #if DEBUG
-                        StackTrace = exception
+                                StackTrace = friendlyException,
 #endif
-                    });
+                            });
+                            break;
+                        default:
+                            context.Result = result = new OkObjectResult(new GlobalResponse
+                            {
+                                Code = ResponseCode.InternalServerError.GetHashCode(),
+                                Message = new[] { context.Exception.Message },
+#if DEBUG
+                                StackTrace = context.Exception,
+#endif
+                            });
+                            break;
+                    }
+
+                    context.Exception = null;
                 }
-                cxt.Exception = null;
-            }
-            else {
-                var result = (ObjectResult)cxt.Result;
-                cxt.Result = new OkObjectResult(new GlobalResponse {
-                    Code = ResponseCode.Ok.GetHashCode(),
-                    Result = result.Value,
-                });
+
+                var logWriter = ServiceLocator.ServiceProvider.GetService<ILogWriter>();
+                logWriter.Information("Response Action Executed", result.Value);
             }
 
-            // TODO 日志
-            //JsonConvert.SerializeObject((OkObjectResult)cxt.Message);
-            base.OnActionExecuted(cxt);
+            base.OnActionExecuted(context);
         }
     }
 }

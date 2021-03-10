@@ -1,38 +1,27 @@
+// <copyright file="AppEnum.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace Aspire
 {
     /// <summary>
-    /// 响应编码
+    /// 日志等级.
     /// </summary>
-    public enum ResponseCode
+    public enum LogLevelEnum
     {
         /// <summary>
-        /// 成功
+        /// info.
         /// </summary>
-        Ok = 200,
+        Information,
 
         /// <summary>
-        /// 未授权
+        /// warn.
         /// </summary>
-        Unauthorized = 401,
+        Warning,
 
         /// <summary>
-        /// 未授权角色
+        /// error.
         /// </summary>
-        UnauthorizedRoles = 403,
-
-        /// <summary>
-        /// 未授权的账号或者密码
-        /// </summary>
-        UnauthorizedAccountOrPassword = 401001,
-
-        /// <summary>
-        /// 内部服务异常
-        /// </summary>
-        InternalServerError = 500,
-
-        /// <summary>
-        /// 内部服务数据库异常
-        /// </summary>
-        InternalServerDatabaseError = 500001
+        Error,
     }
 }

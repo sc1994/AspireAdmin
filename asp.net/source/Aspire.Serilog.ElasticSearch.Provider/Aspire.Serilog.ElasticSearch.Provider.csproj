@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>D:\Desktop\AspireAdmin\asp.net\source\Aspire.Serilog.ElasticSearch.Provider\Aspire.Serilog.ElasticSearch.Provider.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.Sinks.ElasticSearch" Version="8.4.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+	<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />    
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aspire\Aspire.csproj" />
+  </ItemGroup>
+
+</Project>
