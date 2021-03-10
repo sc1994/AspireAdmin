@@ -4,38 +4,47 @@
         <name>Aspire.Serilog.ElasticSearch.Provider</name>
     </assembly>
     <members>
+        <member name="T:Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore">
+            <summary>
+            Log Write Store.
+            </summary>
+        </member>
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore.#ctor(Aspire.Cache.IAspireCacheClient,Aspire.ILogWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore"/> class.
+            </summary>
+            <param name="cacheClient">Cache Client.</param>
+            <param name="logWriter">Log Writer.</param>
+        </member>
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore.AddItems(System.Object)">
+            <summary>
+            Add Items.
+            </summary>
+            <param name="items">Items.</param>
+        </member>
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore.GetItems">
+            <summary>
+            Get Items.
+            </summary>
+            <returns>Items.</returns>
+        </member>
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore.DeleteItems">
+            <summary>
+            Delete Items.
+            </summary>
+            <returns>Is Success.</returns>
+        </member>
         <member name="T:Aspire.Serilog.ElasticSearch.Provider.LogWriter">
             <summary>
             Log Writer.
             </summary>
         </member>
-        <member name="F:Aspire.Serilog.ElasticSearch.Provider.LogWriter.RedisKeyApiMethod">
-            <summary>
-            Redis Key Api Method.
-            </summary>
-        </member>
-        <member name="F:Aspire.Serilog.ElasticSearch.Provider.LogWriter.RedisKeyApiRouter">
-            <summary>
-            Redis Key Api Router.
-            </summary>
-        </member>
-        <member name="F:Aspire.Serilog.ElasticSearch.Provider.LogWriter.RedisKeyServerAddress">
-            <summary>
-            Redis Key Server Address.
-            </summary>
-        </member>
-        <member name="F:Aspire.Serilog.ElasticSearch.Provider.LogWriter.RedisKeyTitle">
-            <summary>
-            Redis Key Title.
-            </summary>
-        </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriter.#ctor(Serilog.ILogger,Aspire.LogWriterHelper,Aspire.Cache.IAspireCache)">
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriter.#ctor(Serilog.ILogger,Aspire.LogWriterHelper)">
             <summary>
             Initializes a new instance of the <see cref="T:Aspire.Serilog.ElasticSearch.Provider.LogWriter"/> class.
             </summary>
             <param name="logger">Serilog.ILogger.</param>
             <param name="writerHelper">Log Writer Helper.</param>
-            <param name="cache">Redis.</param>
         </member>
         <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriter.Information(System.String,System.String,System.String,System.String)">
             <inheritdoc/>
@@ -127,12 +136,12 @@
             SerilogElastic Search AppService.
             </summary>
         </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Aspire.Cache.IAspireCache)">
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore)">
             <summary>
             Initializes a new instance of the <see cref="T:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService"/> class.
             </summary>
             <param name="config">Configuration.</param>
-            <param name="cache">Redis.</param>
+            <param name="itemsStore">Log Write Items Store.</param>
         </member>
         <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.FilterAsync(Aspire.Serilog.ElasticSearch.Provider.SystemLog.SystemLogFilterInputDto)">
             <inheritdoc />

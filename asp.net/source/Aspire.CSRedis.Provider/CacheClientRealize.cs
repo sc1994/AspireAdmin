@@ -1,4 +1,4 @@
-// <copyright file="CacheRealize.cs" company="PlaceholderCompany">
+// <copyright file="CacheClientRealize.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -12,15 +12,15 @@ namespace Aspire.CSRedis.Provider
     /// <summary>
     /// Redis 实现.
     /// </summary>
-    internal class CacheRealize : IAspireCache
+    internal class CacheClientRealize : IAspireCacheClient
     {
         private readonly CSRedisClient redisClient;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CacheRealize"/> class.
+        /// Initializes a new instance of the <see cref="CacheClientRealize"/> class.
         /// </summary>
         /// <param name="redisClient">CSRedis.RedisClient.</param>
-        public CacheRealize(CSRedisClient redisClient)
+        public CacheClientRealize(CSRedisClient redisClient)
         {
             this.redisClient = redisClient;
         }

@@ -16,33 +16,33 @@
         <member name="M:Aspire.CSRedis.Provider.AspireRedisOptionsSetup.AddAspireRedis(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <inheritdoc />
         </member>
-        <member name="T:Aspire.CSRedis.Provider.CacheRealize">
+        <member name="T:Aspire.CSRedis.Provider.CacheClientRealize">
             <summary>
             Redis 实现.
             </summary>
         </member>
-        <member name="M:Aspire.CSRedis.Provider.CacheRealize.#ctor(CSRedis.CSRedisClient)">
+        <member name="M:Aspire.CSRedis.Provider.CacheClientRealize.#ctor(CSRedis.CSRedisClient)">
             <summary>
-            Initializes a new instance of the <see cref="T:Aspire.CSRedis.Provider.CacheRealize"/> class.
+            Initializes a new instance of the <see cref="T:Aspire.CSRedis.Provider.CacheClientRealize"/> class.
             </summary>
             <param name="redisClient">CSRedis.RedisClient.</param>
         </member>
-        <member name="M:Aspire.CSRedis.Provider.CacheRealize.DeleteKey(System.String)">
+        <member name="M:Aspire.CSRedis.Provider.CacheClientRealize.DeleteKey(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:Aspire.CSRedis.Provider.CacheRealize.ContainsKey(System.String)">
+        <member name="M:Aspire.CSRedis.Provider.CacheClientRealize.ContainsKey(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:Aspire.CSRedis.Provider.CacheRealize.GetString(System.String)">
+        <member name="M:Aspire.CSRedis.Provider.CacheClientRealize.GetString(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:Aspire.CSRedis.Provider.CacheRealize.SetString(System.String,System.String,System.Int32)">
+        <member name="M:Aspire.CSRedis.Provider.CacheClientRealize.SetString(System.String,System.String,System.Int32)">
             <inheritdoc/>
         </member>
-        <member name="M:Aspire.CSRedis.Provider.CacheRealize.AddSetMembers(System.String,System.String[])">
+        <member name="M:Aspire.CSRedis.Provider.CacheClientRealize.AddSetMembers(System.String,System.String[])">
             <inheritdoc/>
         </member>
-        <member name="M:Aspire.CSRedis.Provider.CacheRealize.GetSetAllMembers(System.String)">
+        <member name="M:Aspire.CSRedis.Provider.CacheClientRealize.GetSetAllMembers(System.String)">
             <inheritdoc/>
         </member>
     </members>

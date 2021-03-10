@@ -10,7 +10,6 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
-    using Aspire.Cache;
     using Aspire.SystemLog;
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
@@ -26,18 +25,15 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
     {
         private readonly string node;
         private readonly string index;
-        private readonly IAspireCache cache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerilogElasticSearchAppService"/> class.
         /// </summary>
         /// <param name="config">Configuration.</param>
-        /// <param name="cache">Redis.</param>
-        public SerilogElasticSearchAppService(IConfiguration config, IAspireCache cache)
+        public SerilogElasticSearchAppService(IConfiguration config)
         {
             this.node = config.GetConnectionString("ElasticSearch");
             this.index = config.GetConnectionString("ElasticSearchIndex");
-            this.cache = cache;
         }
 
         private enum OperatorEnum
@@ -137,23 +133,20 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
         /// <inheritdoc />
         public override async Task<SystemLogSelectItemsDto> GetSelectItems()
         {
+            var items = this.itemsStore.GetItems().Select(x => x.DeserializeObject());
             return await Task.FromResult(new SystemLogSelectItemsDto
             {
-                ApiMethods = this.cache.GetSetAllMembers(LogWriter.RedisKeyApiMethod).ToArray(),
-                ServerAddress = this.cache.GetSetAllMembers(LogWriter.RedisKeyServerAddress).ToArray(),
-                ApiRouters = this.cache.GetSetAllMembers(LogWriter.RedisKeyApiRouter).ToArray(),
-                Titles = this.cache.GetSetAllMembers(LogWriter.RedisKeyTitle).ToArray(),
+                ApiMethods = items.Select(x => x["apiMethods"].ToString()).Distinct().ToArray(),
+                ServerAddress = items.Select(x => x["serverAddress"].ToString()).Distinct().ToArray(),
+                ApiRouters = items.Select(x => x["apiRouters"].ToString()).Distinct().ToArray(),
+                Titles = items.Select(x => x["titles"].ToString()).Distinct().ToArray(),
             });
         }
 
         /// <inheritdoc />
         public override async Task<bool> DeleteAllSelectItems()
         {
-            return await Task.FromResult(
-                this.cache.DeleteKey(LogWriter.RedisKeyApiMethod)
-             && this.cache.DeleteKey(LogWriter.RedisKeyServerAddress)
-             && this.cache.DeleteKey(LogWriter.RedisKeyApiRouter)
-             && this.cache.DeleteKey(LogWriter.RedisKeyTitle));
+            return await Task.FromResult(this.itemsStore.DeleteItems());
         }
 
         private static object GetQueryItem(string field, object value, OperatorEnum operatorEnum)

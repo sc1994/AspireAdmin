@@ -6,7 +6,6 @@ namespace Aspire.Serilog.ElasticSearch.Provider
 {
     using System;
     using System.Linq;
-    using Aspire.Cache;
     using global::Serilog;
 
     /// <summary>
@@ -14,35 +13,15 @@ namespace Aspire.Serilog.ElasticSearch.Provider
     /// </summary>
     public class LogWriter : ILogWriter
     {
-        /// <summary>
-        /// Redis Key Api Method.
-        /// </summary>
-        internal const string RedisKeyApiMethod = "Aspire:Serilog:ElasticSearch:Select:ApiMethod";
-
-        /// <summary>
-        /// Redis Key Api Router.
-        /// </summary>
-        internal const string RedisKeyApiRouter = "Aspire:Serilog:ElasticSearch:Select:ApiRouter";
-
-        /// <summary>
-        /// Redis Key Server Address.
-        /// </summary>
-        internal const string RedisKeyServerAddress = "Aspire:Serilog:ElasticSearch:Select:ServerAddress";
-
-        /// <summary>
-        /// Redis Key Title.
-        /// </summary>
-        internal const string RedisKeyTitle = "Aspire:Serilog:ElasticSearch:Select:Title";
-
         private const string LogTemplate = "{apiMethod}  {apiRouter}" +
-                                           "\r\n\t[{clientAddress}->{serverAddress}] [{f1}] [{f2}]" +
-                                           "\r\n\ttitle  : {title}" +
-                                           "\r\n\taccount: {account}" +
-                                           "\r\n\ttrace  : {traceId}" +
-                                           "\r\n\tmessage: {message}";
+                                           "\r\n[{clientAddress}->{serverAddress}] [{f1}] [{f2}]" +
+                                           "\r\ntitle  : {title}" +
+                                           "\r\naccount: {account}" +
+                                           "\r\ntrace  : {traceId}" +
+                                           "\r\nmessage: {message}" +
+                                           "\r\n";
 
         private readonly LogWriterHelper writerHelper;
-        private readonly IAspireCache cache;
         private readonly ILogger logger;
 
         /// <summary>
@@ -50,14 +29,11 @@ namespace Aspire.Serilog.ElasticSearch.Provider
         /// </summary>
         /// <param name="logger">Serilog.ILogger.</param>
         /// <param name="writerHelper">Log Writer Helper.</param>
-        /// <param name="cache">Redis.</param>
         public LogWriter(
             ILogger logger,
-            LogWriterHelper writerHelper,
-            IAspireCache cache)
+            LogWriterHelper writerHelper)
         {
             this.writerHelper = writerHelper;
-            this.cache = cache;
             this.logger = logger;
         }
 
@@ -87,10 +63,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider
             var (apiMethod, apiRouter, traceId, clientAddress, serverAddress, userAccount) = this.writerHelper.GetPartialStandardParams();
 
             // 收集内容 供可选择项目
-            this.cache.AddSetMembers(RedisKeyApiMethod, apiMethod);
-            this.cache.AddSetMembers(RedisKeyApiRouter, apiRouter);
-            this.cache.AddSetMembers(RedisKeyServerAddress, serverAddress);
-            this.cache.AddSetMembers(RedisKeyTitle, title);
+            LogWriteItemsStore.AddItems(new { apiMethod, apiRouter, serverAddress, title });
 
             return new object[]
             {

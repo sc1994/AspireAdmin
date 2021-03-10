@@ -25,7 +25,7 @@ namespace Aspire.CSRedis.Provider
         /// <inheritdoc />
         public void AddAspireRedis(IServiceCollection service)
         {
-            service.AddSingleton<IAspireCache, CacheRealize>();
+            service.AddSingleton<IAspireCacheClient, CacheClientRealize>();
             service.AddSingleton(serviceProvider => new CSRedisClient(this.connectionString));
         }
     }

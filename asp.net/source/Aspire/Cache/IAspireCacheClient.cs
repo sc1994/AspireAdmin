@@ -1,4 +1,4 @@
-// <copyright file="IAspireCache.cs" company="PlaceholderCompany">
+// <copyright file="IAspireCacheClient.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -10,7 +10,7 @@ namespace Aspire.Cache
     /// <summary>
     /// Cache.
     /// </summary>
-    public interface IAspireCache
+    public interface IAspireCacheClient
     {
         /// <summary>
         /// Delete Key.
