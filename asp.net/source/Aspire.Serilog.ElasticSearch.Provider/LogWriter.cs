@@ -63,7 +63,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider
             var (apiMethod, apiRouter, traceId, clientAddress, serverAddress, userAccount) = this.writerHelper.GetPartialStandardParams();
 
             // 收集内容 供可选择项目
-            LogWriteItemsStore.AddItems(new { apiMethod, apiRouter, serverAddress, title });
+            LogItemsStore.AddItems(new { apiMethod, apiRouter, serverAddress, title });
 
             return new object[]
             {

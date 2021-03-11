@@ -4,35 +4,43 @@
         <name>Aspire.Serilog.ElasticSearch.Provider</name>
     </assembly>
     <members>
-        <member name="T:Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore">
+        <member name="T:Aspire.Serilog.ElasticSearch.Provider.LogItemsStore">
             <summary>
             Log Write Store.
             </summary>
         </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore.#ctor(Aspire.Cache.IAspireCacheClient,Aspire.ILogWriter)">
+        <member name="F:Aspire.Serilog.ElasticSearch.Provider.LogItemsStore.RedisKeyByLogItems">
             <summary>
-            Initializes a new instance of the <see cref="T:Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore"/> class.
+            Redis Key Log Items.
+            </summary>
+        </member>
+        <member name="F:Aspire.Serilog.ElasticSearch.Provider.LogItemsStore.ItemsStore">
+            <summary>
+            Items Store.
+            </summary>
+        </member>
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogItemsStore.#ctor(Aspire.Cache.IAspireCacheClient)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Aspire.Serilog.ElasticSearch.Provider.LogItemsStore"/> class.
             </summary>
             <param name="cacheClient">Cache Client.</param>
-            <param name="logWriter">Log Writer.</param>
         </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore.AddItems(System.Object)">
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogItemsStore.AddItems(System.Object)">
             <summary>
             Add Items.
             </summary>
             <param name="items">Items.</param>
         </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore.GetItems">
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogItemsStore.GetItemsStore">
             <summary>
-            Get Items.
+            Get Items Store.
             </summary>
             <returns>Items.</returns>
         </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore.DeleteItems">
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogItemsStore.ClearItemsStore">
             <summary>
-            Delete Items.
+            Clear Items Store.
             </summary>
-            <returns>Is Success.</returns>
         </member>
         <member name="T:Aspire.Serilog.ElasticSearch.Provider.LogWriter">
             <summary>
@@ -136,12 +144,12 @@
             SerilogElastic Search AppService.
             </summary>
         </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Aspire.Serilog.ElasticSearch.Provider.LogWriteItemsStore)">
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Aspire.Serilog.ElasticSearch.Provider.LogItemsStore)">
             <summary>
             Initializes a new instance of the <see cref="T:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService"/> class.
             </summary>
             <param name="config">Configuration.</param>
-            <param name="itemsStore">Log Write Items Store.</param>
+            <param name="itemsStore">Items Store.</param>
         </member>
         <member name="M:Aspire.Serilog.ElasticSearch.Provider.SystemLog.SerilogElasticSearchAppService.FilterAsync(Aspire.Serilog.ElasticSearch.Provider.SystemLog.SystemLogFilterInputDto)">
             <inheritdoc />

@@ -10,6 +10,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
     using System.Net.Http;
     using System.Net.Http.Json;
     using System.Threading.Tasks;
+    using Aspire.Cache;
     using Aspire.SystemLog;
     using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json.Linq;
@@ -23,6 +24,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
         SystemLogFilterOutputDto,
         SystemLogDetailOutputDto>
     {
+        private readonly LogItemsStore itemsStore;
         private readonly string node;
         private readonly string index;
 
@@ -30,8 +32,12 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
         /// Initializes a new instance of the <see cref="SerilogElasticSearchAppService"/> class.
         /// </summary>
         /// <param name="config">Configuration.</param>
-        public SerilogElasticSearchAppService(IConfiguration config)
+        /// <param name="itemsStore">Items Store.</param>
+        public SerilogElasticSearchAppService(
+            IConfiguration config,
+            LogItemsStore itemsStore)
         {
+            this.itemsStore = itemsStore;
             this.node = config.GetConnectionString("ElasticSearch");
             this.index = config.GetConnectionString("ElasticSearchIndex");
         }
@@ -133,20 +139,21 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
         /// <inheritdoc />
         public override async Task<SystemLogSelectItemsDto> GetSelectItems()
         {
-            var items = this.itemsStore.GetItems().Select(x => x.DeserializeObject());
+            var items = LogItemsStore.GetItemsStore().Select(x => x.DeserializeObject());
             return await Task.FromResult(new SystemLogSelectItemsDto
             {
-                ApiMethods = items.Select(x => x["apiMethods"].ToString()).Distinct().ToArray(),
-                ServerAddress = items.Select(x => x["serverAddress"].ToString()).Distinct().ToArray(),
-                ApiRouters = items.Select(x => x["apiRouters"].ToString()).Distinct().ToArray(),
-                Titles = items.Select(x => x["titles"].ToString()).Distinct().ToArray(),
+                ApiMethods = items.Select(x => x["apiMethods"]?.ToString()).Where(x => !x.IsNullOrWhiteSpace()).Distinct().ToArray(),
+                ServerAddress = items.Select(x => x["serverAddress"]?.ToString()).Where(x => !x.IsNullOrWhiteSpace()).Distinct().ToArray(),
+                ApiRouters = items.Select(x => x["apiRouters"]?.ToString()).Where(x => !x.IsNullOrWhiteSpace()).Distinct().ToArray(),
+                Titles = items.Select(x => x["titles"]?.ToString()).Where(x => !x.IsNullOrWhiteSpace()).Distinct().ToArray(),
             });
         }
 
         /// <inheritdoc />
         public override async Task<bool> DeleteAllSelectItems()
         {
-            return await Task.FromResult(this.itemsStore.DeleteItems());
+            this.itemsStore.ClearItemsStore();
+            return await Task.FromResult(true);
         }
 
         private static object GetQueryItem(string field, object value, OperatorEnum operatorEnum)

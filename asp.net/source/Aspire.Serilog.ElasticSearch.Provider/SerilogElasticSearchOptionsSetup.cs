@@ -5,6 +5,8 @@
 namespace Aspire.Serilog.ElasticSearch.Provider
 {
     using System;
+    using System.Linq;
+    using Aspire.Cache;
     using Aspire.Logger;
     using global::Serilog;
     using global::Serilog.Events;
@@ -35,7 +37,7 @@ namespace Aspire.Serilog.ElasticSearch.Provider
             services.AddSingleton(logger);
             services.AddSingleton<ILogger>(logger);
             services.AddScoped(typeof(ILogWriter), typeof(LogWriter));
-            services.AddSingleton<LogWriteItemsStore, LogWriteItemsStore>();
+            services.AddSingleton<LogItemsStore, LogItemsStore>();
         }
     }
 }
