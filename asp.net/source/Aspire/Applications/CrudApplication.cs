@@ -133,17 +133,17 @@ namespace Aspire
         where TUpdateDto : IDto<TPrimaryKey>
     {
         /// <summary>
-        /// 当前服务仓储.
-        /// </summary>
-        private readonly IAuditRepository<TAuditEntity, TPrimaryKey> currentRepository;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CrudAppService{        TAuditEntity,         TPrimaryKey,         TPageInputDto,         TOutputDto,         TCreateDto,         TUpdateDto}"/> class.
         /// </summary>
         protected CrudAppService()
         {
-            this.currentRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TAuditEntity, TPrimaryKey>>();
+            this.CurrentRepository = ServiceLocator.ServiceProvider.GetService<IAuditRepository<TAuditEntity, TPrimaryKey>>();
         }
+
+        /// <summary>
+        /// Gets 当前服务仓储.
+        /// </summary>
+        protected IAuditRepository<TAuditEntity, TPrimaryKey> CurrentRepository { get; }
 
         /// <summary>
         /// Create.
@@ -153,7 +153,7 @@ namespace Aspire
         public virtual async Task<TOutputDto> CreateAsync(TCreateDto input)
         {
             var entity = this.MapToEntity(input);
-            return this.MapToDto(await this.currentRepository.InsertThenEntityAsync(entity));
+            return this.MapToDto(await this.CurrentRepository.InsertThenEntityAsync(entity));
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Aspire
         [HttpDelete("{id}")]
         public virtual async Task<bool> DeleteAsync(TPrimaryKey id)
         {
-            return await this.currentRepository.DeleteAsync(id);
+            return await this.CurrentRepository.DeleteAsync(id);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Aspire
         public virtual async Task<TOutputDto> UpdateAsync(TUpdateDto input)
         {
             var entity = this.MapToEntity(input);
-            var success = await this.currentRepository.UpdateAsync(entity);
+            var success = await this.CurrentRepository.UpdateAsync(entity);
             if (success)
             {
                 return await this.GetAsync(input.Id);
@@ -192,7 +192,7 @@ namespace Aspire
         [HttpGet("{id}")]
         public virtual async Task<TOutputDto> GetAsync(TPrimaryKey id)
         {
-            return this.MapToDto<TOutputDto>(await this.currentRepository.GetAsync(id));
+            return this.MapToDto<TOutputDto>(await this.CurrentRepository.GetAsync(id));
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace Aspire
         public virtual async Task<PagedResultDto<TOutputDto>> PagingAsync(TPageInputDto input)
         {
             var filer = this.FilterPage(input);
-            var (items, totalCount) = await this.currentRepository.PagingAsync(filer, input);
+            var (items, totalCount) = await this.CurrentRepository.PagingAsync(filer, input);
             return new PagedResultDto<TOutputDto>(items.Select(this.MapToDto), totalCount);
         }
 

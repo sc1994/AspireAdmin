@@ -126,7 +126,8 @@ namespace Aspire.Authorization
         /// <returns>操作结果.</returns>
         public virtual bool Logout()
         {
-            throw new NotImplementedException();
+            // 不需任何操作, 前端删除 token 即可
+            return true;
         }
 
         /// <summary>

@@ -4,16 +4,16 @@
         <name>Aspire.CSRedis.Provider</name>
     </assembly>
     <members>
-        <member name="T:Aspire.CSRedis.Provider.AspireRedisOptionsSetup">
+        <member name="T:Aspire.CSRedis.Provider.AspireCacheOptionsSetup">
             <inheritdoc />
         </member>
-        <member name="M:Aspire.CSRedis.Provider.AspireRedisOptionsSetup.#ctor(System.String)">
+        <member name="M:Aspire.CSRedis.Provider.AspireCacheOptionsSetup.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:Aspire.CSRedis.Provider.AspireRedisOptionsSetup"/> class.
+            Initializes a new instance of the <see cref="T:Aspire.CSRedis.Provider.AspireCacheOptionsSetup"/> class.
             </summary>
             <param name="connectionString">Connection String.</param>
         </member>
-        <member name="M:Aspire.CSRedis.Provider.AspireRedisOptionsSetup.AddAspireRedis(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+        <member name="M:Aspire.CSRedis.Provider.AspireCacheOptionsSetup.AddAspireRedis(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <inheritdoc />
         </member>
         <member name="T:Aspire.CSRedis.Provider.CacheClientRealize">

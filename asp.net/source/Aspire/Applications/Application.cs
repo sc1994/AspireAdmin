@@ -4,7 +4,6 @@
 
 namespace Aspire
 {
-    using System.Diagnostics.CodeAnalysis;
     using Aspire.Mapper;
 
     using Panda.DynamicWebApi;
@@ -21,18 +20,17 @@ namespace Aspire
     public abstract class Application : IDynamicWebApi
     {
         /// <summary>
-        /// Mapper.
-        /// </summary>
-        [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "<挂起>")]
-        protected readonly IAspireMapper Mapper;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Application"/> class.
         /// </summary>
         protected Application()
         {
             this.Mapper = ServiceLocator.ServiceProvider.GetService<IAspireMapper>();
         }
+
+        /// <summary>
+        /// Gets mapper.
+        /// </summary>
+        protected IAspireMapper Mapper { get; }
 
         /// <summary>
         /// 失败.

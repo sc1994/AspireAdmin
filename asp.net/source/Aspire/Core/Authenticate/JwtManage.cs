@@ -40,7 +40,8 @@ namespace Aspire.Authenticate
             DateTime expiryTime;
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(typeof(ICurrentUser).GetProperties()
+                Subject = new ClaimsIdentity(typeof(ICurrentUser)
+                    .GetProperties()
                     .Select(x => new Claim(x.Name, x.GetValue(user)?.ToString() ?? string.Empty))
                     .ToArray()),
                 Expires = expiryTime = DateTime.Now.AddSeconds(this.jwtAppSettings.ExpireSeconds),

@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using Aspire.AutoMapper.Provider;
@@ -68,14 +67,11 @@ namespace AspireAdmin.Host
 
                 options.LoggerOptionsSetup = new SerilogElasticSearchOptionsSetup();
 
-                options.CacheOptionsSetup = new AspireRedisOptionsSetup(this.configuration.GetConnectionString("Redis"));
+                options.CacheOptionsSetup = new AspireCacheOptionsSetup(this.configuration.GetConnectionString("Redis"));
             });
         }
 
-        public void Configure(
-            IApplicationBuilder app,
-            IWebHostEnvironment env,
-            IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -84,8 +80,6 @@ namespace AspireAdmin.Host
 
             app.UseAspire<User>(configure =>
             {
-                configure.ServiceProvider = serviceProvider;
-
                 configure.CorsPolicyBuilderConfigure = corsPolicy =>
                 {
                     corsPolicy.AllowAnyHeader();
@@ -105,9 +99,9 @@ namespace AspireAdmin.Host
                 };
 
                 configure.SwaggerUiName = "AspireAdmin.Host v1";
+
+                configure.LoggerConfigure = new SerilogElasticSearchConfigure();
             });
-
-
         }
     }
 }

@@ -31,15 +31,20 @@
             </summary>
             <param name="items">Items.</param>
         </member>
-        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogItemsStore.GetItemsStore">
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogItemsStore.GetItems">
             <summary>
-            Get Items Store.
+            Get Items.
             </summary>
             <returns>Items.</returns>
         </member>
         <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogItemsStore.ClearItemsStore">
             <summary>
             Clear Items Store.
+            </summary>
+        </member>
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogItemsStore.InitItems">
+            <summary>
+            Init Items.
             </summary>
         </member>
         <member name="T:Aspire.Serilog.ElasticSearch.Provider.LogWriter">
@@ -62,6 +67,12 @@
         </member>
         <member name="M:Aspire.Serilog.ElasticSearch.Provider.LogWriter.Error(System.Exception,System.String,System.String,System.String)">
             <inheritdoc/>
+        </member>
+        <member name="T:Aspire.Serilog.ElasticSearch.Provider.SerilogElasticSearchConfigure">
+            <inheritdoc />
+        </member>
+        <member name="M:Aspire.Serilog.ElasticSearch.Provider.SerilogElasticSearchConfigure.UseLogger(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <inheritdoc />
         </member>
         <member name="T:Aspire.Serilog.ElasticSearch.Provider.SerilogElasticSearchOptionsSetup">
             <summary>

@@ -9,6 +9,7 @@ namespace Microsoft.AspNetCore.Builder
     using System.Data;
     using Aspire;
     using Aspire.Authenticate;
+    using Aspire.Logger;
     using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Routing;
@@ -25,25 +26,25 @@ namespace Microsoft.AspNetCore.Builder
         /// </summary>
         /// <typeparam name="TUserEntity">用户实体.</typeparam>
         /// <param name="app">Application Builder.</param>
-        /// <param name="serviceProvider">提供服务.</param>
-        /// <param name="endpointRouteConfigure">终结点【配置.</param>
+        /// <param name="endpointRouteConfigure">终结点配置.</param>
         /// <param name="swaggerUiName">swagger ui name.</param>
         /// <param name="corsPolicyBuilderConfigure">跨域代理配置.</param>
+        /// <param name="loggerConfigure">Logger Configure.</param>
         /// <returns>Application Builder .</returns>
         public static IApplicationBuilder UseAspire<TUserEntity>(
             this IApplicationBuilder app,
-            IServiceProvider serviceProvider,
             Action<IEndpointRouteBuilder> endpointRouteConfigure,
             string swaggerUiName,
-            Action<CorsPolicyBuilder> corsPolicyBuilderConfigure)
+            Action<CorsPolicyBuilder> corsPolicyBuilderConfigure,
+            ILoggerConfigure loggerConfigure)
             where TUserEntity : class, IUserEntity, new()
         {
             return UseAspire<TUserEntity, Guid>(
                 app,
-                serviceProvider,
                 endpointRouteConfigure,
                 swaggerUiName,
-                corsPolicyBuilderConfigure);
+                corsPolicyBuilderConfigure,
+                loggerConfigure);
         }
 
         /// <summary>
@@ -52,25 +53,25 @@ namespace Microsoft.AspNetCore.Builder
         /// <typeparam name="TUserEntity">用户实体.</typeparam>
         /// <typeparam name="TPrimaryKey">实体主键.</typeparam>
         /// <param name="app">Application Builder.</param>
-        /// <param name="serviceProvider">提供服务.</param>
         /// <param name="endpointRouteConfigure">终结点 配置.</param>
         /// <param name="swaggerUiName">swagger ui name.</param>
         /// <param name="corsPolicyBuilderConfigure">跨域代理配置.</param>
+        /// <param name="loggerConfigure">Logger Configure.</param>
         /// <returns>Application Builder .</returns>
         public static IApplicationBuilder UseAspire<TUserEntity, TPrimaryKey>(
             this IApplicationBuilder app,
-            IServiceProvider serviceProvider,
             Action<IEndpointRouteBuilder> endpointRouteConfigure,
             string swaggerUiName,
-            Action<CorsPolicyBuilder> corsPolicyBuilderConfigure)
+            Action<CorsPolicyBuilder> corsPolicyBuilderConfigure,
+            ILoggerConfigure loggerConfigure)
             where TUserEntity : class, IUserEntity<TPrimaryKey>, new()
         {
             return UseAspire<TUserEntity, TPrimaryKey>(app, actionConfigure =>
             {
-                actionConfigure.ServiceProvider = serviceProvider;
                 actionConfigure.EndpointRouteConfigure = endpointRouteConfigure;
                 actionConfigure.SwaggerUiName = swaggerUiName;
                 actionConfigure.CorsPolicyBuilderConfigure = corsPolicyBuilderConfigure;
+                actionConfigure.LoggerConfigure = loggerConfigure;
             });
         }
 
@@ -105,17 +106,13 @@ namespace Microsoft.AspNetCore.Builder
         {
             var configure = new AspireUseConfigure();
             actionConfigure(configure);
-            if (configure.ServiceProvider == null)
-            {
-                throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.ServiceProvider));
-            }
 
-            if (configure.CorsPolicyBuilderConfigure == null)
+            if (configure.CorsPolicyBuilderConfigure is null)
             {
                 throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.CorsPolicyBuilderConfigure));
             }
 
-            if (configure.EndpointRouteConfigure == null)
+            if (configure.EndpointRouteConfigure is null)
             {
                 throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.EndpointRouteConfigure));
             }
@@ -125,11 +122,13 @@ namespace Microsoft.AspNetCore.Builder
                 throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.SwaggerUiName));
             }
 
+            configure.LoggerConfigure?.UseLogger(app);
+
             // 初始化 di服务代理 到 静态服务定位类中
-            ServiceLocator.Initialize(configure.ServiceProvider.GetService<IServiceProviderProxy>());
+            ServiceLocator.Initialize(app.ApplicationServices.GetService<IServiceProviderProxy>());
 
             // 启用 swagger ui
-            var env = configure.ServiceProvider.GetService<IWebHostEnvironment>();
+            var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
             if (env.IsDevelopment())
             {
                 app.UseSwagger();

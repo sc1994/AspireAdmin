@@ -21,7 +21,7 @@ namespace Aspire
             if (context.Result is ObjectResult objectResult)
             {
                 OkObjectResult result;
-                if (context.Exception == null)
+                if (context.Exception is null)
                 {
                     context.Result = result = new OkObjectResult(new GlobalResponse
                     {

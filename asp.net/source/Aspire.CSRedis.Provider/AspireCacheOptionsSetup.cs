@@ -1,4 +1,4 @@
-// <copyright file="AspireRedisOptionsSetup.cs" company="PlaceholderCompany">
+// <copyright file="AspireCacheOptionsSetup.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -9,15 +9,15 @@ namespace Aspire.CSRedis.Provider
     using Microsoft.Extensions.DependencyInjection;
 
     /// <inheritdoc />
-    public class AspireRedisOptionsSetup : IAspireRedisOptionsSetup
+    public class AspireCacheOptionsSetup : IAspireRedisOptionsSetup
     {
         private readonly string connectionString;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AspireRedisOptionsSetup"/> class.
+        /// Initializes a new instance of the <see cref="AspireCacheOptionsSetup"/> class.
         /// </summary>
         /// <param name="connectionString">Connection String.</param>
-        public AspireRedisOptionsSetup(string connectionString)
+        public AspireCacheOptionsSetup(string connectionString)
         {
             this.connectionString = connectionString;
         }

@@ -6,6 +6,7 @@ namespace Aspire
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Aspire.Logger;
     using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.AspNetCore.Routing;
 
@@ -33,9 +34,9 @@ namespace Aspire
         public Action<IEndpointRouteBuilder> EndpointRouteConfigure { get; set; }
 
         /// <summary>
-        /// Gets or sets DI 服务 提供者.
+        /// Gets or sets Logger Configure.
         /// </summary>
         [NotNull]
-        public IServiceProvider ServiceProvider { get; set; }
+        public ILoggerConfigure LoggerConfigure { get; set; }
     }
 }

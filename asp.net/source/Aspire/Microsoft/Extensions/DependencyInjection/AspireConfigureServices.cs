@@ -124,7 +124,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var options = new AspireSetupOptions();
             setupAction(options);
-            if (options.Configuration == null)
+            if (options.Configuration is null)
             {
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.Configuration));
             }
@@ -139,7 +139,7 @@ namespace Microsoft.Extensions.DependencyInjection
             var mvcBuilder = services.AddControllers();
 
             // NewtonsoftJson
-            if (options.NewtonsoftJsonOptionsSetup == null)
+            if (options.NewtonsoftJsonOptionsSetup is null)
             {
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.NewtonsoftJsonOptionsSetup));
             }
@@ -147,7 +147,7 @@ namespace Microsoft.Extensions.DependencyInjection
             mvcBuilder.AddNewtonsoftJson(options.NewtonsoftJsonOptionsSetup);
 
             // swagger
-            if (options.SwaggerGenOptionsSetup == null)
+            if (options.SwaggerGenOptionsSetup is null)
             {
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.SwaggerGenOptionsSetup));
             }
@@ -188,7 +188,7 @@ namespace Microsoft.Extensions.DependencyInjection
             });
 
             // mapper
-            if (options.MapperOptions == null)
+            if (options.MapperOptions is null)
             {
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.MapperOptions));
             }
@@ -196,7 +196,7 @@ namespace Microsoft.Extensions.DependencyInjection
             options.MapperOptions.AddAspireMapper(services);
 
             // audit repository
-            if (options.AuditRepositoryOptions == null)
+            if (options.AuditRepositoryOptions is null)
             {
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.AuditRepositoryOptions));
             }
@@ -249,7 +249,7 @@ namespace Microsoft.Extensions.DependencyInjection
             //    });
 
             // 引入 Panda.DynamicWebApi 自定义配置
-            if (options.DynamicWebApiOptionsSetup == null)
+            if (options.DynamicWebApiOptionsSetup is null)
             {
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.DynamicWebApiOptionsSetup));
             }
@@ -260,7 +260,7 @@ namespace Microsoft.Extensions.DependencyInjection
             });
 
             // LOG
-            if (options.LoggerOptionsSetup == null)
+            if (options.LoggerOptionsSetup is null)
             {
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.LoggerOptionsSetup));
             }
@@ -269,7 +269,7 @@ namespace Microsoft.Extensions.DependencyInjection
             options.LoggerOptionsSetup.AddLogger(services, options.Configuration);
 
             // Cache
-            if (options.CacheOptionsSetup == null)
+            if (options.CacheOptionsSetup is null)
             {
                 throw new NoNullAllowedException(nameof(AspireSetupOptions) + "." + nameof(AspireSetupOptions.CacheOptionsSetup));
             }

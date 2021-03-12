@@ -38,7 +38,45 @@ namespace Aspire.Serilog.ElasticSearch.Provider
         public LogItemsStore(IAspireCacheClient cacheClient)
         {
             this.cacheClient = cacheClient;
-            cacheClient
+        }
+
+        /// <summary>
+        /// Add Items.
+        /// </summary>
+        /// <param name="items">Items.</param>
+        internal static void AddItems(object items)
+        {
+            if (isInitDone)
+            {
+                ItemsStore.TryAdd(items.SerializeObject(), 0);
+            }
+        }
+
+        /// <summary>
+        /// Get Items.
+        /// </summary>
+        /// <returns>Items.</returns>
+        internal static string[] GetItems()
+        {
+            return ItemsStore.Select(x => x.Key).ToArray();
+        }
+
+        /// <summary>
+        /// Clear Items Store.
+        /// </summary>
+        internal void ClearItemsStore()
+        {
+            this.cacheClient.DeleteKey(RedisKeyByLogItems);
+            ItemsStore.Clear();
+            itemsCursor = 0;
+        }
+
+        /// <summary>
+        /// Init Items.
+        /// </summary>
+        internal void InitItems()
+        {
+            this.cacheClient
                 .GetSetAllMembers(RedisKeyByLogItems)
                 .ForEach(x =>
                 {
@@ -55,53 +93,24 @@ namespace Aspire.Serilog.ElasticSearch.Provider
                     await Task.Delay(5000);
 
                     var length = ItemsStore.Count;
-                    if (length > 0)
+                    if (length <= itemsCursor)
                     {
-                        Console.WriteLine($"消费起点: {itemsCursor}, 消费终点: {length}");
+                        continue;
                     }
+
+                    Console.WriteLine($"消费起点: {itemsCursor}, 消费终点: {length}");
 
                     var items = ItemsStore
                         .Skip(itemsCursor)
                         .Take(length)
                         .Select(x => x.Key)
                         .ToArray();
-                    cacheClient.AddSetMembers(RedisKeyByLogItems, items);
+                    this.cacheClient.AddSetMembers(RedisKeyByLogItems, items);
                     itemsCursor = length;
                 }
 
                 // ReSharper disable once FunctionNeverReturns
             });
-        }
-
-        /// <summary>
-        /// Add Items.
-        /// </summary>
-        /// <param name="items">Items.</param>
-        internal static void AddItems(object items)
-        {
-            if (isInitDone)
-            {
-                ItemsStore.TryAdd(items.SerializeObject(), 0);
-            }
-        }
-
-        /// <summary>
-        /// Get Items Store.
-        /// </summary>
-        /// <returns>Items.</returns>
-        internal static string[] GetItemsStore()
-        {
-            return ItemsStore.Select(x => x.Key).ToArray();
-        }
-
-        /// <summary>
-        /// Clear Items Store.
-        /// </summary>
-        internal void ClearItemsStore()
-        {
-            this.cacheClient.DeleteKey(RedisKeyByLogItems);
-            ItemsStore.Clear();
-            itemsCursor = 0;
         }
     }
 }

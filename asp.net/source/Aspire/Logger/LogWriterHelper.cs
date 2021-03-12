@@ -59,7 +59,7 @@ namespace Aspire
 
         private static string GetTrace(HttpContext cxt)
         {
-            if (cxt?.Items == null)
+            if (cxt?.Items is null)
             {
                 return null;
             }

@@ -66,7 +66,7 @@ namespace Aspire.FreeSql.Provider
             try
             {
                 var tmp = ServiceLocator.ServiceProvider.GetService<ILogWriter>();
-                if (tmp == null)
+                if (tmp is null)
                 {
                     Console.WriteLine("Get ILogWriter Fail");
                 }
