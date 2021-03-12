@@ -62,11 +62,12 @@ namespace Aspire
         /// </summary>
         /// <typeparam name="T">T.</typeparam>
         /// <param name="code">错误编码.</param>
+        /// <param name="title">Title.</param>
         /// <param name="messages">消息.</param>
         /// <returns>Return T.</returns>
-        protected static T Failure<T>(int code, params string[] messages)
+        protected static T Failure<T>(int code, string title, params string[] messages)
         {
-            FriendlyThrowException.ThrowException(code, messages);
+            FriendlyThrowException.ThrowException(code, title, messages);
             return default;
         }
 

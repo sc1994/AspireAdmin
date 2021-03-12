@@ -27,6 +27,18 @@ namespace AspireAdmin.Host
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AspireAdminCors", builder =>
+                {
+                    builder
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+                        .WithOrigins(this.configuration.GetSection("WithOrigins").Value.Split(","));
+                });
+            });
+
             services.AddAspire<User>(options =>
             {
                 var applicationAssembly = Assembly.Load("AspireAdmin.Application");
@@ -78,24 +90,21 @@ namespace AspireAdmin.Host
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("AspireAdminCors");
+
             app.UseAspire<User>(configure =>
             {
-                configure.CorsPolicyBuilderConfigure = corsPolicy =>
-                {
-                    corsPolicy.AllowAnyHeader();
-                    corsPolicy.AllowAnyMethod();
-                    corsPolicy.AllowCredentials();
-                    corsPolicy.WithOrigins(this.configuration.GetSection("WithOrigins").Value.Split(","));
-                };
-
                 configure.EndpointRouteConfigure = endpoint =>
                 {
                     endpoint.MapControllers();
 
-                    endpoint.Map("/", async cxt =>
+                    if (env.IsDevelopment())
                     {
-                        await Task.Run(() => cxt.Response.Redirect("/swagger"));
-                    });
+                        endpoint.Map("/", async cxt =>
+                        {
+                            await Task.Run(() => cxt.Response.Redirect("/swagger"));
+                        });
+                    }
                 };
 
                 configure.SwaggerUiName = "AspireAdmin.Host v1";

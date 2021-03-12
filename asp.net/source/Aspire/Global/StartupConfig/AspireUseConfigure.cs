@@ -7,7 +7,6 @@ namespace Aspire
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Aspire.Logger;
-    using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.AspNetCore.Routing;
 
     /// <summary>
@@ -15,12 +14,6 @@ namespace Aspire
     /// </summary>
     public class AspireUseConfigure
     {
-        /// <summary>
-        /// Gets or sets 跨域政策配置.
-        /// </summary>
-        [NotNull]
-        public Action<CorsPolicyBuilder> CorsPolicyBuilderConfigure { get; set; }
-
         /// <summary>
         /// Gets or sets Swagger UI 名称.
         /// </summary>

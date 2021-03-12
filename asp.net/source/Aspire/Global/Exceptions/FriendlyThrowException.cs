@@ -24,10 +24,11 @@ namespace Aspire
         /// 抛出异常.
         /// </summary>
         /// <param name="code">Code.</param>
+        /// <param name="title">Title.</param>
         /// <param name="messages">Messages.</param>
-        public static void ThrowException(int code, params string[] messages)
+        public static void ThrowException(int code, string title, params string[] messages)
         {
-            throw new FriendlyException(code, EnhancedStackTrace.Current(), messages);
+            throw new FriendlyException(code, EnhancedStackTrace.Current(), title, messages);
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace Aspire
         /// <param name="messages">Messages.</param>
         public static void ThrowException(ResponseCode code, params string[] messages)
         {
-            ThrowException(code.GetHashCode(), messages);
+            ThrowException(code.GetHashCode(), code.GetDescription(), messages);
         }
     }
 }

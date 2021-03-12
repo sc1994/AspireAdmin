@@ -4,6 +4,7 @@
 
 namespace Aspire
 {
+    using System.Linq;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -18,50 +19,55 @@ namespace Aspire
         /// <param name="context">Context.</param>
         public override void OnActionExecuted(ActionExecutedContext context)
         {
-            if (context.Result is ObjectResult objectResult)
+            object logMessage = default;
+            if (context.Exception is null && context.Result is ObjectResult objectResult)
             {
-                OkObjectResult result;
-                if (context.Exception is null)
+                var result = new OkObjectResult(new GlobalResponse
                 {
-                    context.Result = result = new OkObjectResult(new GlobalResponse
-                    {
-                        Code = ResponseCode.Ok.GetHashCode(),
-                        Result = objectResult.Value,
-                    });
-                }
-                else
-                {
-                    switch (context.Exception)
-                    {
-                        // 鉴定异常类型
-                        case FriendlyException friendlyException:
-                            context.Result = result = new OkObjectResult(new GlobalResponse
-                            {
-                                Code = friendlyException.Code,
-                                Message = friendlyException.Messages,
-#if DEBUG
-                                StackTrace = friendlyException,
-#endif
-                            });
-                            break;
-                        default:
-                            context.Result = result = new OkObjectResult(new GlobalResponse
-                            {
-                                Code = ResponseCode.InternalServerError.GetHashCode(),
-                                Message = new[] { context.Exception.Message },
-#if DEBUG
-                                StackTrace = context.Exception,
-#endif
-                            });
-                            break;
-                    }
-
-                    context.Exception = null;
-                }
-
-                var logWriter = ServiceLocator.ServiceProvider.GetService<ILogWriter>();
-                logWriter.Information("Response Action Executed", result.Value);
+                    Code = ResponseCode.Ok.GetHashCode(),
+                    Result = objectResult.Value,
+                });
+                logMessage = result.Value;
+                context.Result = result;
             }
+            else
+            {
+                switch (context.Exception)
+                {
+                    // 鉴定异常类型
+                    case FriendlyException friendlyException:
+                        var friendlyExceptionResult = new OkObjectResult(new GlobalResponse
+                        {
+                            Code = friendlyException.Code,
+                            Title = friendlyException.Messages.FirstOrDefault(),
+                            Messages = friendlyException.Messages.Skip(1).ToArray(),
+#if DEBUG
+                            StackTrace = friendlyException,
+#endif
+                        });
+                        logMessage = friendlyExceptionResult.Value;
+                        context.Result = friendlyExceptionResult;
+                        break;
+                    case { } exception:
+                        var exceptionResult = new OkObjectResult(new GlobalResponse
+                        {
+                            Code = ResponseCode.InternalServerError.GetHashCode(),
+                            Title = exception.Message,
+#if DEBUG
+                            StackTrace = exception,
+#endif
+                        });
+                        logMessage = exceptionResult.Value;
+                        context.Result = exceptionResult;
+                        break;
+                }
+
+                // 删除异常让控制器正常返回
+                context.Exception = null;
+            }
+
+            var logWriter = ServiceLocator.ServiceProvider.GetService<ILogWriter>();
+            logWriter.Information("Response Action Executed", logMessage);
 
             base.OnActionExecuted(context);
         }

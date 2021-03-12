@@ -23,7 +23,7 @@ namespace Aspire.SystemLog
         double TickForRequest { get; set; }
 
         /// <summary>
-        /// Gets or sets Message.
+        /// Gets or sets Messages.
         /// </summary>
         string Message { get; set; }
 

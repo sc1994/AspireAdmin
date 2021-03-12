@@ -104,7 +104,7 @@ namespace Aspire
 
             var preResponse = new GlobalResponse
             {
-                Message = new[] { $"接口需要指定[{authorize.CurrentRoles.Join(",")}]的角色权限" },
+                Messages = new[] { $"接口需要指定[{authorize.CurrentRoles.Join(",")}]的角色权限" },
                 Code = ResponseCode.UnauthorizedRoles.GetHashCode(),
             };
 

@@ -10,7 +10,6 @@ namespace Microsoft.AspNetCore.Builder
     using Aspire;
     using Aspire.Authenticate;
     using Aspire.Logger;
-    using Microsoft.AspNetCore.Cors.Infrastructure;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Routing;
     using Microsoft.Extensions.DependencyInjection;
@@ -28,14 +27,12 @@ namespace Microsoft.AspNetCore.Builder
         /// <param name="app">Application Builder.</param>
         /// <param name="endpointRouteConfigure">终结点配置.</param>
         /// <param name="swaggerUiName">swagger ui name.</param>
-        /// <param name="corsPolicyBuilderConfigure">跨域代理配置.</param>
         /// <param name="loggerConfigure">Logger Configure.</param>
         /// <returns>Application Builder .</returns>
         public static IApplicationBuilder UseAspire<TUserEntity>(
             this IApplicationBuilder app,
             Action<IEndpointRouteBuilder> endpointRouteConfigure,
             string swaggerUiName,
-            Action<CorsPolicyBuilder> corsPolicyBuilderConfigure,
             ILoggerConfigure loggerConfigure)
             where TUserEntity : class, IUserEntity, new()
         {
@@ -43,7 +40,6 @@ namespace Microsoft.AspNetCore.Builder
                 app,
                 endpointRouteConfigure,
                 swaggerUiName,
-                corsPolicyBuilderConfigure,
                 loggerConfigure);
         }
 
@@ -55,14 +51,12 @@ namespace Microsoft.AspNetCore.Builder
         /// <param name="app">Application Builder.</param>
         /// <param name="endpointRouteConfigure">终结点 配置.</param>
         /// <param name="swaggerUiName">swagger ui name.</param>
-        /// <param name="corsPolicyBuilderConfigure">跨域代理配置.</param>
         /// <param name="loggerConfigure">Logger Configure.</param>
         /// <returns>Application Builder .</returns>
         public static IApplicationBuilder UseAspire<TUserEntity, TPrimaryKey>(
             this IApplicationBuilder app,
             Action<IEndpointRouteBuilder> endpointRouteConfigure,
             string swaggerUiName,
-            Action<CorsPolicyBuilder> corsPolicyBuilderConfigure,
             ILoggerConfigure loggerConfigure)
             where TUserEntity : class, IUserEntity<TPrimaryKey>, new()
         {
@@ -70,7 +64,6 @@ namespace Microsoft.AspNetCore.Builder
             {
                 actionConfigure.EndpointRouteConfigure = endpointRouteConfigure;
                 actionConfigure.SwaggerUiName = swaggerUiName;
-                actionConfigure.CorsPolicyBuilderConfigure = corsPolicyBuilderConfigure;
                 actionConfigure.LoggerConfigure = loggerConfigure;
             });
         }
@@ -107,11 +100,6 @@ namespace Microsoft.AspNetCore.Builder
             var configure = new AspireUseConfigure();
             actionConfigure(configure);
 
-            if (configure.CorsPolicyBuilderConfigure is null)
-            {
-                throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.CorsPolicyBuilderConfigure));
-            }
-
             if (configure.EndpointRouteConfigure is null)
             {
                 throw new NoNullAllowedException(nameof(AspireUseConfigure) + "." + nameof(AspireUseConfigure.EndpointRouteConfigure));
@@ -134,9 +122,6 @@ namespace Microsoft.AspNetCore.Builder
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", configure.SwaggerUiName));
             }
-
-            // 启用跨域
-            app.UseCors(configure.CorsPolicyBuilderConfigure);
 
             app.UseRouting();
 

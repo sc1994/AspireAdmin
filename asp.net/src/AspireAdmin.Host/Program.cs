@@ -5,6 +5,8 @@ using MicrosoftHost = Microsoft.Extensions.Hosting.Host;
 
 namespace AspireAdmin.Host
 {
+    using Microsoft.Extensions.Logging;
+
     public class Program
     {
         public static void Main(string[] args)
@@ -15,11 +17,16 @@ namespace AspireAdmin.Host
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return MicrosoftHost.CreateDefaultBuilder(args)
+                .ConfigureLogging(configureLogging =>
+                {
+                    configureLogging.AddSimpleConsole(options =>
+                    {
+                        options.TimestampFormat = "[HH:mm:ss.fff] ";
+                    });
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder
-                        .UseUrls("http://*:5000")
-                        .UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>();
                 });
         }
     }

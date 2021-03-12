@@ -20,10 +20,16 @@ namespace Aspire
         public int Code { get; set; }
 
         /// <summary>
-        /// Gets or sets Message.
+        /// Gets or sets Messages.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string[] Message { get; set; }
+        public string[] Messages { get; set; }
+
+        /// <summary>
+        /// Gets or sets Title.
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Title { get; set; }
 
         /// <summary>
         /// Gets or sets Result.

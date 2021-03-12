@@ -4,6 +4,8 @@
 
 namespace Aspire
 {
+    using System.ComponentModel;
+
     /// <summary>
     /// 响应编码.
     /// </summary>
@@ -12,31 +14,31 @@ namespace Aspire
         /// <summary>
         /// 成功.
         /// </summary>
-        Ok = 200,
-
-        /// <summary>
-        /// 未授权.
-        /// </summary>
-        Unauthorized = 401,
+        [Description("成功")]
+        Ok = 20000,
 
         /// <summary>
         /// 未授权角色.
         /// </summary>
-        UnauthorizedRoles = 403,
+        [Description("未授权角色")]
+        UnauthorizedRoles = 40101,
 
         /// <summary>
         /// 未授权的账号或者密码.
         /// </summary>
-        UnauthorizedAccountOrPassword = 401001,
+        [Description("未授权的账号或者密码")]
+        UnauthorizedAccountOrPassword = 40102,
 
         /// <summary>
         /// 内部服务异常.
         /// </summary>
-        InternalServerError = 500,
+        [Description("内部服务异常")]
+        InternalServerError = 50000,
 
         /// <summary>
         /// 内部服务数据库异常.
         /// </summary>
-        InternalServerDatabaseError = 500001,
+        [Description("内部服务数据库异常")]
+        InternalServerDatabaseError = 50001,
     }
 }

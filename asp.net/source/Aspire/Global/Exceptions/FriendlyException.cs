@@ -18,16 +18,24 @@ namespace Aspire
         /// </summary>
         /// <param name="code">Code.</param>
         /// <param name="stackTrace">Stack Trace.</param>
+        /// <param name="title">Title.</param>
         /// <param name="messages">Messages.</param>
         public FriendlyException(
             int code,
             EnhancedStackTrace stackTrace,
+            string title,
             params string[] messages)
         {
             this.Code = code;
             this.StackTrace = stackTrace;
             this.Messages = messages;
+            this.Title = title;
         }
+
+        /// <summary>
+        /// Gets Title.
+        /// </summary>
+        public string Title { get; }
 
         /// <summary>
         /// Gets code.

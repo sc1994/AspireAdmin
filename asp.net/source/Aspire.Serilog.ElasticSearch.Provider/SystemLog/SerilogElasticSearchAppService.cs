@@ -9,7 +9,6 @@ namespace Aspire.Serilog.ElasticSearch.Provider.SystemLog
     using System.Linq;
     using System.Net.Http;
     using System.Net.Http.Json;
-    using System.Reflection.Emit;
     using System.Threading.Tasks;
     using Aspire.SystemLog;
     using Microsoft.Extensions.Configuration;
